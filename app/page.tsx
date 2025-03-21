@@ -128,8 +128,8 @@ export default function GameHub() {
                       Memory LED Challenge
                     </h2>
                     <p className="text-slate-600 text-center mb-6 flex-grow">
-                      Test your memory by repeating a sequence of 10 LED
-                      patterns in the correct order
+                      Test your memory by repeating a sequence of 6 LED patterns
+                      in the correct order
                     </p>
                     <Button
                       onClick={() => navigateTo("led-memory")}
