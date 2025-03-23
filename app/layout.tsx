@@ -12,6 +12,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/icon1.png" type="image/png" sizes="32x32" />
         <link
           href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap"
           rel="stylesheet"
