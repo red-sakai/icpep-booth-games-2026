@@ -94,7 +94,7 @@ export default function GameHeader({
           <AlertCircle size={20} />
           <p className="font-medium text-base sm:text-lg">
             {timeExpired
-              ? "Time&apos;s up! Incorrect wiring."
+              ? "Time's up! Incorrect wiring."
               : "Incorrect wiring! Try again."}
           </p>
         </div>
