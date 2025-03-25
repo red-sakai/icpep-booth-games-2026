@@ -56,7 +56,7 @@ export default function GameHeader({
       {gameState === "select" && (
         <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg shadow-sm">
           <p className="text-slate-700 text-base sm:text-lg">
-            Select a wiring standard to begin. You'll need to memorize the
+            Select a wiring standard to begin. You&apos;ll need to memorize the
             pattern, then arrange the wires correctly in 15 seconds.
           </p>
         </div>
