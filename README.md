@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ICpEP Booth Games 2026
+
+Interactive booth games built with Next.js for the ICpEP event.
+
+## Requirements
+
+- Node.js 20 or later
+- npm 10 or later
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Create a production build:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Scope
 
-## Learn More
+This project currently includes:
 
-To learn more about Next.js, take a look at the following resources:
+- Tech Tac Toe
+- LED Memory
+- RJ45 Game
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contributor Guidelines
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+All contributions must follow these rules:
 
-## Deploy on Vercel
+1. Open an issue before starting implementation so the change is tracked and discussed.
+2. When implementing changes, use conventional commits and include the issue number in the commit message.
+3. Follow this commit format: `<type>/#<issue-number>(<scope>): <summary>`.
+4. Example: `feat/#137(component): add animated game card transitions`.
+5. Every pull request must use `dev` as the base branch unless a maintainer explicitly instructs otherwise.
+6. Every pull request must be attached to its corresponding issue. Include the issue number in the pull request description and link it clearly.
+7. Every pull request requires an interviewer before it can be reviewed or merged.
+8. Keep pull requests focused on a single change or feature whenever possible.
+9. Confirm the project builds and the affected behavior works before requesting review.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Pull Request Checklist
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Before opening a pull request, make sure that:
+
+- The related issue exists.
+- Commits follow the required conventional commit format with the issue number.
+- The pull request base branch is set to `dev`.
+- The pull request description references the related issue.
+- An interviewer has been assigned or requested.
+- The change has been tested locally.
+- The scope of the pull request is limited to the intended update.
