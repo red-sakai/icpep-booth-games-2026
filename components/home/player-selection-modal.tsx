@@ -4,21 +4,21 @@ import type { BoothPlayerType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { usePlayers } from "@/contexts/players-context";
 import { Card } from "../ui/card";
-import { Plus, CheckCircle, Circle, CircleDashed } from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+  Plus,
+  CheckCircle,
+  Circle,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import { useState } from "react";
 
-type PlayerSelectionModalProps = {
-  playerNumber: 1 | 2;
-};
-export const PlayerSelectionModal = ({
-  playerNumber,
-}: PlayerSelectionModalProps) => {
+export const PlayerSelectionModal = () => {
   const {
     players,
-    setPlayers,
     currentPlayers,
     setCurrentPlayers,
-    setOpenPlayerSelectionModal,
+    setIsPlayerSelectionModalOpen,
   } = usePlayers();
   const [filterValue, setFilterValue] = useState("");
 
@@ -26,38 +26,16 @@ export const PlayerSelectionModal = ({
     player.name.toLowerCase().includes(filterValue.toLowerCase()),
   );
 
-  const [selectedPlayer, setSelectedPlayer] = useState<BoothPlayerType | null>(
-    null,
-  );
-  const [selectedOpponent, setSelectedOpponent] =
-    useState<BoothPlayerType | null>(null);
+  const [selectedPlayers, setSelectedPlayers] = useState<{
+    player1: BoothPlayerType | null;
+    player2: BoothPlayerType | null;
+  }>(currentPlayers);
 
-  useEffect(() => {
-    console.log(playerNumber, currentPlayers);
-    if (playerNumber === 1) {
-      setSelectedPlayer(currentPlayers.player1);
-      setSelectedOpponent(currentPlayers.player2);
-    } else {
-      setSelectedPlayer(currentPlayers.player2);
-      setSelectedOpponent(currentPlayers.player1);
-    }
-  }, [playerNumber, currentPlayers]);
+  const [tab, setTab] = useState<"1" | "2">("1");
 
   const handleConfirm = () => {
-    if (selectedPlayer) {
-      if (playerNumber === 1) {
-        setCurrentPlayers((prev) => ({
-          ...prev,
-          player1: selectedPlayer,
-        }));
-      } else {
-        setCurrentPlayers((prev) => ({
-          ...prev,
-          player2: selectedPlayer,
-        }));
-      }
-      setOpenPlayerSelectionModal(null);
-    }
+    setCurrentPlayers(selectedPlayers);
+    setIsPlayerSelectionModalOpen(false);
   };
 
   return (
@@ -74,21 +52,67 @@ export const PlayerSelectionModal = ({
         <div
           className={cn(
             "bg-gradient-to-r p-6 outline-2",
-            playerNumber === 1
+            tab === "1"
               ? "from-blue-100/80 to-blue-300/80 outline-blue-500/80"
               : "from-red-100/80 to-red-300/80 outline-red-500/80",
             "h-full flex flex-col gap-4 rounded-xl border-none",
           )}
         >
-          <section className="">
-            <h2
+          <section>
+            <div
               className={cn(
-                "text-2xl font-bold",
-                playerNumber === 1 ? "text-blue-500" : "text-red-500",
+                "flex items-center gap-4",
+                tab === "1" ? "text-blue-500" : "text-red-500",
               )}
             >
-              Choose/Create Player {playerNumber}
-            </h2>
+              <h2 className="text-2xl font-bold">Choose/Create Player</h2>
+              <div className="flex items-center gap-2">
+                {tab === "2" && (
+                  <button
+                    className={cn(
+                      "border border-red-500/80 rounded-md p-0.5",
+                      "hover:bg-slate-50 shadow-sm",
+                    )}
+                    onClick={() => setTab("1")}
+                  >
+                    <ChevronLeft className="size-6" />
+                  </button>
+                )}
+                <div className="flex items-end gap-2">
+                  <span
+                    className={cn(
+                      tab === "1"
+                        ? "text-5xl font-bold bg-slate-50 px-3 py-0.5 rounded-md shadow-sm"
+                        : "text-xl font-semibold",
+                      "transition-all duration-300",
+                    )}
+                  >
+                    1
+                  </span>
+                  <span
+                    className={cn(
+                      tab === "2"
+                        ? "text-5xl font-bold bg-slate-50 px-2 py-0.5 rounded-md shadow-sm"
+                        : "text-xl font-semibold",
+                      "transition-all duration-300",
+                    )}
+                  >
+                    2
+                  </span>
+                </div>
+                {tab === "1" && (
+                  <button
+                    className={cn(
+                      "border border-blue-500/80 rounded-md p-0.5",
+                      "hover:bg-slate-50 shadow-sm",
+                    )}
+                    onClick={() => setTab("2")}
+                  >
+                    <ChevronRight className="size-6" />
+                  </button>
+                )}
+              </div>
+            </div>
 
             <p className="text-base text-gray-700">
               Select an existing player or create a new one to start playing!
@@ -104,7 +128,7 @@ export const PlayerSelectionModal = ({
                 "outline-2 outline-slate-200 rounded-lg shadow-md",
                 "h-8 w-full px-2 bg-slate-50",
                 "text-gray-700 text-base",
-                playerNumber === 1
+                tab === "1"
                   ? "hover:outline-blue-500/80"
                   : "hover:outline-red-500/80",
                 "transition-all duration-200",
@@ -118,7 +142,7 @@ export const PlayerSelectionModal = ({
                   "flex items-center justify-center",
                   "cursor-pointer active:scale-90 transition-transform",
                   "hover:scale-110",
-                  playerNumber === 1
+                  tab === "1"
                     ? "hover:outline-blue-500/80"
                     : "hover:outline-red-500/80",
                 )}
@@ -135,10 +159,14 @@ export const PlayerSelectionModal = ({
                 <span
                   className={cn(
                     "text-sm font-medium",
-                    selectedPlayer ? "text-blue-500/80" : "text-gray-500/80",
+                    selectedPlayers.player1
+                      ? "text-blue-500/80"
+                      : "text-gray-500/80",
                   )}
                 >
-                  {selectedPlayer?.name || "None"}
+                  {selectedPlayers.player1
+                    ? selectedPlayers.player1.name
+                    : "None"}
                 </span>
               </div>
             </div>
@@ -148,10 +176,14 @@ export const PlayerSelectionModal = ({
                 <span
                   className={cn(
                     "text-sm font-medium",
-                    selectedOpponent ? "text-red-500/80" : "text-gray-500/80",
+                    selectedPlayers.player2
+                      ? "text-red-500/80"
+                      : "text-gray-500/80",
                   )}
                 >
-                  {selectedOpponent?.name || "None"}
+                  {selectedPlayers.player2
+                    ? selectedPlayers.player2.name
+                    : "None"}
                 </span>
               </div>
             </div>
@@ -169,10 +201,9 @@ export const PlayerSelectionModal = ({
                 {filteredPlayers.map((player) =>
                   PlayerItem({
                     player,
-                    selectedPlayer,
-                    setSelectedPlayer,
-                    selectedOpponent,
-                    playerNumber,
+                    selectedPlayers,
+                    setSelectedPlayers,
+                    tab,
                   }),
                 )}
               </div>
@@ -187,18 +218,15 @@ export const PlayerSelectionModal = ({
                 "cursor-pointer hover:scale-110 active:scale-95",
                 "transition-transform duration-200",
               )}
-              onClick={() => setOpenPlayerSelectionModal(null)}
+              onClick={() => setIsPlayerSelectionModalOpen(false)}
             >
               <span className="text-base text-slate-50">Cancel</span>
             </button>
             <button
-              disabled={!selectedPlayer}
               className={cn(
                 "bg-emerald-400 px-2 py-1",
                 "rounded-md shadow-md",
-                selectedPlayer
-                  ? "cursor-pointer hover:scale-110 active:scale-95"
-                  : "cursor-not-allowed opacity-50",
+                "cursor-pointer hover:scale-110 active:scale-95",
                 "transition-transform duration-200",
               )}
               onClick={handleConfirm}
@@ -214,26 +242,40 @@ export const PlayerSelectionModal = ({
 
 type PlayerItemProps = {
   player: BoothPlayerType;
-  selectedPlayer?: BoothPlayerType | null;
-  setSelectedPlayer: (player: BoothPlayerType | null) => void;
-  selectedOpponent?: BoothPlayerType | null;
-  playerNumber: 1 | 2;
+  selectedPlayers: {
+    player1: BoothPlayerType | null;
+    player2: BoothPlayerType | null;
+  };
+  setSelectedPlayers: React.Dispatch<
+    React.SetStateAction<{
+      player1: BoothPlayerType | null;
+      player2: BoothPlayerType | null;
+    }>
+  >;
+  tab: "1" | "2";
 };
 const PlayerItem = ({
   player,
-  selectedPlayer,
-  setSelectedPlayer,
-  selectedOpponent,
-  playerNumber,
+  selectedPlayers,
+  setSelectedPlayers,
+  tab,
 }: PlayerItemProps) => {
-  const handleSelect = () => {
-    if (player.id === selectedOpponent?.id) {
-      return;
-    } else if (player.id === selectedPlayer?.id) {
-      setSelectedPlayer(null);
-    } else {
-      setSelectedPlayer(player);
-    }
+  const handlePlayerSelect = () => {
+    setSelectedPlayers((prev) => {
+      const updatedSelectedPlayers = { ...prev };
+      if (tab === "1") {
+        if (prev.player2?.id !== player.id) {
+          updatedSelectedPlayers.player1 =
+            prev.player1?.id === player.id ? null : player;
+        }
+      } else if (tab === "2") {
+        if (prev.player1?.id !== player.id) {
+          updatedSelectedPlayers.player2 =
+            prev.player2?.id === player.id ? null : player;
+        }
+      }
+      return updatedSelectedPlayers;
+    });
   };
 
   return (
@@ -243,66 +285,46 @@ const PlayerItem = ({
         "py-1 px-4 flex gap-4",
         "items-center justify-start rounded-md",
         "outline shadow-md",
-        playerNumber === 1
-          ? selectedPlayer?.id === player.id
-            ? "bg-blue-200/80 outline-blue-400"
-            : "bg-red-200/80 outline-red-400"
-          : selectedPlayer?.id === player.id
-            ? "bg-red-200/80 outline-red-400"
-            : "bg-blue-200/80 outline-blue-400",
 
-        playerNumber === 1
-          ? selectedOpponent?.id === player.id
-            ? "bg-red-200/80 outline-red-400"
-            : "bg-blue-200/80 outline-blue-400"
-          : selectedOpponent?.id === player.id
-            ? "bg-blue-200/80 outline-blue-400"
-            : "bg-red-200/80 outline-red-400",
+        selectedPlayers.player1?.id === player.id &&
+          "bg-blue-200/80 outline-blue-400",
+        selectedPlayers.player2?.id === player.id &&
+          "bg-red-200/80 outline-red-400",
 
-        player.id !== selectedPlayer?.id &&
-          player.id !== selectedOpponent?.id &&
+        "cursor-pointer",
+        (tab === "1" && selectedPlayers.player2?.id === player.id) ||
+          (tab === "2" && selectedPlayers.player1?.id === player.id)
+          ? "cursor-not-allowed"
+          : "hover:-translate-0.5 active:translate-0.5",
+
+        selectedPlayers.player1?.id !== player.id &&
+          selectedPlayers.player2?.id !== player.id &&
           "group outline-slate-200 bg-slate-50 hover:bg-slate-200",
 
-        player.id !== selectedOpponent?.id
-          ? "cursor-pointer hover:-translate-0.5 active:translate-0.5"
-          : "cursor-not-allowed",
         "transition-all duration-200",
       )}
-      onClick={handleSelect}
+      onClick={handlePlayerSelect}
     >
       <span
         className="size-4 rounded-full opacity-80"
         style={{ backgroundColor: player.color }}
       ></span>
       <span className="text-md text-gray-700 font-medium">{player.name}</span>
-      {selectedPlayer?.id === player.id ||
-      selectedOpponent?.id === player.id ? (
+      {selectedPlayers.player1?.id === player.id ||
+      selectedPlayers.player2?.id === player.id ? (
         <CheckCircle
           className={cn(
             "size-5 ml-auto",
-            playerNumber === 1
-              ? selectedPlayer?.id === player.id
-                ? "text-blue-400 group-hover:text-blue-300/80"
-                : "text-red-400 group-hover:text-red-300/80"
-              : selectedPlayer?.id === player.id
-                ? "text-red-400 group-hover:text-red-300/80"
-                : "text-blue-400 group-hover:text-blue-300/80",
-            playerNumber === 1
-              ? selectedOpponent?.id === player.id
-                ? "text-red-400 group-hover:text-red-300/80"
-                : "text-blue-400 group-hover:text-blue-300/80"
-              : selectedOpponent?.id === player.id
-                ? "text-blue-400 group-hover:text-blue-300/80"
-                : "text-red-400 group-hover:text-red-300/80",
+            selectedPlayers.player1?.id === player.id && "text-blue-400",
+            selectedPlayers.player2?.id === player.id && "text-red-400",
           )}
         />
       ) : (
         <Circle
           className={cn(
             "size-5 text-gray-200 ml-auto",
-            playerNumber === 1
-              ? "group-hover:text-blue-300/80"
-              : "group-hover:text-red-300/80",
+            tab === "1" && "group-hover:text-blue-300/80",
+            tab === "2" && "group-hover:text-red-300/80",
           )}
         />
       )}

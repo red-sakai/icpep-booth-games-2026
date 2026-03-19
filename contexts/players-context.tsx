@@ -14,10 +14,8 @@ type PlayersContextType = {
       player2: BoothPlayerType | null;
     }>
   >;
-  openPlayerSelectionModal: 1 | 2 | null;
-  setOpenPlayerSelectionModal: React.Dispatch<
-    React.SetStateAction<1 | 2 | null>
-  >;
+  isPlayerSelectionModalOpen: boolean;
+  setIsPlayerSelectionModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const PlayersContext = React.createContext<PlayersContextType | null>(null);
@@ -31,8 +29,8 @@ export const PlayersProvider = ({ children }: PlayersProviderProps) => {
     player1: BoothPlayerType | null;
     player2: BoothPlayerType | null;
   }>({ player1: null, player2: null });
-  const [openPlayerSelectionModal, setOpenPlayerSelectionModal] =
-    React.useState<1 | 2 | null>(null);
+  const [isPlayerSelectionModalOpen, setIsPlayerSelectionModalOpen] =
+    React.useState(false);
 
   // smaple players
   useEffect(() => {
@@ -67,8 +65,8 @@ export const PlayersProvider = ({ children }: PlayersProviderProps) => {
         setPlayers,
         currentPlayers,
         setCurrentPlayers,
-        openPlayerSelectionModal,
-        setOpenPlayerSelectionModal,
+        isPlayerSelectionModalOpen,
+        setIsPlayerSelectionModalOpen,
       }}
     >
       {children}
