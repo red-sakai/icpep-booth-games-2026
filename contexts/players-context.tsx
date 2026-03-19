@@ -32,32 +32,6 @@ export const PlayersProvider = ({ children }: PlayersProviderProps) => {
   const [isPlayerSelectionModalOpen, setIsPlayerSelectionModalOpen] =
     React.useState(false);
 
-  // smaple players
-  useEffect(() => {
-    setPlayers([
-      { id: "1", name: "Alice", color: "red" },
-      { id: "2", name: "Bob", color: "blue" },
-      { id: "3", name: "Charlie", color: "green" },
-      { id: "4", name: "Diana", color: "yellow" },
-      { id: "5", name: "Eve", color: "purple" },
-      { id: "6", name: "Frank", color: "orange" },
-      { id: "7", name: "Grace", color: "pink" },
-      { id: "8", name: "Heidi", color: "cyan" },
-      { id: "9", name: "Ivan", color: "teal" },
-      { id: "10", name: "Judy", color: "magenta" },
-      { id: "11", name: "Karl", color: "lime" },
-      { id: "12", name: "Leo", color: "indigo" },
-      { id: "13", name: "Mallory", color: "brown" },
-      { id: "14", name: "Nina", color: "gray" },
-      { id: "15", name: "Oscar", color: "black" },
-      { id: "16", name: "Peggy", color: "skyblue" },
-      { id: "17", name: "Quentin", color: "gold" },
-      { id: "18", name: "Ruth", color: "lightgreen" },
-      { id: "19", name: "Sybil", color: "violet" },
-      { id: "20", name: "Trent", color: "navy" },
-    ]);
-  }, []);
-
   return (
     <PlayersContext.Provider
       value={{

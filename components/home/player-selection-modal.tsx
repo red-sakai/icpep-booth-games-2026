@@ -10,28 +10,74 @@ import {
   Circle,
   ChevronLeft,
   ChevronRight,
+  CircleDashed,
+  ChevronDown,
+  Check,
+  X,
 } from "lucide-react";
 import { useState } from "react";
+import playerColorPalette from "@/data/player-color-pallete.json";
 
-export const PlayerSelectionModal = () => {
+type PlayerSelectionModalProps = {
+  playerCount: 1 | 2;
+};
+export const PlayerSelectionModal = ({
+  playerCount,
+}: PlayerSelectionModalProps) => {
   const {
     players,
+    setPlayers,
     currentPlayers,
     setCurrentPlayers,
     setIsPlayerSelectionModalOpen,
   } = usePlayers();
   const [filterValue, setFilterValue] = useState("");
+  const [selectedPlayers, setSelectedPlayers] = useState<{
+    player1: BoothPlayerType | null;
+    player2: BoothPlayerType | null;
+  }>(currentPlayers);
+  const [tab, setTab] = useState<"1" | "2">("1");
+  const [isCreateEnabled, setIsCreateEnabled] = useState(false);
+  const [newPlayer, setNewPlayer] = useState<BoothPlayerType>({
+    id: "",
+    name: "",
+    color: "",
+  });
+  const [isColorPaletteOpen, setIsColorPaletteOpen] = useState(false);
 
   const filteredPlayers = players.filter((player) =>
     player.name.toLowerCase().includes(filterValue.toLowerCase()),
   );
 
-  const [selectedPlayers, setSelectedPlayers] = useState<{
-    player1: BoothPlayerType | null;
-    player2: BoothPlayerType | null;
-  }>(currentPlayers);
+  const handleNewNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.value;
+    setNewPlayer((prev) => ({
+      ...prev,
+      name,
+      id: String(players.length + 1),
+    }));
+  };
 
-  const [tab, setTab] = useState<"1" | "2">("1");
+  const handleSaveNewPlayer = () => {
+    if (!newPlayer?.id || !newPlayer?.name || !newPlayer?.color) return;
+    if (
+      players.some(
+        (player) =>
+          player.name === newPlayer.name && player.color === newPlayer.color,
+      )
+    ) {
+      alert(
+        "A player with the same name and color already exists. Please choose a different name or color.",
+      );
+      return;
+    }
+    setPlayers((prev) => [...prev, newPlayer]);
+    setNewPlayer({ id: "", name: "", color: "" });
+  };
+  const handleCancelNewPlayer = () => {
+    setNewPlayer({ id: "", name: "", color: "" });
+    setIsCreateEnabled(false);
+  };
 
   const handleConfirm = () => {
     setCurrentPlayers(selectedPlayers);
@@ -89,18 +135,20 @@ export const PlayerSelectionModal = () => {
                   >
                     1
                   </span>
-                  <span
-                    className={cn(
-                      tab === "2"
-                        ? "text-5xl font-bold bg-slate-50 px-2 py-0.5 rounded-md shadow-sm"
-                        : "text-xl font-semibold",
-                      "transition-all duration-300",
-                    )}
-                  >
-                    2
-                  </span>
+                  {playerCount == 2 && (
+                    <span
+                      className={cn(
+                        tab === "2"
+                          ? "text-5xl font-bold bg-slate-50 px-2 py-0.5 rounded-md shadow-sm"
+                          : "text-xl font-semibold",
+                        "transition-all duration-300",
+                      )}
+                    >
+                      2
+                    </span>
+                  )}
                 </div>
-                {tab === "1" && (
+                {playerCount == 2 && tab === "1" && (
                   <button
                     className={cn(
                       "border border-blue-500/80 rounded-md p-0.5",
@@ -121,7 +169,7 @@ export const PlayerSelectionModal = () => {
 
           <section className="flex gap-2 items-center">
             <input
-              placeholder="Filter players..."
+              placeholder="Search player name"
               value={filterValue}
               onChange={(e) => setFilterValue(e.target.value)}
               className={cn(
@@ -146,11 +194,90 @@ export const PlayerSelectionModal = () => {
                     ? "hover:outline-blue-500/80"
                     : "hover:outline-red-500/80",
                 )}
+                onClick={() => setIsCreateEnabled((prev) => !prev)}
               >
                 <Plus className="size-6 text-gray-700" />
               </button>
             </div>
           </section>
+
+          {isCreateEnabled && (
+            <section className="flex gap-2 items-center">
+              <input
+                placeholder="Enter new name"
+                value={newPlayer.name}
+                onChange={handleNewNameChange}
+                className={cn(
+                  "outline-2 outline-slate-200 rounded-md shadow-md",
+                  "h-8 w-full px-2 bg-slate-50",
+                  "text-gray-700 text-base",
+                  tab === "1"
+                    ? "hover:outline-blue-500/80"
+                    : "hover:outline-red-500/80",
+                  "transition-all duration-200",
+                )}
+              />
+              <div
+                className={cn(
+                  "relative outline-2 outline-slate-200 rounded-lg shadow-md",
+                )}
+              >
+                <button
+                  className={cn(
+                    "flex items-center gap-2 rounded-md",
+                    "px-2 py-1 h-full bg-slate-50",
+                    tab === "1"
+                      ? "hover:outline-blue-500/80"
+                      : "hover:outline-red-500/80",
+                    "cursor-pointer",
+                  )}
+                  onClick={() => setIsColorPaletteOpen((prev) => !prev)}
+                >
+                  {newPlayer?.color ? (
+                    <span
+                      className="size-6 rounded-full"
+                      style={{ backgroundColor: newPlayer.color }}
+                    />
+                  ) : (
+                    <CircleDashed className="size-6 text-gray-700" />
+                  )}
+                  <ChevronDown className="size-6 text-gray-700" />
+                </button>
+                {isColorPaletteOpen && (
+                  <PlayerColorPalette
+                    tab={tab}
+                    newPlayer={newPlayer}
+                    setNewPlayer={setNewPlayer}
+                  />
+                )}
+              </div>
+              <button
+                disabled={!newPlayer.id || !newPlayer.name || !newPlayer.color}
+                className={cn(
+                  "px-2 py-1 rounded-md shadow-md",
+                  newPlayer.id && newPlayer.name && newPlayer.color
+                    ? "bg-emerald-400 cursor-pointer hover:scale-110 active:scale-95"
+                    : "bg-gray-400/80 cursor-not-allowed",
+                  "text-base text-slate-50",
+                  "transition-transform duration-200",
+                )}
+                onClick={handleSaveNewPlayer}
+              >
+                <Check className="size-6" />
+              </button>
+              <button
+                className={cn(
+                  "px-2 py-1 rounded-md shadow-md",
+                  "bg-destructive cursor-pointer hover:scale-110 active:scale-95",
+                  "text-base text-slate-50",
+                  "transition-transform duration-200",
+                )}
+                onClick={handleCancelNewPlayer}
+              >
+                <X className="size-6" />
+              </button>
+            </section>
+          )}
 
           <section className="flex gap-2 items-center justify-start">
             <div className={cn("flex items-center gap-4", "mt-auto")}>
@@ -198,7 +325,7 @@ export const PlayerSelectionModal = () => {
           >
             <div className={cn("h-full w-full p-2", "overflow-y-auto")}>
               <div className="h-full flex flex-col gap-2">
-                {filteredPlayers.map((player) =>
+                {filteredPlayers.reverse().map((player) =>
                   PlayerItem({
                     player,
                     selectedPlayers,
@@ -329,5 +456,54 @@ const PlayerItem = ({
         />
       )}
     </button>
+  );
+};
+
+type PlayerColorPaletteProps = {
+  tab: "1" | "2";
+  newPlayer: BoothPlayerType;
+  setNewPlayer: React.Dispatch<React.SetStateAction<BoothPlayerType>>;
+};
+const PlayerColorPalette = ({
+  tab,
+  newPlayer,
+  setNewPlayer,
+}: PlayerColorPaletteProps) => {
+  return (
+    <div
+      className={cn(
+        "absolute z-20 right-0 top-full mt-2",
+        "w-70 max-h-60 flex flex-col gap-2 p-2",
+        "bg-slate-50 rounded-md shadow-lg outline outline-slate-200",
+      )}
+    >
+      <div className={cn("flex flex-wrap justify-evenly gap-1")}>
+        {playerColorPalette.map((color) => (
+          <button
+            key={color}
+            className={cn(
+              "px-2 py-2 rounded-md shadow-md bg-slate-50 outline outline-slate-200",
+              "flex items-center justify-center",
+              tab === "1" &&
+                newPlayer.color === color &&
+                "bg-blue-300/80 outline-blue-500/80",
+              tab === "2" &&
+                newPlayer.color === color &&
+                "bg-red-300/80 outline-red-500/80",
+              "cursor-pointer hover:scale-110 active:scale-95",
+              "transition-transform duration-200",
+            )}
+            onClick={() => {
+              setNewPlayer((prev) => ({ ...prev, color }));
+            }}
+          >
+            <span
+              className="size-4 rounded-full"
+              style={{ backgroundColor: color }}
+            />
+          </button>
+        ))}
+      </div>
+    </div>
   );
 };

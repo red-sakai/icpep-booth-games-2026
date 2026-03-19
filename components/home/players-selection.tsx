@@ -23,7 +23,9 @@ export const PlayersSelection = ({
 
   return (
     <>
-      {isPlayerSelectionModalOpen && <PlayerSelectionModal />}
+      {isPlayerSelectionModalOpen && (
+        <PlayerSelectionModal playerCount={playerCount} />
+      )}
 
       <div className="flex items-center justify-end gap-4">
         <PlayerStatus playerNumber={1} />
@@ -36,7 +38,7 @@ export const PlayersSelection = ({
           )}
           onClick={() => setIsPlayerSelectionModalOpen(true)}
         >
-          <Edit className="size-6" />
+          <Edit className="size-6 text-gray-700" />
         </button>
       </div>
     </>
@@ -54,7 +56,7 @@ const PlayerStatus = ({ playerNumber }: PlayerStatusProps) => {
       <span>Player {playerNumber}:</span>
       <span
         className={cn(
-          "font-semibold bg-slate-50 text-gray-500 px-2 py-1 rounded-lg shadow-sm",
+          "font-semibold bg-slate-50 text-gray-700 px-2 py-1 rounded-lg shadow-sm",
           playerNumber === 1 &&
             currentPlayers.player1 &&
             "bg-blue-100 text-blue-800",
