@@ -28,8 +28,8 @@ export const PlayersSelection = ({
       )}
 
       <div className="flex items-center justify-end gap-4">
-        <PlayerStatus playerNumber={1} />
-        {playerCount === 2 && <PlayerStatus playerNumber={2} />}
+        <PlayerName playerNumber={1} />
+        {playerCount === 2 && <PlayerName playerNumber={2} />}
 
         <button
           className={cn(
@@ -46,10 +46,10 @@ export const PlayersSelection = ({
   );
 };
 
-type PlayerStatusProps = {
+type PlayerNameProps = {
   playerNumber: 1 | 2;
 };
-const PlayerStatus = ({ playerNumber }: PlayerStatusProps) => {
+const PlayerName = ({ playerNumber }: PlayerNameProps) => {
   const { currentPlayers } = usePlayers();
 
   return (

@@ -30,7 +30,6 @@ export const PlayerSelectionModal = ({
     setCurrentPlayers,
     setIsPlayerSelectionModalOpen,
   } = usePlayers();
-  const [filterValue, setFilterValue] = useState("");
   const [selectedPlayers, setSelectedPlayers] = useState<{
     player1: BoothPlayerType | null;
     player2: BoothPlayerType | null;
@@ -41,11 +40,21 @@ export const PlayerSelectionModal = ({
     name: "",
     color: "",
   });
-  const [isColorPaletteOpen, setIsColorPaletteOpen] = useState(false);
+  const [selectedColor, setSelectedColor] = useState("");
+  const [filterNameValue, setFilterNameValue] = useState("");
+  const [filterColor, setFilterColor] = useState("all");
 
-  const filteredPlayers = players.filter((player) =>
-    player.name.toLowerCase().includes(filterValue.toLowerCase()),
+  const filteredPlayers = players.filter(
+    (player) =>
+      player.name.toLowerCase().includes(filterNameValue.toLowerCase()) &&
+      (player.color.includes(filterColor) || filterColor === "all"),
   );
+
+  useEffect(() => {
+    if (selectedColor) {
+      setNewPlayer((prev) => ({ ...prev, color: selectedColor }));
+    }
+  }, [selectedColor]);
 
   const handleNewNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.value;
@@ -66,6 +75,7 @@ export const PlayerSelectionModal = ({
     }
     setPlayers((prev) => [...prev, newPlayer]);
     setNewPlayer({ id: "", name: "", color: "" });
+    setSelectedColor("");
   };
   const handleCancelNewPlayer = () => {
     setNewPlayer({ id: "", name: "", color: "" });
@@ -176,41 +186,13 @@ export const PlayerSelectionModal = ({
                 "transition-all duration-200",
               )}
             />
-            <div
-              className={cn(
-                "relative outline-2 outline-slate-200 rounded-lg shadow-md",
-                tab === "1"
-                  ? "hover:outline-blue-500/80"
-                  : "hover:outline-red-500/80",
-              )}
-            >
-              <button
-                className={cn(
-                  "flex items-center gap-2 rounded-md",
-                  "px-2 py-1 h-full bg-slate-50",
-                  "cursor-pointer",
-                )}
-                onClick={() => setIsColorPaletteOpen((prev) => !prev)}
-              >
-                {newPlayer?.color ? (
-                  <span
-                    className="size-6 rounded-full"
-                    style={{ backgroundColor: newPlayer.color }}
-                  />
-                ) : (
-                  <CircleDashed className="size-6 text-gray-700" />
-                )}
-                <ChevronDown className="size-6 text-gray-700" />
-              </button>
-              {isColorPaletteOpen && (
-                <PlayerColorPalette
-                  tab={tab}
-                  newPlayer={newPlayer}
-                  setNewPlayer={setNewPlayer}
-                  setIsColorPaletteOpen={setIsColorPaletteOpen}
-                />
-              )}
-            </div>
+            <NewPlayerColorPicker
+              tab={tab}
+              newPlayer={newPlayer}
+              selectedColor={selectedColor}
+              setSelectedColor={setSelectedColor}
+            />
+
             <button
               disabled={!newPlayer.id || !newPlayer.name || !newPlayer.color}
               className={cn(
@@ -241,8 +223,8 @@ export const PlayerSelectionModal = ({
           <section className="flex gap-2 items-center">
             <input
               placeholder="Search player name"
-              value={filterValue}
-              onChange={(e) => setFilterValue(e.target.value)}
+              value={filterNameValue}
+              onChange={(e) => setFilterNameValue(e.target.value)}
               className={cn(
                 "outline-2 outline-slate-200 rounded-lg shadow-md",
                 "h-8 w-full px-2 bg-slate-50",
@@ -252,6 +234,11 @@ export const PlayerSelectionModal = ({
                   : "hover:outline-red-500/80",
                 "transition-all duration-200",
               )}
+            />
+            <FilterPlayerColorPicker
+              tab={tab}
+              filterColor={filterColor}
+              setSelectedColor={setFilterColor}
             />
           </section>
 
@@ -435,17 +422,121 @@ const PlayerItem = ({
   );
 };
 
+type NewPlayerColorPickerProps = {
+  tab: "1" | "2";
+  newPlayer?: BoothPlayerType;
+  selectedColor: string;
+  setSelectedColor: React.Dispatch<React.SetStateAction<string>>;
+};
+const NewPlayerColorPicker = ({
+  tab,
+  newPlayer,
+  selectedColor,
+  setSelectedColor,
+}: NewPlayerColorPickerProps) => {
+  const [isColorPaletteOpen, setIsColorPaletteOpen] = useState(false);
+
+  return (
+    <div
+      className={cn(
+        "relative outline-2 outline-slate-200 rounded-lg shadow-md",
+        tab === "1" ? "hover:outline-blue-500/80" : "hover:outline-red-500/80",
+      )}
+    >
+      <button
+        className={cn(
+          "flex items-center gap-2 rounded-md",
+          "px-2 py-1 h-full bg-slate-50",
+          "cursor-pointer",
+        )}
+        onClick={() => setIsColorPaletteOpen((prev) => !prev)}
+      >
+        {newPlayer?.color ? (
+          <span
+            className="size-6 rounded-full"
+            style={{ backgroundColor: newPlayer.color }}
+          />
+        ) : (
+          <CircleDashed className="size-6 text-gray-700" />
+        )}
+        <ChevronDown className="size-6 text-gray-700" />
+      </button>
+      {isColorPaletteOpen && (
+        <PlayerColorPalette
+          tab={tab}
+          selectedColor={selectedColor}
+          setSelectedColor={setSelectedColor}
+          setIsColorPaletteOpen={setIsColorPaletteOpen}
+          colorPalette={playerColorPalette}
+        />
+      )}
+    </div>
+  );
+};
+
+type FilterPlayerColorPickerProps = {
+  tab: "1" | "2";
+  filterColor: string;
+  setSelectedColor: React.Dispatch<React.SetStateAction<string>>;
+};
+const FilterPlayerColorPicker = ({
+  tab,
+  filterColor,
+  setSelectedColor,
+}: FilterPlayerColorPickerProps) => {
+  const [isColorPaletteOpen, setIsColorPaletteOpen] = useState(false);
+
+  return (
+    <div
+      className={cn(
+        "relative outline-2 outline-slate-200 rounded-lg shadow-md",
+        tab === "1" ? "hover:outline-blue-500/80" : "hover:outline-red-500/80",
+      )}
+    >
+      <button
+        className={cn(
+          "flex items-center gap-2 rounded-md",
+          "px-2 py-1 h-full bg-slate-50",
+          "cursor-pointer",
+        )}
+        onClick={() => setIsColorPaletteOpen((prev) => !prev)}
+      >
+        {filterColor !== "all" ? (
+          <span
+            className="size-6 rounded-full"
+            style={{ backgroundColor: filterColor }}
+          />
+        ) : (
+          <span>All</span>
+        )}
+        <ChevronDown className="size-6 text-gray-700" />
+      </button>
+      {isColorPaletteOpen && (
+        <PlayerColorPalette
+          tab={tab}
+          selectedColor={filterColor}
+          setSelectedColor={setSelectedColor}
+          setIsColorPaletteOpen={setIsColorPaletteOpen}
+          colorPalette={["all", ...playerColorPalette]}
+        />
+      )}
+    </div>
+  );
+};
+
 type PlayerColorPaletteProps = {
   tab: "1" | "2";
-  newPlayer: BoothPlayerType;
-  setNewPlayer: React.Dispatch<React.SetStateAction<BoothPlayerType>>;
+  selectedColor: string;
+  setSelectedColor: React.Dispatch<React.SetStateAction<string>>;
   setIsColorPaletteOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  colorPalette: string[];
 };
 const PlayerColorPalette = ({
   tab,
-  newPlayer,
-  setNewPlayer,
+  selectedColor,
+  setSelectedColor,
   setIsColorPaletteOpen,
+  colorPalette,
 }: PlayerColorPaletteProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -471,7 +562,7 @@ const PlayerColorPalette = ({
       )}
     >
       <div className={cn("flex flex-wrap justify-evenly gap-1")}>
-        {playerColorPalette.map((color) => (
+        {colorPalette.map((color) => (
           <button
             key={color}
             className={cn(
@@ -482,23 +573,27 @@ const PlayerColorPalette = ({
               tab === "2" && "hover:outline-red-500/80",
 
               tab === "1" &&
-                newPlayer.color === color &&
+                selectedColor === color &&
                 "bg-blue-300/80 outline-blue-500/80",
               tab === "2" &&
-                newPlayer.color === color &&
+                selectedColor === color &&
                 "bg-red-300/80 outline-red-500/80",
 
               "cursor-pointer hover:scale-110 active:scale-95",
               "transition-transform duration-200",
             )}
             onClick={() => {
-              setNewPlayer((prev) => ({ ...prev, color }));
+              setSelectedColor(color);
             }}
           >
-            <span
-              className="size-4 rounded-full"
-              style={{ backgroundColor: color }}
-            />
+            {color === "all" ? (
+              <span className="text-sm text-gray-700 mx-1">All</span>
+            ) : (
+              <span
+                className="size-4 rounded-full"
+                style={{ backgroundColor: color }}
+              />
+            )}
           </button>
         ))}
       </div>
