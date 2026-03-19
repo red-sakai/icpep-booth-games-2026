@@ -3,6 +3,7 @@ import { usePlayers } from "@/contexts/players-context";
 import { PlayerSelectionModal } from "./player-selection-modal";
 import { useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { AnimatePresence, motion } from "framer-motion";
 
 type PlayerSelectionButtonProps = {
   playerCount: 1 | 2;
@@ -23,9 +24,22 @@ export const PlayersSelection = ({
 
   return (
     <>
-      {isPlayerSelectionModalOpen && (
-        <PlayerSelectionModal playerCount={playerCount} />
-      )}
+      <AnimatePresence>
+        {isPlayerSelectionModalOpen && (
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            className={cn(
+              "fixed inset-0 z-20 flex flex-col gap-4",
+              "backdrop-blur-xs bg-white/20",
+              "flex items-center justify-center",
+            )}
+          >
+            <PlayerSelectionModal playerCount={playerCount} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="flex items-center justify-end gap-4">
         <PlayerName playerNumber={1} />

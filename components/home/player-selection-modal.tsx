@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import playerColorPalette from "@/data/player-color-pallete.json";
+import { motion, AnimatePresence } from "framer-motion";
 
 type PlayerSelectionModalProps = {
   playerCount: 1 | 2;
@@ -87,246 +88,240 @@ export const PlayerSelectionModal = ({
   };
 
   return (
-    <div
-      className={cn(
-        "fixed inset-0 z-20 flex flex-col gap-4",
-        "backdrop-blur-xs bg-white/20",
-        "flex items-center justify-center",
-      )}
+    <Card
+      className={cn("max-h-120 w-120 h-120 rounded-xl border-none shadow-md")}
     >
-      <Card
-        className={cn("max-h-120 w-120 h-120 rounded-xl border-none shadow-md")}
+      <div
+        className={cn(
+          "bg-gradient-to-r p-6 outline-2",
+          tab === "1"
+            ? "from-blue-100/80 to-blue-300/80 outline-blue-500/80"
+            : "from-red-100/80 to-red-300/80 outline-red-500/80",
+          "h-full flex flex-col gap-4 rounded-xl border-none",
+        )}
       >
-        <div
-          className={cn(
-            "bg-gradient-to-r p-6 outline-2",
-            tab === "1"
-              ? "from-blue-100/80 to-blue-300/80 outline-blue-500/80"
-              : "from-red-100/80 to-red-300/80 outline-red-500/80",
-            "h-full flex flex-col gap-4 rounded-xl border-none",
-          )}
-        >
-          <section>
-            <div
-              className={cn(
-                "flex items-center gap-4",
-                tab === "1" ? "text-blue-500" : "text-red-500",
+        <section>
+          <div
+            className={cn(
+              "flex items-center gap-4",
+              tab === "1" ? "text-blue-500" : "text-red-500",
+            )}
+          >
+            <h2 className="text-2xl font-bold">Choose/Create Player</h2>
+            <div className="flex items-center gap-2">
+              {tab === "2" && (
+                <button
+                  className={cn(
+                    "border border-red-500/80 rounded-md p-0.5",
+                    "bg-slate-50 shadow-sm hover:scale-110 active:scale-95",
+                    "transition-transform duration-200",
+                  )}
+                  onClick={() => setTab("1")}
+                >
+                  <ChevronLeft className="size-4" />
+                </button>
               )}
-            >
-              <h2 className="text-2xl font-bold">Choose/Create Player</h2>
-              <div className="flex items-center gap-2">
-                {tab === "2" && (
-                  <button
-                    className={cn(
-                      "border border-red-500/80 rounded-md p-0.5",
-                      "bg-slate-50 shadow-sm hover:scale-110 active:scale-95",
-                      "transition-transform duration-200",
-                    )}
-                    onClick={() => setTab("1")}
-                  >
-                    <ChevronLeft className="size-4" />
-                  </button>
-                )}
-                <div className="flex items-end gap-2">
+              <div className="flex items-end gap-2">
+                <span
+                  className={cn(
+                    tab === "1"
+                      ? "text-5xl font-bold bg-slate-50 px-3 py-0.5 rounded-md shadow-sm"
+                      : "text-xl font-semibold",
+                    "transition-all duration-300",
+                  )}
+                >
+                  1
+                </span>
+                {playerCount == 2 && (
                   <span
                     className={cn(
-                      tab === "1"
-                        ? "text-5xl font-bold bg-slate-50 px-3 py-0.5 rounded-md shadow-sm"
+                      tab === "2"
+                        ? "text-5xl font-bold bg-slate-50 px-2 py-0.5 rounded-md shadow-sm"
                         : "text-xl font-semibold",
                       "transition-all duration-300",
                     )}
                   >
-                    1
+                    2
                   </span>
-                  {playerCount == 2 && (
-                    <span
-                      className={cn(
-                        tab === "2"
-                          ? "text-5xl font-bold bg-slate-50 px-2 py-0.5 rounded-md shadow-sm"
-                          : "text-xl font-semibold",
-                        "transition-all duration-300",
-                      )}
-                    >
-                      2
-                    </span>
-                  )}
-                </div>
-                {playerCount == 2 && tab === "1" && (
-                  <button
-                    className={cn(
-                      "border border-blue-500/80 rounded-md p-0.5",
-                      "bg-slate-50 shadow-sm hover:scale-110 active:scale-95",
-                      "transition-transform duration-200",
-                    )}
-                    onClick={() => setTab("2")}
-                  >
-                    <ChevronRight className="size-4" />
-                  </button>
                 )}
               </div>
-            </div>
-
-            <p className="text-base text-gray-700">
-              Select an existing player or create a new one to start playing!
-            </p>
-          </section>
-
-          <section className="flex gap-2 items-center">
-            <input
-              placeholder="Enter new name"
-              value={newPlayer.name}
-              onChange={handleNewNameChange}
-              className={cn(
-                "outline-2 outline-slate-200 rounded-md shadow-md",
-                "h-8 w-full px-2 bg-slate-50",
-                "text-gray-700 text-base",
-                tab === "1"
-                  ? "hover:outline-blue-500/80"
-                  : "hover:outline-red-500/80",
-                "transition-all duration-200",
-              )}
-            />
-            <NewPlayerColorPicker
-              tab={tab}
-              newPlayer={newPlayer}
-              selectedColor={selectedColor}
-              setSelectedColor={setSelectedColor}
-            />
-
-            <button
-              disabled={!newPlayer.id || !newPlayer.name || !newPlayer.color}
-              className={cn(
-                "px-2 py-1 rounded-md shadow-md",
-                newPlayer.id && newPlayer.name && newPlayer.color
-                  ? "bg-emerald-400 cursor-pointer hover:scale-110 active:scale-95"
-                  : "bg-gray-400/80 cursor-not-allowed",
-                "text-base text-slate-50",
-                "transition-transform duration-200",
-              )}
-              onClick={handleSaveNewPlayer}
-            >
-              <Check className="size-6" />
-            </button>
-            <button
-              className={cn(
-                "px-2 py-1 rounded-md shadow-md",
-                "bg-destructive cursor-pointer hover:scale-110 active:scale-95",
-                "text-base text-slate-50",
-                "transition-transform duration-200",
-              )}
-              onClick={handleCancelNewPlayer}
-            >
-              <X className="size-6" />
-            </button>
-          </section>
-
-          <section className="flex gap-2 items-center">
-            <input
-              placeholder="Search player name"
-              value={filterNameValue}
-              onChange={(e) => setFilterNameValue(e.target.value)}
-              className={cn(
-                "outline-2 outline-slate-200 rounded-lg shadow-md",
-                "h-8 w-full px-2 bg-slate-50",
-                "text-gray-700 text-base",
-                tab === "1"
-                  ? "hover:outline-blue-500/80"
-                  : "hover:outline-red-500/80",
-                "transition-all duration-200",
-              )}
-            />
-            <FilterPlayerColorPicker
-              tab={tab}
-              filterColor={filterColor}
-              setSelectedColor={setFilterColor}
-            />
-          </section>
-
-          <section className="flex gap-2 items-center justify-start">
-            <div className={cn("flex items-center gap-4", "mt-auto")}>
-              <span className="text-gray-500 text-base">Player 1: </span>
-              <div className="flex items-center gap-2 bg-slate-50 px-3 py-0.5 rounded-md shadow-md">
-                <span
+              {playerCount == 2 && tab === "1" && (
+                <button
                   className={cn(
-                    "text-sm font-medium",
-                    selectedPlayers.player1
-                      ? "text-blue-500/80"
-                      : "text-gray-500/80",
+                    "border border-blue-500/80 rounded-md p-0.5",
+                    "bg-slate-50 shadow-sm hover:scale-110 active:scale-95",
+                    "transition-transform duration-200",
                   )}
+                  onClick={() => setTab("2")}
                 >
-                  {selectedPlayers.player1
-                    ? selectedPlayers.player1.name
-                    : "None"}
-                </span>
-              </div>
+                  <ChevronRight className="size-4" />
+                </button>
+              )}
             </div>
-            <div className={cn("flex items-center gap-4", "mt-auto")}>
-              <span className="text-gray-500 text-base">Player 2: </span>
-              <div className="flex items-center gap-2 bg-slate-50 px-3 py-0.5 rounded-md shadow-md">
-                <span
-                  className={cn(
-                    "text-sm font-medium",
-                    selectedPlayers.player2
-                      ? "text-red-500/80"
-                      : "text-gray-500/80",
-                  )}
-                >
-                  {selectedPlayers.player2
-                    ? selectedPlayers.player2.name
-                    : "None"}
-                </span>
-              </div>
-            </div>
-          </section>
+          </div>
 
-          <section
+          <p className="text-base text-gray-700">
+            Select an existing player or create a new one to start playing!
+          </p>
+        </section>
+
+        <section className="flex gap-2 items-center">
+          <input
+            placeholder="Enter new name"
+            value={newPlayer.name}
+            onChange={handleNewNameChange}
             className={cn(
-              "h-full w-full min-h-0 p-1 pb-3 bg-slate-50",
-              "outline outline-slate-200 rounded-lg",
-              "shadow-[inset_4px_0_4px_-4px_rgba(0,0,0,0.1),inset_0_4px_8px_-4px_rgba(0,0,0,0.1)]",
+              "outline-2 outline-slate-200 rounded-md shadow-md",
+              "h-8 w-full px-2 bg-slate-50",
+              "text-gray-700 text-base",
+              tab === "1"
+                ? "hover:outline-blue-500/80"
+                : "hover:outline-red-500/80",
+              "transition-all duration-200",
             )}
-          >
-            <div className={cn("h-full w-full p-2", "overflow-y-auto")}>
-              <div className="h-full flex flex-col gap-2">
-                {filteredPlayers.reverse().map((player) =>
-                  PlayerItem({
-                    player,
-                    selectedPlayers,
-                    setSelectedPlayers,
-                    tab,
-                  }),
-                )}
-              </div>
-            </div>
-          </section>
+          />
+          <NewPlayerColorPicker
+            tab={tab}
+            newPlayer={newPlayer}
+            selectedColor={selectedColor}
+            setSelectedColor={setSelectedColor}
+          />
 
-          <section className="w-full flex items-center justify-end gap-2 mt-auto">
-            <button
-              className={cn(
-                "bg-destructive px-2 py-1",
-                "rounded-md shadow-md",
-                "cursor-pointer hover:scale-110 active:scale-95",
-                "transition-transform duration-200",
-              )}
-              onClick={() => setIsPlayerSelectionModalOpen(false)}
-            >
-              <span className="text-base text-slate-50">Cancel</span>
-            </button>
-            <button
-              className={cn(
-                "bg-emerald-400 px-2 py-1",
-                "rounded-md shadow-md",
-                "cursor-pointer hover:scale-110 active:scale-95",
-                "transition-transform duration-200",
-              )}
-              onClick={handleConfirm}
-            >
-              <span className="text-base text-slate-50">Confirm</span>
-            </button>
-          </section>
-        </div>
-      </Card>
-    </div>
+          <button
+            disabled={!newPlayer.id || !newPlayer.name || !newPlayer.color}
+            className={cn(
+              "px-2 py-1 rounded-md shadow-md",
+              newPlayer.id && newPlayer.name && newPlayer.color
+                ? "bg-emerald-400 cursor-pointer hover:scale-110 active:scale-95"
+                : "bg-gray-400/80 cursor-not-allowed",
+              "text-base text-slate-50",
+              "transition-transform duration-200",
+            )}
+            onClick={handleSaveNewPlayer}
+          >
+            <Check className="size-6" />
+          </button>
+          <button
+            className={cn(
+              "px-2 py-1 rounded-md shadow-md",
+              "bg-destructive cursor-pointer hover:scale-110 active:scale-95",
+              "text-base text-slate-50",
+              "transition-transform duration-200",
+            )}
+            onClick={handleCancelNewPlayer}
+          >
+            <X className="size-6" />
+          </button>
+        </section>
+
+        <section className="flex gap-2 items-center">
+          <input
+            placeholder="Search player name"
+            value={filterNameValue}
+            onChange={(e) => setFilterNameValue(e.target.value)}
+            className={cn(
+              "outline-2 outline-slate-200 rounded-lg shadow-md",
+              "h-8 w-full px-2 bg-slate-50",
+              "text-gray-700 text-base",
+              tab === "1"
+                ? "hover:outline-blue-500/80"
+                : "hover:outline-red-500/80",
+              "transition-all duration-200",
+            )}
+          />
+          <FilterPlayerColorPicker
+            tab={tab}
+            filterColor={filterColor}
+            setSelectedColor={setFilterColor}
+          />
+        </section>
+
+        <section className="flex gap-2 items-center justify-start">
+          <div className={cn("flex items-center gap-4", "mt-auto")}>
+            <span className="text-gray-500 text-base">Player 1: </span>
+            <div className="flex items-center gap-2 bg-slate-50 px-3 py-0.5 rounded-md shadow-md">
+              <span
+                className={cn(
+                  "text-sm font-medium",
+                  selectedPlayers.player1
+                    ? "text-blue-500/80"
+                    : "text-gray-500/80",
+                )}
+              >
+                {selectedPlayers.player1
+                  ? selectedPlayers.player1.name
+                  : "None"}
+              </span>
+            </div>
+          </div>
+          <div className={cn("flex items-center gap-4", "mt-auto")}>
+            <span className="text-gray-500 text-base">Player 2: </span>
+            <div className="flex items-center gap-2 bg-slate-50 px-3 py-0.5 rounded-md shadow-md">
+              <span
+                className={cn(
+                  "text-sm font-medium",
+                  selectedPlayers.player2
+                    ? "text-red-500/80"
+                    : "text-gray-500/80",
+                )}
+              >
+                {selectedPlayers.player2
+                  ? selectedPlayers.player2.name
+                  : "None"}
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <section
+          className={cn(
+            "h-full w-full min-h-0 p-1 pb-3 bg-slate-50",
+            "outline outline-slate-200 rounded-lg",
+            "shadow-[inset_4px_0_4px_-4px_rgba(0,0,0,0.1),inset_0_4px_8px_-4px_rgba(0,0,0,0.1)]",
+          )}
+        >
+          <div className={cn("h-full w-full p-2", "overflow-y-auto")}>
+            <div className="h-full flex flex-col gap-2">
+              {filteredPlayers.reverse().map((player) => (
+                <AnimatePresence key={player.id}>
+                  <PlayerItem
+                    player={player}
+                    selectedPlayers={selectedPlayers}
+                    setSelectedPlayers={setSelectedPlayers}
+                    tab={tab}
+                  />
+                </AnimatePresence>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="w-full flex items-center justify-end gap-2 mt-auto">
+          <button
+            className={cn(
+              "bg-destructive px-2 py-1",
+              "rounded-md shadow-md",
+              "cursor-pointer hover:scale-110 active:scale-95",
+              "transition-transform duration-200",
+            )}
+            onClick={() => setIsPlayerSelectionModalOpen(false)}
+          >
+            <span className="text-base text-slate-50">Cancel</span>
+          </button>
+          <button
+            className={cn(
+              "bg-emerald-400 px-2 py-1",
+              "rounded-md shadow-md",
+              "cursor-pointer hover:scale-110 active:scale-95",
+              "transition-transform duration-200",
+            )}
+            onClick={handleConfirm}
+          >
+            <span className="text-base text-slate-50">Confirm</span>
+          </button>
+        </section>
+      </div>
+    </Card>
   );
 };
 
@@ -369,7 +364,7 @@ const PlayerItem = ({
   };
 
   return (
-    <button
+    <motion.button
       key={player.id}
       className={cn(
         "py-1 px-4 flex gap-4",
@@ -393,6 +388,9 @@ const PlayerItem = ({
 
         "transition-all duration-200",
       )}
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0 }}
       onClick={handlePlayerSelect}
     >
       <span
@@ -418,7 +416,7 @@ const PlayerItem = ({
           )}
         />
       )}
-    </button>
+    </motion.button>
   );
 };
 
@@ -461,15 +459,17 @@ const NewPlayerColorPicker = ({
         )}
         <ChevronDown className="size-6 text-gray-700" />
       </button>
-      {isColorPaletteOpen && (
-        <PlayerColorPalette
-          tab={tab}
-          selectedColor={selectedColor}
-          setSelectedColor={setSelectedColor}
-          setIsColorPaletteOpen={setIsColorPaletteOpen}
-          colorPalette={playerColorPalette}
-        />
-      )}
+      <AnimatePresence>
+        {isColorPaletteOpen && (
+          <PlayerColorPalette
+            tab={tab}
+            selectedColor={selectedColor}
+            setSelectedColor={setSelectedColor}
+            setIsColorPaletteOpen={setIsColorPaletteOpen}
+            colorPalette={playerColorPalette}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -499,7 +499,7 @@ const FilterPlayerColorPicker = ({
           "px-2 py-1 h-full bg-slate-50",
           "cursor-pointer",
         )}
-        onClick={() => setIsColorPaletteOpen((prev) => !prev)}
+        onClick={() => !isColorPaletteOpen && setIsColorPaletteOpen(true)}
       >
         {filterColor !== "all" ? (
           <span
@@ -511,15 +511,17 @@ const FilterPlayerColorPicker = ({
         )}
         <ChevronDown className="size-6 text-gray-700" />
       </button>
-      {isColorPaletteOpen && (
-        <PlayerColorPalette
-          tab={tab}
-          selectedColor={filterColor}
-          setSelectedColor={setSelectedColor}
-          setIsColorPaletteOpen={setIsColorPaletteOpen}
-          colorPalette={["all", ...playerColorPalette]}
-        />
-      )}
+      <AnimatePresence>
+        {isColorPaletteOpen && (
+          <PlayerColorPalette
+            tab={tab}
+            selectedColor={filterColor}
+            setSelectedColor={setSelectedColor}
+            setIsColorPaletteOpen={setIsColorPaletteOpen}
+            colorPalette={["all", ...playerColorPalette]}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -553,13 +555,16 @@ const PlayerColorPalette = ({
   }, [setIsColorPaletteOpen]);
 
   return (
-    <div
+    <motion.div
       ref={ref}
       className={cn(
         "absolute z-20 right-0 top-full mt-2",
         "w-70 max-h-60 flex flex-col gap-2 p-2",
         "bg-slate-50 rounded-md shadow-lg outline outline-slate-200",
       )}
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0 }}
     >
       <div className={cn("flex flex-wrap justify-evenly gap-1")}>
         {colorPalette.map((color) => (
@@ -587,7 +592,7 @@ const PlayerColorPalette = ({
             }}
           >
             {color === "all" ? (
-              <span className="text-sm text-gray-700 mx-1">All</span>
+              <span className="text-xs text-gray-700">All</span>
             ) : (
               <span
                 className="size-4 rounded-full"
@@ -597,6 +602,6 @@ const PlayerColorPalette = ({
           </button>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 };
