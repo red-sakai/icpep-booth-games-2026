@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { usePlayers } from "@/contexts/players-context";
 import { Card } from "../ui/card";
 import {
-  Plus,
   CheckCircle,
   Circle,
   ChevronLeft,
@@ -15,7 +14,7 @@ import {
   Check,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import playerColorPalette from "@/data/player-color-pallete.json";
 
 type PlayerSelectionModalProps = {
@@ -37,7 +36,6 @@ export const PlayerSelectionModal = ({
     player2: BoothPlayerType | null;
   }>(currentPlayers);
   const [tab, setTab] = useState<"1" | "2">("1");
-  const [isCreateEnabled, setIsCreateEnabled] = useState(false);
   const [newPlayer, setNewPlayer] = useState<BoothPlayerType>({
     id: "",
     name: "",
@@ -60,14 +58,9 @@ export const PlayerSelectionModal = ({
 
   const handleSaveNewPlayer = () => {
     if (!newPlayer?.id || !newPlayer?.name || !newPlayer?.color) return;
-    if (
-      players.some(
-        (player) =>
-          player.name === newPlayer.name && player.color === newPlayer.color,
-      )
-    ) {
+    if (players.some((player) => player.name === newPlayer.name)) {
       alert(
-        "A player with the same name and color already exists. Please choose a different name or color.",
+        "A player with the same name already exists. Please choose a different name.",
       );
       return;
     }
@@ -76,7 +69,6 @@ export const PlayerSelectionModal = ({
   };
   const handleCancelNewPlayer = () => {
     setNewPlayer({ id: "", name: "", color: "" });
-    setIsCreateEnabled(false);
   };
 
   const handleConfirm = () => {
@@ -117,11 +109,12 @@ export const PlayerSelectionModal = ({
                   <button
                     className={cn(
                       "border border-red-500/80 rounded-md p-0.5",
-                      "hover:bg-slate-50 shadow-sm",
+                      "bg-slate-50 shadow-sm hover:scale-110 active:scale-95",
+                      "transition-transform duration-200",
                     )}
                     onClick={() => setTab("1")}
                   >
-                    <ChevronLeft className="size-6" />
+                    <ChevronLeft className="size-4" />
                   </button>
                 )}
                 <div className="flex items-end gap-2">
@@ -152,11 +145,12 @@ export const PlayerSelectionModal = ({
                   <button
                     className={cn(
                       "border border-blue-500/80 rounded-md p-0.5",
-                      "hover:bg-slate-50 shadow-sm",
+                      "bg-slate-50 shadow-sm hover:scale-110 active:scale-95",
+                      "transition-transform duration-200",
                     )}
                     onClick={() => setTab("2")}
                   >
-                    <ChevronRight className="size-6" />
+                    <ChevronRight className="size-4" />
                   </button>
                 )}
               </div>
@@ -165,6 +159,83 @@ export const PlayerSelectionModal = ({
             <p className="text-base text-gray-700">
               Select an existing player or create a new one to start playing!
             </p>
+          </section>
+
+          <section className="flex gap-2 items-center">
+            <input
+              placeholder="Enter new name"
+              value={newPlayer.name}
+              onChange={handleNewNameChange}
+              className={cn(
+                "outline-2 outline-slate-200 rounded-md shadow-md",
+                "h-8 w-full px-2 bg-slate-50",
+                "text-gray-700 text-base",
+                tab === "1"
+                  ? "hover:outline-blue-500/80"
+                  : "hover:outline-red-500/80",
+                "transition-all duration-200",
+              )}
+            />
+            <div
+              className={cn(
+                "relative outline-2 outline-slate-200 rounded-lg shadow-md",
+                tab === "1"
+                  ? "hover:outline-blue-500/80"
+                  : "hover:outline-red-500/80",
+              )}
+            >
+              <button
+                className={cn(
+                  "flex items-center gap-2 rounded-md",
+                  "px-2 py-1 h-full bg-slate-50",
+                  "cursor-pointer",
+                )}
+                onClick={() => setIsColorPaletteOpen((prev) => !prev)}
+              >
+                {newPlayer?.color ? (
+                  <span
+                    className="size-6 rounded-full"
+                    style={{ backgroundColor: newPlayer.color }}
+                  />
+                ) : (
+                  <CircleDashed className="size-6 text-gray-700" />
+                )}
+                <ChevronDown className="size-6 text-gray-700" />
+              </button>
+              {isColorPaletteOpen && (
+                <PlayerColorPalette
+                  tab={tab}
+                  newPlayer={newPlayer}
+                  setNewPlayer={setNewPlayer}
+                  setIsColorPaletteOpen={setIsColorPaletteOpen}
+                />
+              )}
+            </div>
+            <button
+              disabled={!newPlayer.id || !newPlayer.name || !newPlayer.color}
+              className={cn(
+                "px-2 py-1 rounded-md shadow-md",
+                newPlayer.id && newPlayer.name && newPlayer.color
+                  ? "bg-emerald-400 cursor-pointer hover:scale-110 active:scale-95"
+                  : "bg-gray-400/80 cursor-not-allowed",
+                "text-base text-slate-50",
+                "transition-transform duration-200",
+              )}
+              onClick={handleSaveNewPlayer}
+            >
+              <Check className="size-6" />
+            </button>
+            <button
+              className={cn(
+                "px-2 py-1 rounded-md shadow-md",
+                "bg-destructive cursor-pointer hover:scale-110 active:scale-95",
+                "text-base text-slate-50",
+                "transition-transform duration-200",
+              )}
+              onClick={handleCancelNewPlayer}
+            >
+              <X className="size-6" />
+            </button>
           </section>
 
           <section className="flex gap-2 items-center">
@@ -182,102 +253,7 @@ export const PlayerSelectionModal = ({
                 "transition-all duration-200",
               )}
             />
-            <div>
-              <button
-                className={cn(
-                  "outline-2 outline-slate-200 rounded-lg shadow-md",
-                  "size-8 bg-slate-50",
-                  "flex items-center justify-center",
-                  "cursor-pointer active:scale-90 transition-transform",
-                  "hover:scale-110",
-                  tab === "1"
-                    ? "hover:outline-blue-500/80"
-                    : "hover:outline-red-500/80",
-                )}
-                onClick={() => setIsCreateEnabled((prev) => !prev)}
-              >
-                <Plus className="size-6 text-gray-700" />
-              </button>
-            </div>
           </section>
-
-          {isCreateEnabled && (
-            <section className="flex gap-2 items-center">
-              <input
-                placeholder="Enter new name"
-                value={newPlayer.name}
-                onChange={handleNewNameChange}
-                className={cn(
-                  "outline-2 outline-slate-200 rounded-md shadow-md",
-                  "h-8 w-full px-2 bg-slate-50",
-                  "text-gray-700 text-base",
-                  tab === "1"
-                    ? "hover:outline-blue-500/80"
-                    : "hover:outline-red-500/80",
-                  "transition-all duration-200",
-                )}
-              />
-              <div
-                className={cn(
-                  "relative outline-2 outline-slate-200 rounded-lg shadow-md",
-                )}
-              >
-                <button
-                  className={cn(
-                    "flex items-center gap-2 rounded-md",
-                    "px-2 py-1 h-full bg-slate-50",
-                    tab === "1"
-                      ? "hover:outline-blue-500/80"
-                      : "hover:outline-red-500/80",
-                    "cursor-pointer",
-                  )}
-                  onClick={() => setIsColorPaletteOpen((prev) => !prev)}
-                >
-                  {newPlayer?.color ? (
-                    <span
-                      className="size-6 rounded-full"
-                      style={{ backgroundColor: newPlayer.color }}
-                    />
-                  ) : (
-                    <CircleDashed className="size-6 text-gray-700" />
-                  )}
-                  <ChevronDown className="size-6 text-gray-700" />
-                </button>
-                {isColorPaletteOpen && (
-                  <PlayerColorPalette
-                    tab={tab}
-                    newPlayer={newPlayer}
-                    setNewPlayer={setNewPlayer}
-                  />
-                )}
-              </div>
-              <button
-                disabled={!newPlayer.id || !newPlayer.name || !newPlayer.color}
-                className={cn(
-                  "px-2 py-1 rounded-md shadow-md",
-                  newPlayer.id && newPlayer.name && newPlayer.color
-                    ? "bg-emerald-400 cursor-pointer hover:scale-110 active:scale-95"
-                    : "bg-gray-400/80 cursor-not-allowed",
-                  "text-base text-slate-50",
-                  "transition-transform duration-200",
-                )}
-                onClick={handleSaveNewPlayer}
-              >
-                <Check className="size-6" />
-              </button>
-              <button
-                className={cn(
-                  "px-2 py-1 rounded-md shadow-md",
-                  "bg-destructive cursor-pointer hover:scale-110 active:scale-95",
-                  "text-base text-slate-50",
-                  "transition-transform duration-200",
-                )}
-                onClick={handleCancelNewPlayer}
-              >
-                <X className="size-6" />
-              </button>
-            </section>
-          )}
 
           <section className="flex gap-2 items-center justify-start">
             <div className={cn("flex items-center gap-4", "mt-auto")}>
@@ -463,14 +439,31 @@ type PlayerColorPaletteProps = {
   tab: "1" | "2";
   newPlayer: BoothPlayerType;
   setNewPlayer: React.Dispatch<React.SetStateAction<BoothPlayerType>>;
+  setIsColorPaletteOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const PlayerColorPalette = ({
   tab,
   newPlayer,
   setNewPlayer,
+  setIsColorPaletteOpen,
 }: PlayerColorPaletteProps) => {
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setIsColorPaletteOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setIsColorPaletteOpen]);
+
   return (
     <div
+      ref={ref}
       className={cn(
         "absolute z-20 right-0 top-full mt-2",
         "w-70 max-h-60 flex flex-col gap-2 p-2",
@@ -484,12 +477,17 @@ const PlayerColorPalette = ({
             className={cn(
               "px-2 py-2 rounded-md shadow-md bg-slate-50 outline outline-slate-200",
               "flex items-center justify-center",
+
+              tab === "1" && "hover:outline-blue-500/80",
+              tab === "2" && "hover:outline-red-500/80",
+
               tab === "1" &&
                 newPlayer.color === color &&
                 "bg-blue-300/80 outline-blue-500/80",
               tab === "2" &&
                 newPlayer.color === color &&
                 "bg-red-300/80 outline-red-500/80",
+
               "cursor-pointer hover:scale-110 active:scale-95",
               "transition-transform duration-200",
             )}

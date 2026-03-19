@@ -33,8 +33,9 @@ export const PlayersSelection = ({
 
         <button
           className={cn(
-            "bg-slate-50 p-1 rounded-lg shadow-sm hover:bg-blue-100 transition-colors",
-            "cursor-pointer",
+            "p-1 rounded-lg bg-blue-100 shadow-md",
+            "cursor-pointer hover:scale-105 active:scale-95",
+            "transition-all duration-200",
           )}
           onClick={() => setIsPlayerSelectionModalOpen(true)}
         >
