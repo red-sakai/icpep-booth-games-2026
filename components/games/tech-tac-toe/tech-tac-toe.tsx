@@ -16,7 +16,7 @@ export default function TechTacToe() {
   const [currentPlayer, setCurrentPlayer] = useState<BoothPlayerType | null>(
     null,
   );
-  const [winnerPlayer, setWinnerName] = useState<
+  const [winnerPlayer, setWinnerPlayer] = useState<
     BoothPlayerType | "draw" | null
   >(null);
   const [winningPattern, setWinningPattern] = useState<number[] | null>(null);
@@ -40,9 +40,9 @@ export default function TechTacToe() {
     if (board[index] || winnerPlayer) return;
 
     const newBoard = [...board];
-    if (currentPlayers?.player1 === currentPlayer) {
+    if (currentPlayers?.player1.name === currentPlayer?.name) {
       newBoard[index] = "1";
-    } else if (currentPlayers?.player2 === currentPlayer) {
+    } else if (currentPlayers?.player2.name === currentPlayer?.name) {
       newBoard[index] = "0";
     }
     setBoard(newBoard);
@@ -51,11 +51,11 @@ export default function TechTacToe() {
 
     if (newWinner) {
       if (newWinner === "1") {
-        setWinnerName(currentPlayers?.player1);
+        setWinnerPlayer(currentPlayers?.player1);
       } else if (newWinner === "0") {
-        setWinnerName(currentPlayers?.player2);
+        setWinnerPlayer(currentPlayers?.player2);
       } else {
-        setWinnerName("draw");
+        setWinnerPlayer("draw");
       }
       setWinningPattern(pattern);
 
@@ -87,7 +87,7 @@ export default function TechTacToe() {
   const resetGame = () => {
     setBoard(Array(9).fill(null));
     setCurrentPlayer(currentPlayers?.player1 || null);
-    setWinnerName(null);
+    setWinnerPlayer(null);
     setWinningPattern(null);
   };
 

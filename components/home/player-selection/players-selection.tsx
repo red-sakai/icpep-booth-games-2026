@@ -1,9 +1,9 @@
 import { Edit } from "lucide-react";
 import { usePlayers } from "@/contexts/players-context";
-import { PlayerSelectionModal } from "./player-selection-modal";
 import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
+import { PlayerSelectionModal } from "./player-selection-modal";
 
 type PlayerSelectionButtonProps = {
   playerCount: 1 | 2;
