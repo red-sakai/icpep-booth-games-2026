@@ -11,6 +11,7 @@ import StandardSelection from "@/components/games/rj45/standard-selection";
 import WirePattern from "@/components/games/rj45/wire-pattern";
 import WireArrangement from "@/components/games/rj45/wire-arrangement";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import LeaderboardPanel from "@/components/games/leaderboard/leaderboard-panel";
 
 export default function RJ45Game() {
   const [gameState, setGameState] = useState<RJ45GameState>("select");
@@ -185,6 +186,8 @@ export default function RJ45Game() {
           />
         )}
       </div>
+
+      <LeaderboardPanel gameId="rj45-game" />
 
       {(gameState === "success" || gameState === "failure") && (
         <Button

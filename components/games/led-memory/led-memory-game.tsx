@@ -8,6 +8,7 @@ import type { GameState, LED } from "@/lib/types";
 import { generateFullSequence } from "@/lib/game-utils/led-memory-utils";
 import GameHeader from "@/components/games/led-memory/game-header";
 import LEDGrid from "@/components/games/led-memory/led-grid";
+import LeaderboardPanel from "@/components/games/leaderboard/leaderboard-panel";
 
 export default function LEDMemoryGame() {
   const [gameState, setGameState] = useState<GameState>("idle");
@@ -187,6 +188,8 @@ export default function LEDMemoryGame() {
         gameState={gameState}
         handleLEDClick={handleLEDClick}
       />
+
+      <LeaderboardPanel gameId="led-memory" />
 
       <div className="flex space-x-4">
         <Button

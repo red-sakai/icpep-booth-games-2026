@@ -8,6 +8,7 @@ import type { Player, BoardState } from "@/lib/types";
 import { checkWinner } from "@/lib/game-utils/tech-tac-toe-utils";
 import GameHeader from "@/components/games/tech-tac-toe/game-header";
 import GameBoard from "@/components/games/tech-tac-toe/game-board";
+import LeaderboardPanel from "@/components/games/leaderboard/leaderboard-panel";
 
 export default function TechTacToe() {
   const [board, setBoard] = useState<BoardState>(Array(9).fill(null));
@@ -66,6 +67,8 @@ export default function TechTacToe() {
         winningPattern={winningPattern}
         handleCellClick={handleCellClick}
       />
+
+      <LeaderboardPanel gameId="tech-tac-toe" />
 
       <Button
         onClick={resetGame}
