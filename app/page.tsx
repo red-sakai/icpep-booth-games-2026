@@ -20,7 +20,7 @@ import BackToHomeButton from "@/components/home/back-to-home-button";
 // Types
 import { GameType } from "@/lib/types";
 import { PlayersProvider } from "@/contexts/players-context";
-import { PlayersSelection } from "@/components/home/players-selection";
+import { PlayersSelection } from "@/components/home/player-selection/players-selection";
 
 export default function GameHub() {
   const [currentGame, setCurrentGame] = useState<GameType>("home");
