@@ -25,14 +25,14 @@ export default function GameCards({ navigateTo }: GameCardsProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <Card className="overflow-hidden border-2 border-amber-200 shadow-md h-full">
-          <div className="bg-gradient-to-r from-amber-100 to-rose-100 p-6 h-full flex flex-col">
+        <Card className="overflow-hidden border-2 border-rose-400 shadow-lg h-full">
+          <div className="p-6 h-full flex flex-col bg-gradient-to-b from-rose-200 via-rose-100 to-white">
             <div className="flex justify-center mb-4">
-              <div className="bg-white p-4 rounded-full shadow-md">
-                <Lightbulb size={48} className="text-amber-500" />
+              <div className="bg-white p-4 rounded-2xl shadow-sm">
+                <Lightbulb size={48} className="text-rose-500" />
               </div>
             </div>
-            <h2 className="text-2xl font-bold text-amber-600 text-center mb-2">
+            <h2 className="text-lg font-bold text-rose-600 text-center mb-2">
               Memory Heist: Guess the Pattern of Lights
             </h2>
             <p className="text-slate-600 text-center mb-6 flex-grow">
@@ -41,7 +41,7 @@ export default function GameCards({ navigateTo }: GameCardsProps) {
             </p>
             <Button
               onClick={() => navigateTo("led-memory")}
-              className="w-full bg-amber-500 hover:bg-amber-600 text-white shadow-sm"
+              className="w-full bg-rose-500 hover:bg-rose-600 text-white rounded-xl shadow-none font-semibold"
             >
               Play LED Memory
             </Button>
@@ -61,14 +61,14 @@ export default function GameCards({ navigateTo }: GameCardsProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <Card className="overflow-hidden border-2 border-sky-200 shadow-md h-full">
-          <div className="bg-gradient-to-r from-sky-100 to-indigo-100 p-6 h-full flex flex-col">
+        <Card className="overflow-hidden border-2 border-pink-400 shadow-lg h-full">
+          <div className="p-6 h-full flex flex-col bg-gradient-to-b from-pink-200 via-pink-100 to-white">
             <div className="flex justify-center mb-4">
-              <div className="bg-white p-4 rounded-full shadow-md">
-                <Grid3X3 size={48} className="text-sky-600" />
+              <div className="bg-white p-4 rounded-2xl shadow-sm">
+                <Grid3X3 size={48} className="text-pink-500" />
               </div>
             </div>
-            <h2 className="text-2xl font-bold text-sky-700 text-center mb-2">
+            <h2 className="text-2xl font-bold text-pink-600 text-center mb-2">
               Tech Tac Toe
             </h2>
             <p className="text-slate-600 text-center mb-6 flex-grow">
@@ -77,7 +77,7 @@ export default function GameCards({ navigateTo }: GameCardsProps) {
             </p>
             <Button
               onClick={() => navigateTo("tech-tac-toe")}
-              className="w-full bg-sky-600 hover:bg-sky-700 text-white shadow-sm"
+              className="w-full bg-pink-500 hover:bg-pink-600 text-white rounded-xl shadow-none font-semibold"
             >
               Play Tech Tac Toe
             </Button>
@@ -97,14 +97,14 @@ export default function GameCards({ navigateTo }: GameCardsProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <Card className="overflow-hidden border-2 border-cyan-200 shadow-md h-full">
-          <div className="bg-gradient-to-r from-cyan-100 to-blue-100 p-6 h-full flex flex-col">
+        <Card className="overflow-hidden border-2 border-purple-400 shadow-lg h-full">
+          <div className="p-6 h-full flex flex-col bg-gradient-to-b from-purple-200 via-purple-100 to-white">
             <div className="flex justify-center mb-4">
-              <div className="bg-white p-4 rounded-full shadow-md">
-                <Cable size={48} className="text-cyan-600" />
+              <div className="bg-white p-4 rounded-2xl shadow-sm">
+                <Cable size={48} className="text-purple-500" />
               </div>
             </div>
-            <h2 className="text-2xl font-bold text-cyan-700 text-center mb-2">
+            <h2 className="text-lg font-bold text-purple-600 text-center mb-2">
               Connect Me Not: Ethernet Color Coding Game
             </h2>
             <p className="text-slate-600 text-center mb-6 flex-grow">
@@ -113,7 +113,7 @@ export default function GameCards({ navigateTo }: GameCardsProps) {
             </p>
             <Button
               onClick={() => navigateTo("rj45-game")}
-              className="w-full bg-cyan-600 hover:bg-cyan-700 text-white shadow-sm"
+              className="w-full bg-purple-500 hover:bg-purple-600 text-white rounded-xl shadow-none font-semibold"
             >
               Play RJ45 Game
             </Button>
