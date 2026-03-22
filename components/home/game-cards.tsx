@@ -190,7 +190,7 @@ export default function GameCards({ navigateTo }: GameCardsProps) {
             <LeaderboardPanel
               gameId={leaderboardGame}
               limit={9999}
-              className="w-full max-w-none bg-white/80 backdrop-blur-sm border-slate-200"
+              className="w-full max-w-none"
             />
           )}
         </DialogContent>

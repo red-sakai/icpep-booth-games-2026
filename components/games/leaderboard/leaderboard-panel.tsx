@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 type LeaderboardEntry = {
   name: string;
@@ -34,6 +35,35 @@ export default function LeaderboardPanel({
   className,
   entriesClassName,
 }: LeaderboardPanelProps) {
+  const theme = useMemo(() => {
+    switch (gameId) {
+      case "led-memory":
+        return {
+          card: "bg-amber-50/80 border-amber-200",
+          title: "text-amber-800",
+          metric: "text-amber-700",
+        };
+      case "tech-tac-toe":
+        return {
+          card: "bg-sky-50/80 border-sky-200",
+          title: "text-sky-800",
+          metric: "text-sky-700",
+        };
+      case "rj45-game":
+        return {
+          card: "bg-cyan-50/80 border-cyan-200",
+          title: "text-cyan-800",
+          metric: "text-cyan-700",
+        };
+      default:
+        return {
+          card: "bg-white/80 border-slate-200",
+          title: "text-slate-800",
+          metric: "text-slate-500",
+        };
+    }
+  }, [gameId]);
+
   const [data, setData] = useState<LeaderboardFile | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -89,18 +119,19 @@ export default function LeaderboardPanel({
 
   return (
     <Card
-      className={
-        className ??
-        "w-full max-w-2xl bg-white/80 backdrop-blur-sm border-slate-200"
-      }
+      className={cn(
+        "w-full max-w-2xl backdrop-blur-sm",
+        theme.card,
+        className
+      )}
     >
       <div className="p-5 sm:p-6 space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg sm:text-xl font-semibold text-slate-800">
+          <h2 className={cn("text-lg sm:text-xl font-semibold", theme.title)}>
             Leaderboard
           </h2>
           {game?.metric && (
-            <span className="text-sm text-slate-500">{game.metric}</span>
+            <span className={cn("text-sm", theme.metric)}>{game.metric}</span>
           )}
         </div>
 
@@ -123,7 +154,9 @@ export default function LeaderboardPanel({
         )}
 
         {!loading && !error && game && entries.length > 0 && (
-          <ol className={"space-y-2" + (entriesClassName ? ` ${entriesClassName}` : "")}>
+          <ol
+            className={cn("space-y-2", entriesClassName)}
+          >
             {entries.map((entry, index) => (
               <li
                 key={`${entry.name}-${entry.createdAt}-${index}`}
