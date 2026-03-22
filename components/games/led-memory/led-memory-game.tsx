@@ -111,7 +111,14 @@ export default function LEDMemoryGame() {
       await audioContextRef.current.resume();
     }
 
-    return audioContextRef.current;
+  // Start a new game
+  const startGame = useCallback(() => {
+    setLeaderboardOpen(false);
+    const fullSequence = generateFullSequence();
+    setSequence(fullSequence);
+    setPlayerSequence([]);
+    setGameState("showing");
+    showSequence(fullSequence);
   }, []);
 
   const playLEDTone = useCallback(
@@ -363,7 +370,34 @@ export default function LEDMemoryGame() {
         handleLEDClick={handleLEDClick}
       />
 
-      <div className="w-full max-w-2xl flex flex-col sm:flex-row items-center justify-center gap-3">
+      {(gameState === "gameover" || gameState === "success") && (
+        <Button
+          onClick={() => setLeaderboardOpen(true)}
+          variant="outline"
+          size="lg"
+          className="bg-white border-amber-200 hover:bg-amber-50 hover:border-amber-300 text-amber-700 shadow-sm"
+        >
+          Show Leaderboard
+        </Button>
+      )}
+
+      <Dialog open={leaderboardOpen} onOpenChange={setLeaderboardOpen}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Leaderboard</DialogTitle>
+            <DialogDescription>LED Memory scores and rankings</DialogDescription>
+          </DialogHeader>
+
+          <LeaderboardPanel
+            gameId="led-memory"
+            limit={9999}
+            className="w-full max-w-none"
+            entriesClassName="max-h-[60vh] overflow-y-auto pr-2"
+          />
+        </DialogContent>
+      </Dialog>
+
+      <div className="flex space-x-4">
         <Button
           onClick={() => startGame(selectedLevel)}
           variant="outline"

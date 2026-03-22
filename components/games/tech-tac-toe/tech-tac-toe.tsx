@@ -1,34 +1,70 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { RotateCcw } from "lucide-react";
-import type { Player, BoardState } from "@/lib/types";
+import type { BoardState, BoothPlayerType } from "@/lib/types";
 import { checkWinner } from "@/lib/game-utils/tech-tac-toe-utils";
 import GameHeader from "@/components/games/tech-tac-toe/game-header";
 import GameBoard from "@/components/games/tech-tac-toe/game-board";
 import LeaderboardPanel from "@/components/games/leaderboard/leaderboard-panel";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function TechTacToe() {
   const [board, setBoard] = useState<BoardState>(Array(9).fill(null));
-  const [currentPlayer, setCurrentPlayer] = useState<Player>("1");
-  const [winner, setWinner] = useState<Player | "draw" | null>(null);
+  const { currentPlayers } = usePlayers();
+  const [currentPlayer, setCurrentPlayer] = useState<BoothPlayerType | null>(
+    null,
+  );
+  const [winnerPlayer, setWinnerPlayer] = useState<
+    BoothPlayerType | "draw" | null
+  >(null);
   const [winningPattern, setWinningPattern] = useState<number[] | null>(null);
   const [showInfo, setShowInfo] = useState(false);
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
+
+  useEffect(() => {
+    if (currentPlayers.player1 && currentPlayers.player2) {
+      setCurrentPlayer(currentPlayers.player1);
+      toast(`${currentPlayers.player1.name} starts!`, {
+        className: "bg-sky-100 text-sky-800 border-sky-200",
+      });
+    }
+  }, [currentPlayers]);
 
   const handleCellClick = (index: number) => {
+    if (!currentPlayers.player1 || !currentPlayers.player2) {
+      alert("Please select both players before starting the game.");
+      return;
+    }
     // Ignore click if cell is already filled or game is over
-    if (board[index] || winner) return;
+    if (board[index] || winnerPlayer) return;
 
     const newBoard = [...board];
-    newBoard[index] = currentPlayer;
+    if (currentPlayers?.player1.name === currentPlayer?.name) {
+      newBoard[index] = "1";
+    } else if (currentPlayers?.player2.name === currentPlayer?.name) {
+      newBoard[index] = "0";
+    }
     setBoard(newBoard);
 
     const { winner: newWinner, pattern } = checkWinner(newBoard);
 
     if (newWinner) {
-      setWinner(newWinner);
+      if (newWinner === "1") {
+        setWinnerPlayer(currentPlayers?.player1);
+      } else if (newWinner === "0") {
+        setWinnerPlayer(currentPlayers?.player2);
+      } else {
+        setWinnerPlayer("draw");
+      }
       setWinningPattern(pattern);
 
       if (newWinner === "draw") {
@@ -42,21 +78,34 @@ export default function TechTacToe() {
       }
     } else {
       // Switch player
-      setCurrentPlayer(currentPlayer === "1" ? "0" : "1");
+      if (currentPlayer === currentPlayers?.player1) {
+        setCurrentPlayer(currentPlayers?.player2);
+        toast(`${currentPlayers?.player2?.name}'s turn!`, {
+          className: "bg-sky-100 text-sky-800 border-sky-200",
+        });
+      } else {
+        setCurrentPlayer(currentPlayers?.player1);
+        toast(`${currentPlayers?.player1?.name}'s turn!`, {
+          className: "bg-sky-100 text-sky-800 border-sky-200",
+        });
+      }
     }
   };
 
   const resetGame = () => {
     setBoard(Array(9).fill(null));
-    setCurrentPlayer("1");
-    setWinner(null);
+    setCurrentPlayer(currentPlayers?.player1 || null);
+    setWinnerPlayer(null);
     setWinningPattern(null);
+    setLeaderboardOpen(false);
   };
+
+  const isFinished = winner !== null;
 
   return (
     <div className="flex flex-col items-center justify-center p-4 space-y-6 bg-gradient-to-br from-sky-100 via-indigo-50 to-blue-100 rounded-xl shadow-md">
       <GameHeader
-        winner={winner}
+        winnerPlayer={winnerPlayer}
         currentPlayer={currentPlayer}
         showInfo={showInfo}
         setShowInfo={setShowInfo}
@@ -68,7 +117,34 @@ export default function TechTacToe() {
         handleCellClick={handleCellClick}
       />
 
-      <LeaderboardPanel gameId="tech-tac-toe" />
+      {isFinished && (
+        <Button
+          onClick={() => setLeaderboardOpen(true)}
+          variant="outline"
+          size="lg"
+          className="bg-white border-sky-200 hover:bg-sky-50 hover:border-sky-300 text-sky-700 shadow-sm"
+        >
+          Show Leaderboard
+        </Button>
+      )}
+
+      <Dialog open={leaderboardOpen} onOpenChange={setLeaderboardOpen}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Leaderboard</DialogTitle>
+            <DialogDescription>
+              Tech Tac Toe scores and rankings
+            </DialogDescription>
+          </DialogHeader>
+
+          <LeaderboardPanel
+            gameId="tech-tac-toe"
+            limit={9999}
+            className="w-full max-w-none"
+            entriesClassName="max-h-[60vh] overflow-y-auto pr-2"
+          />
+        </DialogContent>
+      </Dialog>
 
       <Button
         onClick={resetGame}
