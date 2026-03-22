@@ -8,6 +8,14 @@ import type { GameState, LED } from "@/lib/types";
 import { generateFullSequence } from "@/lib/game-utils/led-memory-utils";
 import GameHeader from "@/components/games/led-memory/game-header";
 import LEDGrid from "@/components/games/led-memory/led-grid";
+import LeaderboardPanel from "@/components/games/leaderboard/leaderboard-panel";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function LEDMemoryGame() {
   const [gameState, setGameState] = useState<GameState>("idle");
@@ -16,6 +24,7 @@ export default function LEDMemoryGame() {
   const [activeLED, setActiveLED] = useState<LED | null>(null);
   const [showInfo, setShowInfo] = useState(false);
   const [timeLeft, setTimeLeft] = useState(20);
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -49,6 +58,7 @@ export default function LEDMemoryGame() {
 
   // Start a new game
   const startGame = useCallback(() => {
+    setLeaderboardOpen(false);
     const fullSequence = generateFullSequence();
     setSequence(fullSequence);
     setPlayerSequence([]);
@@ -187,6 +197,33 @@ export default function LEDMemoryGame() {
         gameState={gameState}
         handleLEDClick={handleLEDClick}
       />
+
+      {(gameState === "gameover" || gameState === "success") && (
+        <Button
+          onClick={() => setLeaderboardOpen(true)}
+          variant="outline"
+          size="lg"
+          className="bg-white border-amber-200 hover:bg-amber-50 hover:border-amber-300 text-amber-700 shadow-sm"
+        >
+          Show Leaderboard
+        </Button>
+      )}
+
+      <Dialog open={leaderboardOpen} onOpenChange={setLeaderboardOpen}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Leaderboard</DialogTitle>
+            <DialogDescription>LED Memory scores and rankings</DialogDescription>
+          </DialogHeader>
+
+          <LeaderboardPanel
+            gameId="led-memory"
+            limit={9999}
+            className="w-full max-w-none"
+            entriesClassName="max-h-[60vh] overflow-y-auto pr-2"
+          />
+        </DialogContent>
+      </Dialog>
 
       <div className="flex space-x-4">
         <Button
