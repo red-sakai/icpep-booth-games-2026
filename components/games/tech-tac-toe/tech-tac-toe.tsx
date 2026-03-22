@@ -16,6 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { usePlayers } from "@/contexts/players-context";
 
 export default function TechTacToe() {
   const [board, setBoard] = useState<BoardState>(Array(9).fill(null));
@@ -100,7 +101,7 @@ export default function TechTacToe() {
     setLeaderboardOpen(false);
   };
 
-  const isFinished = winner !== null;
+  const isFinished = winnerPlayer !== null;
 
   return (
     <div className="flex flex-col items-center justify-center p-4 space-y-6 bg-gradient-to-br from-sky-100 via-indigo-50 to-blue-100 rounded-xl shadow-md">

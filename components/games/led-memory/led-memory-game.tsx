@@ -87,6 +87,7 @@ export default function LEDMemoryGame() {
     useState<DifficultyLevel>("medium");
   const [showLevelDialog, setShowLevelDialog] = useState(true);
   const [showNameDialog, setShowNameDialog] = useState(false);
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
   const [playerName, setPlayerName] = useState("");
   const [hasPromptedName, setHasPromptedName] = useState(false);
 
@@ -110,15 +111,7 @@ export default function LEDMemoryGame() {
     if (audioContextRef.current.state === "suspended") {
       await audioContextRef.current.resume();
     }
-
-  // Start a new game
-  const startGame = useCallback(() => {
-    setLeaderboardOpen(false);
-    const fullSequence = generateFullSequence();
-    setSequence(fullSequence);
-    setPlayerSequence([]);
-    setGameState("showing");
-    showSequence(fullSequence);
+    return audioContextRef.current;
   }, []);
 
   const playLEDTone = useCallback(
