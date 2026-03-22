@@ -5,10 +5,76 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
 import type { GameState, LED } from "@/lib/types";
-import { generateFullSequence } from "@/lib/game-utils/led-memory-utils";
+import { getRandomLED } from "@/lib/game-utils/led-memory-utils";
 import GameHeader from "@/components/games/led-memory/game-header";
 import LEDGrid from "@/components/games/led-memory/led-grid";
 import LeaderboardPanel from "@/components/games/leaderboard/leaderboard-panel";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+type DifficultyLevel = "easy" | "medium" | "hard";
+
+const LEVEL_CONFIG: Record<
+  DifficultyLevel,
+  {
+    label: string;
+    sequenceLength: number;
+    timeLimit: number;
+    ledShowMs: number;
+    ledGapMs: number;
+  }
+> = {
+  easy: {
+    label: "Easy",
+    sequenceLength: 6,
+    timeLimit: 20,
+    ledShowMs: 900,
+    ledGapMs: 500,
+  },
+  medium: {
+    label: "Medium",
+    sequenceLength: 6,
+    timeLimit: 15,
+    ledShowMs: 750,
+    ledGapMs: 380,
+  },
+  hard: {
+    label: "Hard",
+    sequenceLength: 6,
+    timeLimit: 10,
+    ledShowMs: 600,
+    ledGapMs: 280,
+  },
+};
+
+const generateSequenceByLength = (length: number): LED[] => {
+  const newSequence: LED[] = [];
+
+  for (let index = 0; index < length; index++) {
+    newSequence.push(getRandomLED());
+  }
+
+  return newSequence;
+};
+
+const LED_TONE_FREQUENCIES: Record<LED, number> = {
+  1: 261.63,
+  2: 329.63,
+  3: 392.0,
+  4: 440.0,
+  5: 523.25,
+  6: 659.25,
+};
+
+const LED_TONE_ATTACK = 0.008;
+const LED_TONE_DECAY = 0.24;
+const LED_TONE_PEAK_GAIN = 0.24;
 
 export default function LEDMemoryGame() {
   const [gameState, setGameState] = useState<GameState>("idle");
@@ -17,84 +83,156 @@ export default function LEDMemoryGame() {
   const [activeLED, setActiveLED] = useState<LED | null>(null);
   const [showInfo, setShowInfo] = useState(false);
   const [timeLeft, setTimeLeft] = useState(20);
+  const [selectedLevel, setSelectedLevel] =
+    useState<DifficultyLevel>("medium");
+  const [showLevelDialog, setShowLevelDialog] = useState(true);
+  const [showNameDialog, setShowNameDialog] = useState(false);
+  const [playerName, setPlayerName] = useState("");
+  const [hasPromptedName, setHasPromptedName] = useState(false);
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
 
-  // Start the 20-second timer for guessing
-  const startGuessingTimer = useCallback(() => {
-    setTimeLeft(20);
+  const initializeAudio = useCallback(async () => {
+    if (typeof window === "undefined") return null;
 
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
+    if (!audioContextRef.current) {
+      const AudioContextClass =
+        window.AudioContext ||
+        (window as typeof window & { webkitAudioContext?: typeof AudioContext })
+          .webkitAudioContext;
+
+      if (!AudioContextClass) return null;
+      audioContextRef.current = new AudioContextClass();
     }
 
-    timerRef.current = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timerRef.current!);
-          // Time's up - game over
-          setGameState("gameover");
-          toast(
-            `Time's up! You remembered ${playerSequence.length} out of ${sequence.length} correctly.`,
-            {
-              className: "bg-amber-100 text-amber-800 border-amber-200",
-            }
-          );
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  }, [playerSequence.length, sequence.length]);
+    if (audioContextRef.current.state === "suspended") {
+      await audioContextRef.current.resume();
+    }
 
-  // Start a new game
-  const startGame = useCallback(() => {
-    const fullSequence = generateFullSequence();
-    setSequence(fullSequence);
-    setPlayerSequence([]);
-    setGameState("showing");
-    showSequence(fullSequence);
+    return audioContextRef.current;
   }, []);
+
+  const playLEDTone = useCallback(
+    async (led: LED) => {
+      const context = await initializeAudio();
+      if (!context) return;
+
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+
+      oscillator.type = "triangle";
+      oscillator.frequency.value = LED_TONE_FREQUENCIES[led];
+
+      gain.gain.setValueAtTime(0.0001, context.currentTime);
+      gain.gain.exponentialRampToValueAtTime(
+        LED_TONE_PEAK_GAIN,
+        context.currentTime + LED_TONE_ATTACK
+      );
+      gain.gain.exponentialRampToValueAtTime(
+        0.0001,
+        context.currentTime + LED_TONE_DECAY
+      );
+
+      oscillator.connect(gain);
+      gain.connect(context.destination);
+
+      oscillator.start(context.currentTime);
+      oscillator.stop(context.currentTime + LED_TONE_DECAY + 0.02);
+    },
+    [initializeAudio]
+  );
+
+  // Start the level-based timer for guessing
+  const startGuessingTimer = useCallback(
+    (level: DifficultyLevel) => {
+      const levelConfig = LEVEL_CONFIG[level];
+      setTimeLeft(levelConfig.timeLimit);
+
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+
+      timerRef.current = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            clearInterval(timerRef.current!);
+            setGameState("gameover");
+            toast(
+              `Time's up! You remembered ${playerSequence.length} out of ${sequence.length} correctly.`,
+              {
+                className: "bg-amber-100 text-amber-800 border-amber-200",
+              }
+            );
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    },
+    [playerSequence.length, sequence.length]
+  );
 
   // Show the sequence to the player
   const showSequence = useCallback(
-    (currentSequence: LED[]) => {
+    (currentSequence: LED[], level: DifficultyLevel) => {
       let step = 0;
+      const levelConfig = LEVEL_CONFIG[level];
 
-      // Clear any existing timeout
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
 
       const playStep = () => {
         if (step < currentSequence.length) {
-          // Light up the LED
           setActiveLED(currentSequence[step]);
+          void playLEDTone(currentSequence[step]);
 
-          // Turn off after a delay
           timeoutRef.current = setTimeout(() => {
             setActiveLED(null);
 
-            // Wait before showing the next LED
             timeoutRef.current = setTimeout(() => {
               step++;
               playStep();
-            }, 400); // Longer delay between LEDs to make it easier
-          }, 800); // Longer display time to make it easier
+            }, levelConfig.ledGapMs);
+          }, levelConfig.ledShowMs);
         } else {
-          // Sequence finished, player's turn
           setActiveLED(null);
           setGameState("guessing");
           setPlayerSequence([]);
-          startGuessingTimer(); // Start the 20-second timer
+          startGuessingTimer(level);
         }
       };
 
-      // Start playing the sequence after a short delay
-      timeoutRef.current = setTimeout(playStep, 1000);
+      timeoutRef.current = setTimeout(playStep, 900);
     },
     [startGuessingTimer]
+  );
+
+  // Start a new game
+  const startGame = useCallback(
+    (level: DifficultyLevel) => {
+      const levelConfig = LEVEL_CONFIG[level];
+      const fullSequence = generateSequenceByLength(levelConfig.sequenceLength);
+
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+
+      setSelectedLevel(level);
+      setSequence(fullSequence);
+      setPlayerSequence([]);
+      setTimeLeft(levelConfig.timeLimit);
+      setShowLevelDialog(false);
+      setShowNameDialog(false);
+      setPlayerName("");
+      setHasPromptedName(false);
+      setGameState("showing");
+      void initializeAudio();
+      showSequence(fullSequence, level);
+    },
+    [initializeAudio, showSequence]
   );
 
   // Handle player clicking an LED
@@ -102,6 +240,7 @@ export default function LEDMemoryGame() {
     if (gameState !== "guessing") return;
 
     // Light up the LED briefly
+    void playLEDTone(led);
     setActiveLED(led);
     setTimeout(() => setActiveLED(null), 200);
 
@@ -157,8 +296,42 @@ export default function LEDMemoryGame() {
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
+      const audioContext = audioContextRef.current;
+      if (audioContext) {
+        void audioContext.close();
+      }
     };
   }, []);
+
+  // Show post-game name dialog once per finished run
+  useEffect(() => {
+    const isFinished = gameState === "gameover" || gameState === "success";
+
+    if (isFinished && sequence.length > 0 && !hasPromptedName) {
+      setShowNameDialog(true);
+      setHasPromptedName(true);
+    }
+  }, [gameState, hasPromptedName, sequence.length]);
+
+  const handleSaveName = () => {
+    const trimmedName = playerName.trim();
+
+    if (trimmedName.length > 0) {
+      toast(`Nice run, ${trimmedName}! (UI only — not saved)`, {
+        className: "bg-emerald-100 text-emerald-800 border-emerald-200",
+      });
+    } else {
+      toast("No name entered. You can skip this step.", {
+        className: "bg-amber-100 text-amber-800 border-amber-200",
+      });
+    }
+
+    setShowNameDialog(false);
+  };
+
+  const handleSkipName = () => {
+    setShowNameDialog(false);
+  };
 
   // // Reset game and clear timers
   // const resetGame = () => {
@@ -173,12 +346,13 @@ export default function LEDMemoryGame() {
   // };
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 space-y-6 bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 rounded-xl shadow-md">
+    <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center p-4 sm:p-7 gap-5 sm:gap-6 bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 rounded-2xl border border-amber-100/80 shadow-sm">
       <GameHeader
         gameState={gameState}
         playerSequence={playerSequence}
         sequenceLength={sequence.length}
         timeLeft={timeLeft}
+        selectedLevel={selectedLevel}
         showInfo={showInfo}
         setShowInfo={setShowInfo}
       />
@@ -189,23 +363,117 @@ export default function LEDMemoryGame() {
         handleLEDClick={handleLEDClick}
       />
 
-      <LeaderboardPanel gameId="led-memory" />
-
-      <div className="flex space-x-4">
+      <div className="w-full max-w-2xl flex flex-col sm:flex-row items-center justify-center gap-3">
         <Button
-          onClick={startGame}
+          onClick={() => startGame(selectedLevel)}
           variant="outline"
           size="lg"
-          className="bg-white border-amber-200 hover:bg-amber-50 hover:border-amber-300 text-amber-700 shadow-sm flex items-center gap-2"
+          disabled={gameState === "showing"}
+          className="min-w-40 bg-white border-amber-300 hover:bg-amber-50 hover:border-amber-400 text-amber-700 shadow-sm flex items-center gap-2"
         >
           <RotateCcw size={16} />
-          {gameState === "idle" ||
-          gameState === "gameover" ||
-          gameState === "success"
-            ? "Start Challenge"
-            : "Restart"}
+          Restart
+        </Button>
+
+        <Button
+          onClick={() => setShowLevelDialog(true)}
+          variant="outline"
+          size="lg"
+          disabled={gameState === "showing"}
+          className="min-w-40 bg-white border-slate-300 hover:bg-slate-50 hover:border-slate-400 text-slate-700 shadow-sm"
+        >
+          Change Level
         </Button>
       </div>
+
+      <div className="w-full flex justify-center">
+        <LeaderboardPanel
+          gameId="led-memory"
+          className="w-full max-w-2xl mx-auto bg-white/90 backdrop-blur-sm border-slate-200"
+        />
+      </div>
+
+      <Dialog
+        open={showLevelDialog}
+        onOpenChange={(open) => {
+          if (open) {
+            setShowLevelDialog(true);
+          }
+        }}
+      >
+        <DialogContent
+          className="sm:max-w-md rounded-xl border-slate-200 [&>button]:hidden"
+          onEscapeKeyDown={(event) => event.preventDefault()}
+          onPointerDownOutside={(event) => event.preventDefault()}
+          onInteractOutside={(event) => event.preventDefault()}
+        >
+          <DialogHeader className="space-y-1">
+            <DialogTitle className="text-xl">Choose Difficulty</DialogTitle>
+            <DialogDescription>
+              Pick a level to start Memory Heist.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="grid grid-cols-1 gap-3">
+            <Button
+              variant="outline"
+              className="justify-between border-slate-200 hover:border-amber-300 hover:bg-amber-50/70"
+              onClick={() => startGame("easy")}
+            >
+              <span>Easy</span>
+              <span className="text-xs text-slate-500 font-medium">6 lights • 20s</span>
+            </Button>
+            <Button
+              variant="outline"
+              className="justify-between border-slate-200 hover:border-amber-300 hover:bg-amber-50/70"
+              onClick={() => startGame("medium")}
+            >
+              <span>Medium</span>
+              <span className="text-xs text-slate-500 font-medium">6 lights • 15s</span>
+            </Button>
+            <Button
+              variant="outline"
+              className="justify-between border-slate-200 hover:border-amber-300 hover:bg-amber-50/70"
+              onClick={() => startGame("hard")}
+            >
+              <span>Hard</span>
+              <span className="text-xs text-slate-500 font-medium">6 lights • 10s</span>
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showNameDialog} onOpenChange={setShowNameDialog}>
+        <DialogContent className="sm:max-w-md rounded-xl border-slate-200">
+          <DialogHeader className="space-y-1">
+            <DialogTitle className="text-xl">Great Game!</DialogTitle>
+            <DialogDescription>
+              Enter your name for leaderboard preview. You can skip.
+            </DialogDescription>
+          </DialogHeader>
+
+          <input
+            value={playerName}
+            onChange={(event) => setPlayerName(event.target.value)}
+            placeholder="Enter your name"
+            maxLength={20}
+            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-200"
+          />
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              className="border-slate-200"
+              onClick={handleSkipName}
+            >
+              Skip
+            </Button>
+            <Button className="bg-amber-600 hover:bg-amber-700" onClick={handleSaveName}>
+              Save Name
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
