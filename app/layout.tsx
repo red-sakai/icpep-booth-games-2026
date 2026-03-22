@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ReactLenis } from "lenis/react";
+
 
 export const metadata: Metadata = {
   title: "ICpEP Booth Games",
@@ -18,7 +20,11 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <ReactLenis root options={{ lerp: 0.1, duration: 0.5, smoothWheel: true }} >
+          {children}
+        </ReactLenis>
+      </body>
     </html>
   );
 }
