@@ -25,12 +25,14 @@ type LeaderboardPanelProps = {
   gameId: string;
   limit?: number;
   className?: string;
+  entriesClassName?: string;
 };
 
 export default function LeaderboardPanel({
   gameId,
   limit = 5,
   className,
+  entriesClassName,
 }: LeaderboardPanelProps) {
   const [data, setData] = useState<LeaderboardFile | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -121,7 +123,7 @@ export default function LeaderboardPanel({
         )}
 
         {!loading && !error && game && entries.length > 0 && (
-          <ol className="space-y-2">
+          <ol className={"space-y-2" + (entriesClassName ? ` ${entriesClassName}` : "")}>
             {entries.map((entry, index) => (
               <li
                 key={`${entry.name}-${entry.createdAt}-${index}`}

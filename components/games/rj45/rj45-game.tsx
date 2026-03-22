@@ -12,6 +12,13 @@ import WirePattern from "@/components/games/rj45/wire-pattern";
 import WireArrangement from "@/components/games/rj45/wire-arrangement";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import LeaderboardPanel from "@/components/games/leaderboard/leaderboard-panel";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function RJ45Game() {
   const [gameState, setGameState] = useState<RJ45GameState>("select");
@@ -22,6 +29,7 @@ export default function RJ45Game() {
   const [showCorrectPattern, setShowCorrectPattern] = useState(true);
   const [showInfo, setShowInfo] = useState(false);
   const [timeExpired, setTimeExpired] = useState(false);
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const gameContainerRef = useRef<HTMLDivElement>(null);
@@ -32,6 +40,7 @@ export default function RJ45Game() {
 
   // Select a standard and start the game
   const selectStandard = (selected: WireStandard) => {
+    setLeaderboardOpen(false);
     setStandard(selected);
     setCorrectWires([...WIRE_STANDARDS[selected]]);
     setGameState("learn");
@@ -142,6 +151,7 @@ export default function RJ45Game() {
     setTimeLeft(15);
     setShowCorrectPattern(true);
     setTimeExpired(false);
+    setLeaderboardOpen(false);
   };
 
   // Clean up on unmount
@@ -187,7 +197,32 @@ export default function RJ45Game() {
         )}
       </div>
 
-      <LeaderboardPanel gameId="rj45-game" />
+      {(gameState === "success" || gameState === "failure") && (
+        <Button
+          onClick={() => setLeaderboardOpen(true)}
+          variant="outline"
+          size="lg"
+          className="bg-white border-cyan-200 hover:bg-cyan-50 hover:border-cyan-300 text-cyan-700 shadow-md"
+        >
+          Show Leaderboard
+        </Button>
+      )}
+
+      <Dialog open={leaderboardOpen} onOpenChange={setLeaderboardOpen}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Leaderboard</DialogTitle>
+            <DialogDescription>RJ45 scores and rankings</DialogDescription>
+          </DialogHeader>
+
+          <LeaderboardPanel
+            gameId="rj45-game"
+            limit={9999}
+            className="w-full max-w-none"
+            entriesClassName="max-h-[60vh] overflow-y-auto pr-2"
+          />
+        </DialogContent>
+      </Dialog>
 
       {(gameState === "success" || gameState === "failure") && (
         <Button

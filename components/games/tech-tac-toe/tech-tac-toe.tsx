@@ -9,6 +9,13 @@ import { checkWinner } from "@/lib/game-utils/tech-tac-toe-utils";
 import GameHeader from "@/components/games/tech-tac-toe/game-header";
 import GameBoard from "@/components/games/tech-tac-toe/game-board";
 import LeaderboardPanel from "@/components/games/leaderboard/leaderboard-panel";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function TechTacToe() {
   const [board, setBoard] = useState<BoardState>(Array(9).fill(null));
@@ -16,6 +23,7 @@ export default function TechTacToe() {
   const [winner, setWinner] = useState<Player | "draw" | null>(null);
   const [winningPattern, setWinningPattern] = useState<number[] | null>(null);
   const [showInfo, setShowInfo] = useState(false);
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
 
   const handleCellClick = (index: number) => {
     // Ignore click if cell is already filled or game is over
@@ -51,7 +59,10 @@ export default function TechTacToe() {
     setCurrentPlayer("1");
     setWinner(null);
     setWinningPattern(null);
+    setLeaderboardOpen(false);
   };
+
+  const isFinished = winner !== null;
 
   return (
     <div className="flex flex-col items-center justify-center p-4 space-y-6 bg-gradient-to-br from-sky-100 via-indigo-50 to-blue-100 rounded-xl shadow-md">
@@ -68,7 +79,34 @@ export default function TechTacToe() {
         handleCellClick={handleCellClick}
       />
 
-      <LeaderboardPanel gameId="tech-tac-toe" />
+      {isFinished && (
+        <Button
+          onClick={() => setLeaderboardOpen(true)}
+          variant="outline"
+          size="lg"
+          className="bg-white border-sky-200 hover:bg-sky-50 hover:border-sky-300 text-sky-700 shadow-sm"
+        >
+          Show Leaderboard
+        </Button>
+      )}
+
+      <Dialog open={leaderboardOpen} onOpenChange={setLeaderboardOpen}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Leaderboard</DialogTitle>
+            <DialogDescription>
+              Tech Tac Toe scores and rankings
+            </DialogDescription>
+          </DialogHeader>
+
+          <LeaderboardPanel
+            gameId="tech-tac-toe"
+            limit={9999}
+            className="w-full max-w-none"
+            entriesClassName="max-h-[60vh] overflow-y-auto pr-2"
+          />
+        </DialogContent>
+      </Dialog>
 
       <Button
         onClick={resetGame}
