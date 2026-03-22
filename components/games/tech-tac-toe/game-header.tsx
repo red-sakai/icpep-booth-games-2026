@@ -2,21 +2,25 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Info, Trophy } from "lucide-react";
-import type { Player } from "@/lib/types";
+import type { BoothPlayerType } from "@/lib/types";
+import { usePlayers } from "@/contexts/players-context";
+import { cn } from "@/lib/utils";
 
 type GameHeaderProps = {
-  winner: Player | "draw" | null;
-  currentPlayer: Player;
+  winnerPlayer: BoothPlayerType | "draw" | null;
+  currentPlayer: BoothPlayerType | null;
   showInfo: boolean;
   setShowInfo: (show: boolean) => void;
 };
 
 export default function GameHeader({
-  winner,
+  winnerPlayer,
   currentPlayer,
   showInfo,
   setShowInfo,
 }: GameHeaderProps) {
+  const { currentPlayers } = usePlayers();
+
   return (
     <div className="text-center space-y-3">
       <div className="flex items-center justify-center gap-2">
@@ -52,22 +56,49 @@ export default function GameHeader({
 
       <div className="bg-white/80 backdrop-blur-sm rounded-lg p-3 shadow-sm">
         <p className="text-slate-700 font-medium">
-          {winner ? (
-            winner === "draw" ? (
+          {winnerPlayer ? (
+            winnerPlayer === "draw" ? (
               "Game ended in a draw!"
             ) : (
               <span className="flex items-center justify-center gap-1">
                 <Trophy
                   size={16}
                   className={
-                    winner === "1" ? "text-emerald-500" : "text-rose-500"
+                    winnerPlayer === currentPlayers.player1
+                      ? "text-emerald-500"
+                      : "text-rose-500"
                   }
                 />
-                Player {winner} wins!
+                Player{" "}
+                <span
+                  className={cn(
+                    winnerPlayer.name === currentPlayers.player1?.name
+                      ? "bg-emerald-200/80 text-emerald-500/80"
+                      : "bg-rose-300 text-rose-500",
+                    "px-2 py-1 rounded-lg font-semibold",
+                  )}
+                >
+                  {winnerPlayer.name}
+                </span>
+                wins!
               </span>
             )
           ) : (
-            `Current player: ${currentPlayer}`
+            <span>
+              Current player:{" "}
+              <span
+                className={cn(
+                  currentPlayer
+                    ? currentPlayer.name === currentPlayers.player1?.name
+                      ? "bg-emerald-200/80 text-emerald-500/80"
+                      : "bg-rose-300 text-rose-500/80"
+                    : "bg-gray-200 text-gray-500",
+                  "px-2 py-1 rounded-lg font-semibold",
+                )}
+              >
+                {currentPlayer?.name || "None"}
+              </span>
+            </span>
           )}
         </p>
       </div>
