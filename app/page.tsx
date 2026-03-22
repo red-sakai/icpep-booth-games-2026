@@ -78,7 +78,7 @@ export default function GameHub() {
 
   return (
     <PlayersProvider>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-sky-50 to-indigo-50 p-4 md:p-8">
+      <div className="min-h-screen bg-gradient-to-b from-purple-100 via-pink-200 to-rose-200 p-4 md:p-8">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentGame}

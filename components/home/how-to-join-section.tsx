@@ -19,19 +19,19 @@ export default function HowToJoinSection() {
     {
       name: "Facebook",
       icon: <Facebook size={24} className="text-blue-600" />,
-      color: "bg-blue-100 text-blue-600 border-blue-200",
+      color: "bg-blue-100 text-blue-600 border-blue-400",
       url: "/qr-codes/facebook.png",
     },
     {
       name: "Instagram",
       icon: <Instagram size={24} className="text-pink-600" />,
-      color: "bg-pink-100 text-pink-600 border-pink-200",
+      color: "bg-pink-100 text-pink-600 border-pink-400",
       url: "/qr-codes/instagram.png",
     },
     {
       name: "LinkedIn",
-      icon: <Linkedin size={24} className="text-blue-700" />,
-      color: "bg-blue-100 text-blue-700 border-blue-200",
+      icon: <Linkedin size={24} className="text-blue-600" />,
+      color: "bg-blue-100 text-blue-700 border-blue-400",
       url: "/qr-codes/linked-in.png",
     },
   ];
@@ -43,10 +43,10 @@ export default function HowToJoinSection() {
 
   return (
     <>
-      <Card className="overflow-hidden border border-slate-200 shadow-md">
-        <div className="bg-gradient-to-r from-slate-50 to-blue-50 p-6">
-          <h2 className="text-2xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-            <QrCode size={24} className="text-blue-600" />
+      <Card className="overflow-hidden border-2 border-purple-300 shadow-md">
+        <div className="bg-gradient-to-b from-purple-50 to-white h-full p-6">
+          <h2 className="text-2xl font-bold text-purple-600 mb-4 flex items-center gap-2">
+            <QrCode size={24} className="text-purple-500" />
             How to Join
           </h2>
 
@@ -77,7 +77,7 @@ export default function HowToJoinSection() {
               <div key={index} className="flex flex-col items-center">
                 <button
                   onClick={() => openQRCodeDialog(qrCode)}
-                  className={`border-2 border-dashed rounded-lg p-3 w-full flex flex-col items-center justify-center bg-white hover:bg-slate-50 transition-colors cursor-pointer ${
+                  className={`border-2 border-dashed rounded-lg p-3 w-full flex flex-col items-center justify-center bg-white/80 hover:bg-white transition-all cursor-pointer ${
                     qrCode.color.split(" ")[2]
                   }`}
                   aria-label={`Scan QR code for ${qrCode.name}`}
@@ -102,7 +102,7 @@ export default function HowToJoinSection() {
 
       {/* QR Code Dialog */}
       <Dialog open={openQRDialog} onOpenChange={setOpenQRDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md bg-white border">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               {selectedQR?.icon}
