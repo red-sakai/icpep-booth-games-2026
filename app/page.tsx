@@ -14,7 +14,7 @@ import RJ45Game from "@/components/games/rj45/rj45-game";
 import GameHeader from "@/components/home/game-header";
 import HowToJoinSection from "@/components/home/how-to-join-section";
 import GameMechanicsSection from "@/components/home/game-mechanics-section";
-import GameCards from "@/components/home/game-cards";
+import GameSelectorCarousel from "@/components/home/game-selector-carousel";
 import BackToHomeButton from "@/components/home/back-to-home-button";
 
 // Types
@@ -70,7 +70,7 @@ export default function GameHub() {
               <HowToJoinSection />
               <GameMechanicsSection />
             </div>
-            <GameCards navigateTo={navigateTo} />
+            <GameSelectorCarousel navigateTo={navigateTo} />
           </div>
         );
     }

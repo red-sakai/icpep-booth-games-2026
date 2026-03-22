@@ -9,6 +9,7 @@ type GameHeaderProps = {
   playerSequence: number[];
   sequenceLength: number;
   timeLeft: number;
+  selectedLevel: "easy" | "medium" | "hard";
   showInfo: boolean;
   setShowInfo: (show: boolean) => void;
 };
@@ -18,21 +19,40 @@ export default function GameHeader({
   playerSequence,
   sequenceLength,
   timeLeft,
+  selectedLevel,
   showInfo,
   setShowInfo,
 }: GameHeaderProps) {
+  const progress =
+    sequenceLength > 0
+      ? Math.min(100, Math.round((playerSequence.length / sequenceLength) * 100))
+      : 0;
+
+  const totalPatterns = sequenceLength || 6;
+
   return (
-    <div className="text-center space-y-3">
-      <div className="flex items-center justify-center gap-2">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-amber-600">
-          Memory Heist: Guess the Pattern of Lights
-        </h1>
+    <div className="w-full max-w-2xl text-center space-y-4">
+      <div className="flex items-start justify-center gap-2">
+        <div>
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-amber-600">
+            Memory Heist
+          </h1>
+          <p className="text-sm sm:text-base text-slate-600 mt-1">
+            Guess the pattern of lights before time runs out.
+          </p>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1 tracking-wide">
+            Difficulty: {" "}
+            <span className="font-semibold capitalize text-slate-700">
+              {selectedLevel}
+            </span>
+          </p>
+        </div>
         <button
           onClick={() => setShowInfo(!showInfo)}
-          className="text-amber-600 hover:text-amber-800 transition-colors"
+          className="shrink-0 mt-1 h-8 w-8 inline-flex items-center justify-center rounded-full border border-transparent text-amber-600 hover:text-amber-800 hover:bg-amber-100/80 hover:border-amber-200 transition-colors"
           aria-label="Show information about LED Memory Challenge"
         >
-          <Info size={20} />
+          <Info size={18} />
         </button>
       </div>
 
@@ -42,10 +62,12 @@ export default function GameHeader({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="bg-white/80 backdrop-blur-sm p-3 rounded-lg shadow-sm text-sm text-slate-700">
-              <p>
+            <div className="bg-white/90 backdrop-blur-sm p-4 rounded-xl border border-slate-200 shadow-sm text-sm text-slate-700">
+              <p className="font-medium text-slate-800">How to play</p>
+              <p className="mt-1">
                 Watch the sequence of 6 LED lights and repeat it from memory
                 within 20 seconds.
               </p>
@@ -54,10 +76,10 @@ export default function GameHeader({
         )}
       </AnimatePresence>
 
-      <div className="bg-white/80 backdrop-blur-sm rounded-lg p-3 shadow-sm">
-        <div className="flex justify-center text-slate-700 font-medium">
+      <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-4">
+        <div className="flex flex-wrap items-center justify-center gap-2 text-slate-700 font-medium">
           {gameState === "idle" && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-slate-700">
               <Brain size={18} />
               <p>Press Start to test your memory!</p>
             </div>
@@ -69,16 +91,35 @@ export default function GameHeader({
             </div>
           )}
           {gameState === "guessing" && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-amber-700">
               <Clock size={18} className="text-amber-600" />
               <p>
-                Repeat the pattern! ({playerSequence.length}/{sequenceLength}) -
-                Time: {timeLeft}s
+                Repeat the pattern! ({playerSequence.length}/{sequenceLength})
               </p>
+              <span className="px-2.5 py-0.5 rounded-full border border-amber-200 bg-amber-50 text-amber-800 text-xs sm:text-sm">
+                {timeLeft}s left
+              </span>
             </div>
           )}
-          {gameState === "gameover" && "Game Over! Try again?"}
-          {gameState === "success" && "Perfect memory! Try again?"}
+          {gameState === "gameover" && (
+            <p className="text-rose-700">Game Over! Try again?</p>
+          )}
+          {gameState === "success" && (
+            <p className="text-emerald-700">Perfect memory! Try again?</p>
+          )}
+        </div>
+
+        <div className="w-full max-w-md mx-auto">
+          <div className="flex justify-between text-xs text-slate-500 mb-1.5">
+            <span>Progress</span>
+            <span>{playerSequence.length}/{totalPatterns}</span>
+          </div>
+          <div className="h-1.5 rounded-full bg-slate-200/80 overflow-hidden">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500 transition-all duration-300"
+              style={{ width: `${gameState === "guessing" ? progress : 0}%` }}
+            />
+          </div>
         </div>
       </div>
     </div>
