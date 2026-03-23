@@ -26,6 +26,7 @@ type LeaderboardPanelProps = {
   gameId: string;
   limit?: number;
   className?: string;
+  leaderboardKey?: number;
   entriesClassName?: string;
 };
 
@@ -33,6 +34,7 @@ export default function LeaderboardPanel({
   gameId,
   limit = 5,
   className,
+  leaderboardKey = 0,
   entriesClassName,
 }: LeaderboardPanelProps) {
   const theme = useMemo(() => {
@@ -68,8 +70,6 @@ export default function LeaderboardPanel({
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const cacheBuster = useMemo(() => Date.now(), []);
-
   useEffect(() => {
     const controller = new AbortController();
 
@@ -78,13 +78,14 @@ export default function LeaderboardPanel({
         setLoading(true);
         setError(null);
 
-        const res = await fetch(`/leaderboard.json?cb=${cacheBuster}`, {
+        // Fetch from the API instead of static JSON to ensure we get the latest data
+        const res = await fetch(`/api/leaderboard?cb=${Date.now()}`, {
           signal: controller.signal,
           cache: "no-store",
         });
 
         if (!res.ok) {
-          throw new Error(`Failed to load leaderboard.json (${res.status})`);
+          throw new Error(`Failed to load leaderboard (${res.status})`);
         }
 
         const json = (await res.json()) as LeaderboardFile;
@@ -102,7 +103,7 @@ export default function LeaderboardPanel({
     void load();
 
     return () => controller.abort();
-  }, [cacheBuster]);
+  }, [gameId, leaderboardKey]);
 
   const game = data?.games?.[gameId] ?? null;
 
