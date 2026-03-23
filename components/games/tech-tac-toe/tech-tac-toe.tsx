@@ -4,9 +4,10 @@ import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { RotateCcw } from "lucide-react";
-import type { BoardState, BoothPlayerType } from "@/lib/types";
+import type { BoardState, Player } from "@/lib/types";
 import { checkWinner } from "@/lib/game-utils/tech-tac-toe-utils";
 import { getBestMove } from "@/lib/game-utils/tech-tac-toe-ai";
+import { usePlayers } from "@/contexts/players-context";
 import GameHeader from "@/components/games/tech-tac-toe/game-header";
 import GameBoard from "@/components/games/tech-tac-toe/game-board";
 import LeaderboardPanel from "@/components/games/leaderboard/leaderboard-panel";
@@ -19,19 +20,16 @@ type Difficulty = "easy" | "medium" | "hard";
 export default function TechTacToe() {
   const [board, setBoard] = useState<BoardState>(Array(9).fill(null));
   const { currentPlayers } = usePlayers();
-  const [currentPlayer, setCurrentPlayer] = useState<BoothPlayerType | null>(
-    null,
-  );
-  const [winnerPlayer, setWinnerPlayer] = useState<
-    BoothPlayerType | "draw" | null
-  >(null);
+  const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
+  const [winner, setWinner] = useState<Player | "draw" | null>(null);
+  const [winnerPlayer, setWinnerPlayer] = useState<Player | null>(null);
   const [winningPattern, setWinningPattern] = useState<number[] | null>(null);
   const [showInfo, setShowInfo] = useState(false);
   const [leaderboardOpen, setLeaderboardOpen] = useState(false);
 
   useEffect(() => {
     if (currentPlayers.player1 && currentPlayers.player2) {
-      setCurrentPlayer(currentPlayers.player1);
+      setCurrentPlayer("1");
       toast(`${currentPlayers.player1.name} starts!`, {
         className: "bg-sky-100 text-sky-800 border-sky-200",
       });
@@ -49,7 +47,6 @@ export default function TechTacToe() {
   const [p0Streak, setP0Streak] = useState(0);
   const [lastWinScore, setLastWinScore] = useState(0);
   const [showNameDialog, setShowNameDialog] = useState(false);
-  const [winnerPlayer, setWinnerPlayer] = useState<Player | null>(null);
   const [leaderboardKey, setLeaderboardKey] = useState(0); // For refreshing leaderboard
 
   const handleCellClick = useCallback(
@@ -143,13 +140,13 @@ export default function TechTacToe() {
 
   const resetBoard = () => {
     setBoard(Array(9).fill(null));
-    setCurrentPlayer(currentPlayers?.player1 || null);
+    setCurrentPlayer("1");
+    setWinner(null);
     setWinnerPlayer(null);
     setWinningPattern(null);
     setIsAIThinking(false);
     setLastWinScore(0);
     setShowNameDialog(false);
-    setWinnerPlayer(null);
   };
 
   const handleChangeMode = () => {
