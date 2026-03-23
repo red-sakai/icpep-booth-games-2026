@@ -1,16 +1,13 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Info, Trophy, Cpu, User } from "lucide-react";
+import { Info, Trophy, Cpu } from "lucide-react";
 import type { Player } from "@/lib/types";
-import { Info, Trophy } from "lucide-react";
-import type { BoothPlayerType } from "@/lib/types";
-import { usePlayers } from "@/contexts/players-context";
 import { cn } from "@/lib/utils";
 
 type GameHeaderProps = {
-  winnerPlayer: BoothPlayerType | "draw" | null;
-  currentPlayer: BoothPlayerType | null;
+  winnerPlayer: Player | "draw" | null;
+  currentPlayer: Player | null;
   showInfo: boolean;
   setShowInfo: (show: boolean) => void;
   isAIThinking?: boolean;
@@ -30,12 +27,14 @@ export default function GameHeader({
   p0Streak = 0,
 }: GameHeaderProps) {
   const getPlayerLabel = (player: Player) => {
+    if (!player) {
+      return "Waiting...";
+    }
     if (gameMode === "pve") {
       return player === "1" ? "Player (1)" : "AI (0)";
     }
     return `Player ${player}`;
   };
-  const { currentPlayers } = usePlayers();
 
   return (
     <div className="text-center space-y-3 w-full max-w-md">
@@ -73,7 +72,7 @@ export default function GameHeader({
       <div className="grid grid-cols-2 gap-4 mb-2">
         <div className={cn(
           "bg-white/80 backdrop-blur-sm rounded-lg p-2 shadow-sm border-b-4 transition-all",
-          currentPlayer === "1" && !winner ? "border-sky-500 scale-105" : "border-transparent opacity-80"
+          currentPlayer === "1" && !winnerPlayer ? "border-sky-500 scale-105" : "border-transparent opacity-80"
         )}>
           <div className="text-xs font-bold text-sky-600 uppercase">Player 1</div>
           <div className="text-lg font-black text-sky-900 flex items-center justify-center gap-1">
@@ -88,7 +87,7 @@ export default function GameHeader({
 
         <div className={cn(
           "bg-white/80 backdrop-blur-sm rounded-lg p-2 shadow-sm border-b-4 transition-all",
-          currentPlayer === "0" && !winner ? "border-sky-500 scale-105" : "border-transparent opacity-80"
+          currentPlayer === "0" && !winnerPlayer ? "border-sky-500 scale-105" : "border-transparent opacity-80"
         )}>
           <div className="text-xs font-bold text-sky-600 uppercase">
             {gameMode === "pve" ? "AI" : "Player 2"}
@@ -106,13 +105,13 @@ export default function GameHeader({
 
       <div className="bg-white/80 backdrop-blur-sm rounded-lg p-3 shadow-sm min-w-[200px]">
         <div className="text-slate-700 font-medium">
-          {winner ? (
-            winner === "draw" ? (
+          {winnerPlayer ? (
+            winnerPlayer === "draw" ? (
               "Game ended in a draw!"
             ) : (
               <span className="flex items-center justify-center gap-1 text-emerald-600 font-bold">
                 <Trophy size={18} />
-                {getPlayerLabel(winner)} wins!
+                {getPlayerLabel(winnerPlayer)} wins!
               </span>
             )
           ) : isAIThinking ? (
