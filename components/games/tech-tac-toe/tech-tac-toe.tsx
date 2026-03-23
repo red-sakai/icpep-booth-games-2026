@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { RotateCcw } from "lucide-react";
-import type { Player, BoardState } from "@/lib/types";
+import type { BoardState, BoothPlayerType } from "@/lib/types";
 import { checkWinner } from "@/lib/game-utils/tech-tac-toe-utils";
 import { getBestMove } from "@/lib/game-utils/tech-tac-toe-ai";
 import GameHeader from "@/components/games/tech-tac-toe/game-header";
@@ -18,10 +18,25 @@ type Difficulty = "easy" | "medium" | "hard";
 
 export default function TechTacToe() {
   const [board, setBoard] = useState<BoardState>(Array(9).fill(null));
-  const [currentPlayer, setCurrentPlayer] = useState<Player>("1");
-  const [winner, setWinner] = useState<Player | "draw" | null>(null);
+  const { currentPlayers } = usePlayers();
+  const [currentPlayer, setCurrentPlayer] = useState<BoothPlayerType | null>(
+    null,
+  );
+  const [winnerPlayer, setWinnerPlayer] = useState<
+    BoothPlayerType | "draw" | null
+  >(null);
   const [winningPattern, setWinningPattern] = useState<number[] | null>(null);
   const [showInfo, setShowInfo] = useState(false);
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
+
+  useEffect(() => {
+    if (currentPlayers.player1 && currentPlayers.player2) {
+      setCurrentPlayer(currentPlayers.player1);
+      toast(`${currentPlayers.player1.name} starts!`, {
+        className: "bg-sky-100 text-sky-800 border-sky-200",
+      });
+    }
+  }, [currentPlayers]);
 
   // AI & Game Mode State
   const [gameMode, setGameMode] = useState<GameMode | null>(null);
@@ -128,8 +143,8 @@ export default function TechTacToe() {
 
   const resetBoard = () => {
     setBoard(Array(9).fill(null));
-    setCurrentPlayer("1");
-    setWinner(null);
+    setCurrentPlayer(currentPlayers?.player1 || null);
+    setWinnerPlayer(null);
     setWinningPattern(null);
     setIsAIThinking(false);
     setLastWinScore(0);
@@ -194,6 +209,8 @@ export default function TechTacToe() {
     }
   };
 
+  const isFinished = winner !== null;
+
   return (
     <div className="flex flex-col items-center justify-center p-4 space-y-6 bg-gradient-to-br from-sky-100 via-indigo-50 to-blue-100 rounded-xl shadow-md">
       <GameModeSelector
@@ -224,7 +241,7 @@ export default function TechTacToe() {
       />
 
       <GameHeader
-        winner={winner}
+        winnerPlayer={winnerPlayer}
         currentPlayer={currentPlayer}
         showInfo={showInfo}
         setShowInfo={setShowInfo}

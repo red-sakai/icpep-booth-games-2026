@@ -3,11 +3,14 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Info, Trophy, Cpu, User } from "lucide-react";
 import type { Player } from "@/lib/types";
+import { Info, Trophy } from "lucide-react";
+import type { BoothPlayerType } from "@/lib/types";
+import { usePlayers } from "@/contexts/players-context";
 import { cn } from "@/lib/utils";
 
 type GameHeaderProps = {
-  winner: Player | "draw" | null;
-  currentPlayer: Player;
+  winnerPlayer: BoothPlayerType | "draw" | null;
+  currentPlayer: BoothPlayerType | null;
   showInfo: boolean;
   setShowInfo: (show: boolean) => void;
   isAIThinking?: boolean;
@@ -17,7 +20,7 @@ type GameHeaderProps = {
 };
 
 export default function GameHeader({
-  winner,
+  winnerPlayer,
   currentPlayer,
   showInfo,
   setShowInfo,
@@ -32,6 +35,7 @@ export default function GameHeader({
     }
     return `Player ${player}`;
   };
+  const { currentPlayers } = usePlayers();
 
   return (
     <div className="text-center space-y-3 w-full max-w-md">

@@ -40,3 +40,10 @@ export type RJ45GameState =
   | "arrange"
   | "success"
   | "failure";
+
+export type BoothPlayerType = {
+  id: string;
+  name: string;
+  color: string;
+  // score: number;
+};
