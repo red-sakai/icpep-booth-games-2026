@@ -23,8 +23,8 @@ export default function LEDGrid({
   const canInteract = gameState === "guessing";
 
   return (
-    <div className="w-full max-w-2xl rounded-xl bg-white/90 backdrop-blur-sm border border-slate-200 shadow-sm p-5 sm:p-6 space-y-5">
-      <p className="text-center text-sm sm:text-base text-slate-600">
+    <div className="w-full max-w-2xl rounded-xl bg-white/40 backdrop-blur-md border border-white/50 shadow-sm p-5 sm:p-6 space-y-5">
+      <p className="text-center text-sm sm:text-base text-rose-600">
         {canInteract
           ? "Tap the LEDs in exact order."
           : "Watch closely for the sequence."}
@@ -43,7 +43,7 @@ export default function LEDGrid({
                 canInteract ? "cursor-pointer" : "cursor-not-allowed"
               } ${
                 activeLED === led
-                  ? `${LED_COLORS[led as LED]} shadow-lg border-white scale-105`
+                  ? `${LED_COLORS[led as LED]} shadow-lg border-slate-white-800 scale-105`
                   : `${LED_INACTIVE_COLORS[led as LED]} shadow-sm opacity-90`
               }`}
               onClick={() => handleLEDClick(led as LED)}
@@ -66,7 +66,7 @@ export default function LEDGrid({
               {canInteract && (
                 <Lightbulb
                   size={14}
-                  className="absolute bottom-2 right-2 text-slate-600 opacity-60"
+                  className="absolute bottom-2 right-2 text-rose-400 opacity-60"
                 />
               )}
             </Card>

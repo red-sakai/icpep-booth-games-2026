@@ -1,22 +1,22 @@
 import type { LED } from "@/lib/types";
 
-// Light mode colors
+// Light mode colors - more vibrant
 export const LED_COLORS = {
-  1: "bg-red-500 shadow-red-500/50",
-  2: "bg-amber-500 shadow-amber-500/50",
-  3: "bg-emerald-500 shadow-emerald-500/50",
-  4: "bg-sky-500 shadow-sky-500/50",
-  5: "bg-purple-500 shadow-purple-500/50",
-  6: "bg-pink-500 shadow-pink-500/50",
+  1: "bg-red-500 shadow-red-500/70 border-red-400",
+  2: "bg-orange-500 shadow-orange-500/70 border-orange-400",
+  3: "bg-emerald-500 shadow-emerald-500/70 border-emerald-400",
+  4: "bg-blue-500 shadow-blue-500/70 border-blue-400",
+  5: "bg-violet-500 shadow-violet-500/70 border-violet-400",
+  6: "bg-pink-500 shadow-pink-500/70 border-pink-400",
 };
 
 export const LED_INACTIVE_COLORS = {
-  1: "bg-red-100 border-red-300",
-  2: "bg-amber-100 border-amber-300",
-  3: "bg-emerald-100 border-emerald-300",
-  4: "bg-sky-100 border-sky-300",
-  5: "bg-purple-100 border-purple-300",
-  6: "bg-pink-100 border-pink-300",
+  1: "bg-red-200 border-red-400",
+  2: "bg-orange-200 border-orange-400",
+  3: "bg-emerald-200 border-emerald-400",
+  4: "bg-blue-200 border-blue-400",
+  5: "bg-violet-200 border-violet-400",
+  6: "bg-pink-200 border-pink-400",
 };
 
 // Fixed pattern length
