@@ -41,9 +41,26 @@ export type RJ45GameState =
   | "success"
   | "failure";
 
+// ----- for leaderboard -----
 export type BoothPlayerType = {
-  id: string;
   name: string;
   color: string;
-  // score: number;
+  createdAt: string;
+  updatedAt?: string | null;
+};
+export type LeaderboardPlayerType = {
+  name: string;
+  score: number;
+  createdAt: string;
+  updatedAt?: string | null;
+};
+export type GameLeaderboardType = {
+  metric: string;
+  order: "asc" | "desc";
+  entries: LeaderboardPlayerType[];
+};
+export type LeaderboardDataType = {
+  version: number;
+  generatedAt: string;
+  games: Record<string, GameLeaderboardType>;
 };
