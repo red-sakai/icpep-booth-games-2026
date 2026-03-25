@@ -6,41 +6,154 @@
       "metric": "patternsRemembered",
       "order": "desc",
       "entries": [
-        { "name": "PAT", "score": 6, "createdAt": "2026-03-18T09:12:00.000Z" },
-        { "name": "RED", "score": 5, "createdAt": "2026-03-18T10:05:00.000Z" },
-        { "name": "EZE", "score": 5, "createdAt": "2026-03-18T14:44:00.000Z" },
-        { "name": "CRL", "score": 4, "createdAt": "2026-03-19T08:22:00.000Z" },
-        { "name": "JRD", "score": 4, "createdAt": "2026-03-19T11:03:00.000Z" },
-        { "name": "PTK", "score": 3, "createdAt": "2026-03-19T15:27:00.000Z" },
-        { "name": "IVY", "score": 3, "createdAt": "2026-03-19T16:09:00.000Z" },
-        { "name": "MAT", "score": 2, "createdAt": "2026-03-20T09:01:00.000Z" }
+        {
+          "name": "PAT",
+          "score": 6,
+          "createdAt": "2026-03-18T09:12:00.000Z"
+        },
+        {
+          "name": "RED",
+          "score": 5,
+          "createdAt": "2026-03-18T10:05:00.000Z"
+        },
+        {
+          "name": "EZE",
+          "score": 5,
+          "createdAt": "2026-03-18T14:44:00.000Z"
+        },
+        {
+          "name": "CRL",
+          "score": 4,
+          "createdAt": "2026-03-19T08:22:00.000Z"
+        },
+        {
+          "name": "JRD",
+          "score": 4,
+          "createdAt": "2026-03-19T11:03:00.000Z"
+        },
+        {
+          "name": "PTK",
+          "score": 3,
+          "createdAt": "2026-03-19T15:27:00.000Z"
+        },
+        {
+          "name": "IVY",
+          "score": 3,
+          "createdAt": "2026-03-19T16:09:00.000Z"
+        },
+        {
+          "name": "MAT",
+          "score": 2,
+          "createdAt": "2026-03-20T09:01:00.000Z"
+        }
       ]
     },
     "rj45-game": {
       "metric": "timeRemainingSeconds",
       "order": "desc",
       "entries": [
-        { "name": "RJM", "score": 12, "createdAt": "2026-03-18T09:40:00.000Z" },
-        { "name": "JII", "score": 11, "createdAt": "2026-03-18T13:02:00.000Z" },
-        { "name": "RED", "score": 10, "createdAt": "2026-03-18T16:18:00.000Z" },
-        { "name": "CRL", "score": 9, "createdAt": "2026-03-19T09:55:00.000Z" },
-        { "name": "EZE", "score": 8, "createdAt": "2026-03-19T12:11:00.000Z" },
-        { "name": "GKJ", "score": 8, "createdAt": "2026-03-19T17:45:00.000Z" },
-        { "name": "ZED", "score": 7, "createdAt": "2026-03-20T08:33:00.000Z" },
-        { "name": "SJM", "score": 6, "createdAt": "2026-03-20T10:20:00.000Z" }
+        {
+          "name": "RJM",
+          "score": 12,
+          "createdAt": "2026-03-18T09:40:00.000Z"
+        },
+        {
+          "name": "JII",
+          "score": 11,
+          "createdAt": "2026-03-18T13:02:00.000Z"
+        },
+        {
+          "name": "RED",
+          "score": 10,
+          "createdAt": "2026-03-18T16:18:00.000Z"
+        },
+        {
+          "name": "CRL",
+          "score": 9,
+          "createdAt": "2026-03-19T09:55:00.000Z"
+        },
+        {
+          "name": "EZE",
+          "score": 8,
+          "createdAt": "2026-03-19T12:11:00.000Z"
+        },
+        {
+          "name": "GKJ",
+          "score": 8,
+          "createdAt": "2026-03-19T17:45:00.000Z"
+        },
+        {
+          "name": "ZED",
+          "score": 7,
+          "createdAt": "2026-03-20T08:33:00.000Z"
+        },
+        {
+          "name": "SJM",
+          "score": 6,
+          "createdAt": "2026-03-20T10:20:00.000Z"
+        }
       ]
     },
     "tech-tac-toe": {
-      "metric": "winStreak",
+      "metric": "totalWins",
       "order": "desc",
       "entries": [
-        { "name": "SGA", "score": 5, "createdAt": "2026-03-18T10:00:00.000Z" },
-        { "name": "PG", "score": 4, "createdAt": "2026-03-18T11:30:00.000Z" },
-        { "name": "ZAC", "score": 3, "createdAt": "2026-03-19T09:10:00.000Z" },
-        { "name": "GUM", "score": 3, "createdAt": "2026-03-19T13:50:00.000Z" },
-        { "name": "BAL", "score": 2, "createdAt": "2026-03-19T16:05:00.000Z" },
-        { "name": "ANA", "score": 2, "createdAt": "2026-03-20T08:45:00.000Z" },
-        { "name": "JOE", "score": 1, "createdAt": "2026-03-20T10:15:00.000Z" }
+        {
+          "name": "KIAN",
+          "score": 8,
+          "createdAt": "2026-03-22T16:22:25.495Z",
+          "updatedAt": "2026-03-22T16:23:49.948Z"
+        },
+        {
+          "name": "SGA",
+          "score": 5,
+          "createdAt": "2026-03-18T10:00:00.000Z"
+        },
+        {
+          "name": "PG",
+          "score": 4,
+          "createdAt": "2026-03-18T11:30:00.000Z"
+        },
+        {
+          "name": "ZAC",
+          "score": 3,
+          "createdAt": "2026-03-19T09:10:00.000Z"
+        },
+        {
+          "name": "GUM",
+          "score": 3,
+          "createdAt": "2026-03-19T13:50:00.000Z"
+        },
+        {
+          "name": "BAL",
+          "score": 2,
+          "createdAt": "2026-03-19T16:05:00.000Z"
+        },
+        {
+          "name": "ANA",
+          "score": 2,
+          "createdAt": "2026-03-20T08:45:00.000Z"
+        },
+        {
+          "name": "JOE",
+          "score": 1,
+          "createdAt": "2026-03-20T10:15:00.000Z"
+        },
+        {
+          "name": "AI (MEDIUM)",
+          "score": 1,
+          "createdAt": "2026-03-22T16:23:08.996Z"
+        },
+        {
+          "name": "AI (HARD)",
+          "score": 1,
+          "createdAt": "2026-03-23T06:35:48.935Z"
+        },
+        {
+          "name": "RED",
+          "score": 1,
+          "createdAt": "2026-03-23T06:36:15.058Z"
+        }
       ]
     }
   }
