@@ -37,7 +37,7 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="pink" />
-              <EditPlayers playerCount={2} />
+              <EditPlayers mode="pvp" />
             </div>
             <TechTacToe />
           </div>
@@ -47,7 +47,7 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="rose" />
-              <EditPlayers playerCount={1} />
+              <EditPlayers mode="solo" />
             </div>
             <LEDMemoryGame />
           </div>
@@ -57,7 +57,7 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="purple" />
-              <EditPlayers playerCount={1} />
+              <EditPlayers mode="solo" />
             </div>
             <RJ45Game />
           </div>

@@ -7,10 +7,10 @@ import { CreatePlayerDialog } from "@/components/home/edit-players/edit-player/c
 import { SelectPlayerDialog } from "@/components/home/edit-players/edit-player/select-player-dialog";
 
 type EditPlayersProps = {
-  playerCount: 1 | 2;
+  mode: "solo" | "pvp" | "pve";
 };
 
-export const EditPlayers = ({ playerCount }: EditPlayersProps) => {
+export const EditPlayers = ({ mode }: EditPlayersProps) => {
   const [team, setTeam] = useState<"team1" | "team2">("team1");
   const {
     currTeam1Player,
@@ -28,7 +28,7 @@ export const EditPlayers = ({ playerCount }: EditPlayersProps) => {
   useEffect(() => {
     setCurrTeam1Player(null);
     setCurrTeam2Player(null);
-  }, [playerCount, setCurrTeam1Player, setCurrTeam2Player]);
+  }, [mode, setCurrTeam1Player, setCurrTeam2Player]);
 
   // reset create and select player dialogs when edit team dialog is opened
   useEffect(() => {
@@ -61,8 +61,8 @@ export const EditPlayers = ({ playerCount }: EditPlayersProps) => {
   return (
     <>
       <div className="flex items-center justify-end gap-4">
-        <PlayerNames playerNumber={1} />
-        {playerCount === 2 && <PlayerNames playerNumber={2} />}
+        <PlayerNames team="team1" />
+        {mode === "pvp" && <PlayerNames team="team2" />}
 
         <button
           className={cn(
@@ -77,6 +77,7 @@ export const EditPlayers = ({ playerCount }: EditPlayersProps) => {
       </div>
 
       <EditTeamDialog
+        mode={mode}
         isOpen={isEditTeamDialogOpen}
         setIsOpen={setIsEditTeamDialogOpen}
         onNext={handleEditTeamNext}
@@ -104,22 +105,22 @@ export const EditPlayers = ({ playerCount }: EditPlayersProps) => {
 };
 
 type PlayerNamesProps = {
-  playerNumber: 1 | 2;
+  team: "team1" | "team2";
 };
-const PlayerNames = ({ playerNumber }: PlayerNamesProps) => {
+const PlayerNames = ({ team }: PlayerNamesProps) => {
   const { currTeam1Player, currTeam2Player } = usePlayers();
 
   return (
     <div className="flex items-center gap-2">
-      <span>Team {playerNumber}:</span>
+      <span>Team {team === "team1" ? "1" : "2"}:</span>
       <span
         className={cn(
           "font-semibold bg-slate-50 text-gray-700 px-2 py-1 rounded-lg shadow-sm",
-          playerNumber === 1 && currTeam1Player && "bg-blue-100 text-blue-800",
-          playerNumber === 2 && currTeam2Player && "bg-red-100 text-red-800",
+          team === "team1" && currTeam1Player && "bg-blue-100 text-blue-800",
+          team === "team2" && currTeam2Player && "bg-red-100 text-red-800",
         )}
       >
-        {playerNumber === 1
+        {team === "team1"
           ? currTeam1Player
             ? currTeam1Player.name
             : "None"

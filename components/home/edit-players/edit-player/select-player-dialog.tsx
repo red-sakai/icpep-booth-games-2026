@@ -56,14 +56,28 @@ export const SelectPlayerDialog = ({
       onOpenChange={setIsOpen}
       aria-describedby="create-player-dialog"
     >
-      <DialogContent className="sm:max-w-md bg-white border-sky-100">
+      <DialogContent
+        className={cn(
+          "sm:max-w-md bg-slate-50",
+          team === "team1" ? "border-sky-100" : "border-rose-100",
+        )}
+      >
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-sky-900">
+          <DialogTitle
+            className={cn(
+              "text-2xl font-bold",
+              team === "team1" ? "text-sky-900" : "text-rose-900",
+            )}
+          >
             Select a Player
           </DialogTitle>
         </DialogHeader>
 
-        <span className="text-sky-700">Filter players:</span>
+        <span
+          className={cn(team === "team1" ? "text-sky-700" : "text-rose-700")}
+        >
+          Filter players:
+        </span>
         <FilterPlayers
           team={team}
           filterNameValue={playerName}
@@ -72,7 +86,11 @@ export const SelectPlayerDialog = ({
           setFilterColor={setSelectedColor}
         />
 
-        <span className="text-sky-700">Result:</span>
+        <span
+          className={cn(team === "team1" ? "text-sky-700" : "text-rose-700")}
+        >
+          Result:
+        </span>
         <div className="h-full max-h-40 min-h-40">
           <FilteredPlayerList
             team={team}
@@ -88,7 +106,8 @@ export const SelectPlayerDialog = ({
             <Button
               className={cn(
                 "w-full bg-slate-50 rounded-xl",
-                "text-sky-900 py-6 text-lg font-bold",
+                team === "team1" ? "text-sky-900" : "text-rose-900",
+                "py-6 text-lg font-bold",
                 "cursor-pointer border border-slate-300/80",
                 "hover:bg-slate-200   hover:shadow-lg",
                 "transition-all duration-300",
@@ -99,9 +118,11 @@ export const SelectPlayerDialog = ({
             </Button>
             <Button
               className={cn(
-                "w-full bg-sky-600 rounded-xl shadow-lg",
-                "text-white py-6 text-lg font-bold",
-                "hover:bg-sky-700   hover:shadow-sky-200",
+                "w-full brounded-xl shadow-lg",
+                "text-slate-50 py-6 text-lg font-bold",
+                team === "team1"
+                  ? "bg-sky-600 hover:bg-sky-700   hover:shadow-sky-200"
+                  : "bg-rose-600 hover:bg-rose-700   hover:shadow-rose-200",
                 "transition-all duration-300",
                 "cursor-pointer",
               )}
