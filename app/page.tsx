@@ -20,7 +20,7 @@ import BackToHomeButton from "@/components/home/back-to-home-button";
 // Types
 import { GameType } from "@/lib/types";
 import { PlayersProvider } from "@/contexts/players-context";
-import { PlayersSelection } from "@/components/home/player-selection/players-selection";
+import { EditPlayers } from "@/components/home/edit-players/edit-players";
 
 export default function GameHub() {
   const [currentGame, setCurrentGame] = useState<GameType>("home");
@@ -37,7 +37,7 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="pink" />
-              <PlayersSelection playerCount={2} />
+              <EditPlayers playerCount={2} />
             </div>
             <TechTacToe />
           </div>
@@ -47,7 +47,7 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="rose" />
-              <PlayersSelection playerCount={1} />
+              <EditPlayers playerCount={2} />
             </div>
             <LEDMemoryGame />
           </div>
@@ -57,7 +57,7 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="purple" />
-              <PlayersSelection playerCount={1} />
+              <EditPlayers playerCount={1} />
             </div>
             <RJ45Game />
           </div>

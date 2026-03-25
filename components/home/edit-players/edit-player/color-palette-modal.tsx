@@ -1,33 +1,34 @@
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
+import { ColorPaletteSelection } from "./color-palette-selection";
 
-type ColorPaletteProps = {
-  variant: "blue" | "red";
+type ColorPaletteModalProps = {
+  variant: "sky" | "rose";
   selectedColor: string;
   setSelectedColor: React.Dispatch<React.SetStateAction<string>>;
   setIsColorPaletteOpen: React.Dispatch<React.SetStateAction<boolean>>;
   colorPalette: string[];
 };
-export const ColorPalette = ({
+export const ColorPaletteModal = ({
   variant,
   selectedColor,
   setSelectedColor,
   setIsColorPaletteOpen,
   colorPalette,
-}: ColorPaletteProps) => {
+}: ColorPaletteModalProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
 
   const getClassNames = (color: string) => {
-    if (variant === "blue") {
+    if (variant === "sky") {
       return [
-        "hover: outline-blue-500/80",
-        selectedColor === color ? "bg-blue-300/80 outline-blue-500/80" : "",
+        "hover: outline-sky-500/80",
+        selectedColor === color ? "bg-sky-300/80 outline-sky-500/80" : "",
       ];
-    } else if (variant === "red") {
+    } else if (variant === "rose") {
       return [
-        "hover: outline-red-500/80",
-        selectedColor === color ? "bg-red-300/80 outline-red-500/80" : "",
+        "hover: outline-rose-500/80",
+        selectedColor === color ? "bg-rose-300/80 outline-rose-500/80" : "",
       ];
     } else return [];
   };
@@ -56,34 +57,12 @@ export const ColorPalette = ({
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0 }}
     >
-      <div className={cn("flex flex-wrap justify-evenly gap-1")}>
-        {colorPalette.map((color) => (
-          <button
-            key={color}
-            className={cn(
-              "px-2 py-2 rounded-md shadow-md bg-slate-50 outline outline-slate-200",
-              "flex items-center justify-center",
-
-              ...getClassNames(color),
-
-              "cursor-pointer hover:scale-110 active:scale-95",
-              "transition-transform duration-200",
-            )}
-            onClick={() => {
-              setSelectedColor(color);
-            }}
-          >
-            {color === "all" ? (
-              <span className="text-xs text-gray-700">All</span>
-            ) : (
-              <span
-                className="size-4 rounded-full"
-                style={{ backgroundColor: color }}
-              />
-            )}
-          </button>
-        ))}
-      </div>
+      <ColorPaletteSelection
+        variant={variant}
+        selectedColor={selectedColor}
+        setSelectedColor={setSelectedColor}
+        colorPalette={colorPalette}
+      />
     </motion.div>
   );
 };

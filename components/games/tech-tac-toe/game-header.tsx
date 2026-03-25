@@ -70,11 +70,17 @@ export default function GameHeader({
       </AnimatePresence>
 
       <div className="grid grid-cols-2 gap-4 mb-2">
-        <div className={cn(
-          "bg-white/80 backdrop-blur-sm rounded-lg p-2 shadow-sm border-b-4 transition-all",
-          currentPlayer === "1" && !winnerPlayer ? "border-sky-500 scale-105" : "border-transparent opacity-80"
-        )}>
-          <div className="text-xs font-bold text-sky-600 uppercase">Player 1</div>
+        <div
+          className={cn(
+            "bg-white/80 backdrop-blur-sm rounded-lg p-2 shadow-sm border-b-4 transition-all",
+            currentPlayer === "1" && !winnerPlayer
+              ? "border-sky-500 scale-105"
+              : "border-transparent opacity-80",
+          )}
+        >
+          <div className="text-xs font-bold text-sky-600 uppercase">
+            Player 1
+          </div>
           <div className="text-lg font-black text-sky-900 flex items-center justify-center gap-1">
             <span className="text-2xl">1</span>
             {p1Streak > 0 && (
@@ -85,10 +91,14 @@ export default function GameHeader({
           </div>
         </div>
 
-        <div className={cn(
-          "bg-white/80 backdrop-blur-sm rounded-lg p-2 shadow-sm border-b-4 transition-all",
-          currentPlayer === "0" && !winnerPlayer ? "border-sky-500 scale-105" : "border-transparent opacity-80"
-        )}>
+        <div
+          className={cn(
+            "bg-white/80 backdrop-blur-sm rounded-lg p-2 shadow-sm border-b-4 transition-all",
+            currentPlayer === "0" && !winnerPlayer
+              ? "border-sky-500 scale-105"
+              : "border-transparent opacity-80",
+          )}
+        >
           <div className="text-xs font-bold text-sky-600 uppercase">
             {gameMode === "pve" ? "AI" : "Player 2"}
           </div>
@@ -121,7 +131,7 @@ export default function GameHeader({
             </span>
           ) : (
             <span className="flex items-center justify-center gap-2">
-              Current turn: {getPlayerLabel(currentPlayer)}
+              Current turn: {getPlayerLabel(currentPlayer || "1")}
             </span>
           )}
         </div>

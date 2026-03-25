@@ -19,7 +19,7 @@ type Difficulty = "easy" | "medium" | "hard";
 
 export default function TechTacToe() {
   const [board, setBoard] = useState<BoardState>(Array(9).fill(null));
-  const { currentPlayers } = usePlayers();
+  const { currTeam1Player, currTeam2Player } = usePlayers();
   const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
   const [winner, setWinner] = useState<Player | "draw" | null>(null);
   const [winnerPlayer, setWinnerPlayer] = useState<Player | null>(null);
@@ -28,13 +28,13 @@ export default function TechTacToe() {
   const [leaderboardOpen, setLeaderboardOpen] = useState(false);
 
   useEffect(() => {
-    if (currentPlayers.player1 && currentPlayers.player2) {
+    if (currTeam1Player && currTeam2Player) {
       setCurrentPlayer("1");
-      toast(`${currentPlayers.player1.name} starts!`, {
+      toast(`${currTeam1Player.name} starts!`, {
         className: "bg-sky-100 text-sky-800 border-sky-200",
       });
     }
-  }, [currentPlayers]);
+  }, [currTeam1Player, currTeam2Player]);
 
   // AI & Game Mode State
   const [gameMode, setGameMode] = useState<GameMode | null>(null);

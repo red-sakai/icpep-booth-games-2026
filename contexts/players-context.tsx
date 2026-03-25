@@ -1,21 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BoothPlayerType } from "@/lib/types";
 
 type PlayersContextType = {
   players: BoothPlayerType[];
   setPlayers: React.Dispatch<React.SetStateAction<BoothPlayerType[]>>;
-  currentPlayers: {
-    player1: BoothPlayerType | null;
-    player2: BoothPlayerType | null;
-  };
-  setCurrentPlayers: React.Dispatch<
-    React.SetStateAction<{
-      player1: BoothPlayerType | null;
-      player2: BoothPlayerType | null;
-    }>
+  currTeam1Player: BoothPlayerType | null;
+  setCurrTeam1Player: React.Dispatch<
+    React.SetStateAction<BoothPlayerType | null>
   >;
-  isPlayerSelectionModalOpen: boolean;
-  setIsPlayerSelectionModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  currTeam2Player: BoothPlayerType | null;
+  setCurrTeam2Player: React.Dispatch<
+    React.SetStateAction<BoothPlayerType | null>
+  >;
+  isPlayerEntryDialogOpen: boolean;
+  setIsPlayerEntryDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const PlayersContext = React.createContext<PlayersContextType | null>(null);
@@ -25,22 +23,33 @@ type PlayersProviderProps = {
 };
 export const PlayersProvider = ({ children }: PlayersProviderProps) => {
   const [players, setPlayers] = React.useState<BoothPlayerType[]>([]);
-  const [currentPlayers, setCurrentPlayers] = React.useState<{
-    player1: BoothPlayerType | null;
-    player2: BoothPlayerType | null;
-  }>({ player1: null, player2: null });
-  const [isPlayerSelectionModalOpen, setIsPlayerSelectionModalOpen] =
+  const [currTeam1Player, setCurrTeam1Player] =
+    React.useState<BoothPlayerType | null>(null);
+  const [currTeam2Player, setCurrTeam2Player] =
+    React.useState<BoothPlayerType | null>(null);
+  const [isPlayerEntryDialogOpen, setIsPlayerEntryDialogOpen] =
     React.useState(false);
+
+  useEffect(() => {
+    const getPlayersData = async () => {
+      const response = await fetch("/api/players");
+      const data = await response.json();
+      setPlayers(data);
+    };
+    getPlayersData();
+  }, []);
 
   return (
     <PlayersContext.Provider
       value={{
         players,
         setPlayers,
-        currentPlayers,
-        setCurrentPlayers,
-        isPlayerSelectionModalOpen,
-        setIsPlayerSelectionModalOpen,
+        currTeam1Player,
+        setCurrTeam1Player,
+        currTeam2Player,
+        setCurrTeam2Player,
+        isPlayerEntryDialogOpen,
+        setIsPlayerEntryDialogOpen,
       }}
     >
       {children}
