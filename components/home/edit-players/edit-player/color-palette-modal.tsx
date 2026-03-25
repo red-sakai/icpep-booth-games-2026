@@ -4,14 +4,14 @@ import { useEffect, useRef } from "react";
 import { ColorPaletteSelection } from "./color-palette-selection";
 
 type ColorPaletteModalProps = {
-  variant: "sky" | "rose";
+  team: "team1" | "team2";
   selectedColor: string;
   setSelectedColor: React.Dispatch<React.SetStateAction<string>>;
   setIsColorPaletteOpen: React.Dispatch<React.SetStateAction<boolean>>;
   colorPalette: string[];
 };
 export const ColorPaletteModal = ({
-  variant,
+  team,
   selectedColor,
   setSelectedColor,
   setIsColorPaletteOpen,
@@ -20,12 +20,12 @@ export const ColorPaletteModal = ({
   const ref = useRef<HTMLDivElement | null>(null);
 
   const getClassNames = (color: string) => {
-    if (variant === "sky") {
+    if (team === "team1") {
       return [
         "hover: outline-sky-500/80",
         selectedColor === color ? "bg-sky-300/80 outline-sky-500/80" : "",
       ];
-    } else if (variant === "rose") {
+    } else if (team === "team2") {
       return [
         "hover: outline-rose-500/80",
         selectedColor === color ? "bg-rose-300/80 outline-rose-500/80" : "",
@@ -58,7 +58,7 @@ export const ColorPaletteModal = ({
       exit={{ opacity: 0, scale: 0 }}
     >
       <ColorPaletteSelection
-        variant={variant}
+        team={team}
         selectedColor={selectedColor}
         setSelectedColor={setSelectedColor}
         colorPalette={colorPalette}

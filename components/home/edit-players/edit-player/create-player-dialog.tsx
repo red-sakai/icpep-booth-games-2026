@@ -12,12 +12,12 @@ import colorPaletteData from "@/data/player-color-pallete.json";
 import { createPlayer } from "@/lib/players-utils/players.client";
 import { BoothPlayerType } from "@/lib/types";
 import { ColorPaletteSelection } from "./color-palette-selection";
+import { usePlayers } from "@/contexts/players-context";
 
 type CreatePlayerDialogProps = {
   team: "team1" | "team2";
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  setIsEditPlayerDialogOpen: (open: boolean) => void;
   currPlayer: BoothPlayerType | null;
   setCurrPlayer: (player: BoothPlayerType | null) => void;
 };
@@ -25,20 +25,19 @@ export const CreatePlayerDialog = ({
   team,
   isOpen,
   setIsOpen,
-  setIsEditPlayerDialogOpen,
   currPlayer,
   setCurrPlayer,
 }: CreatePlayerDialogProps) => {
   const defaultColor = team === "team1" ? "blue" : "red";
   const [playerName, setPlayerName] = useState("");
   const [selectedColor, setSelectedColor] = useState(defaultColor);
+  const { players, updatePlayersData } = usePlayers();
 
   useEffect(() => {
-    if (!isOpen) {
-      setIsEditPlayerDialogOpen(true);
+    if (currPlayer) {
+      updatePlayersData();
     }
-    setIsOpen(isOpen);
-  }, [isOpen, setIsEditPlayerDialogOpen, setIsOpen]);
+  }, [currPlayer, updatePlayersData]);
 
   const handleCancel = () => {
     setPlayerName("");
@@ -51,6 +50,10 @@ export const CreatePlayerDialog = ({
       color: selectedColor,
       createdAt: new Date().toISOString(),
     };
+    if (players.some((player) => player.name === newPlayer.name)) {
+      alert("Player name already exists. Please choose a different name.");
+      return;
+    }
     createPlayer(newPlayer);
     setCurrPlayer(newPlayer);
     setPlayerName("");

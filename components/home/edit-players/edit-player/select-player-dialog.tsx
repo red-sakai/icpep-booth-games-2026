@@ -13,18 +13,16 @@ import { BoothPlayerType } from "@/lib/types";
 import { FilterPlayers } from "./filter-players";
 
 type SelectPlayerDialogProps = {
-  variant: "sky" | "rose";
+  team: "team1" | "team2";
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  setIsEditPlayerDialogOpen: (open: boolean) => void;
   currPlayer: BoothPlayerType | null;
   setCurrPlayer: (player: BoothPlayerType | null) => void;
 };
 export const SelectPlayerDialog = ({
-  variant,
+  team,
   isOpen,
   setIsOpen,
-  setIsEditPlayerDialogOpen,
   currPlayer,
   setCurrPlayer,
 }: SelectPlayerDialogProps) => {
@@ -38,13 +36,6 @@ export const SelectPlayerDialog = ({
   useEffect(() => {
     setSelectedPlayer(currPlayer);
   }, [currPlayer]);
-
-  useEffect(() => {
-    if (!isOpen) {
-      setIsEditPlayerDialogOpen(true);
-    }
-    setIsOpen(isOpen);
-  }, [isOpen, setIsEditPlayerDialogOpen, setIsOpen]);
 
   const handleCancel = () => {
     setPlayerName("");
@@ -74,7 +65,7 @@ export const SelectPlayerDialog = ({
 
         <span className="text-sky-700">Filter players:</span>
         <FilterPlayers
-          variant={variant}
+          team={team}
           filterNameValue={playerName}
           setFilterNameValue={setPlayerName}
           filterColor={selectedColor}
@@ -84,6 +75,7 @@ export const SelectPlayerDialog = ({
         <span className="text-sky-700">Result:</span>
         <div className="h-full max-h-40 min-h-40">
           <FilteredPlayerList
+            team={team}
             filterNameValue={playerName}
             filterColor={selectedColor}
             selectedPlayer={selectedPlayer}

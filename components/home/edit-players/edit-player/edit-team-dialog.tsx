@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import { MousePointerClick, TextCursorInput, User } from "lucide-react";
 import { useState } from "react";
 
-type EditPlayerDialogProps = {
+type EditTeamDialogProps = {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   onNext: (
@@ -19,11 +19,11 @@ type EditPlayerDialogProps = {
     selectedTeam: "team1" | "team2",
   ) => void;
 };
-export const EditPlayerDialog = ({
+export const EditTeamDialog = ({
   isOpen,
   setIsOpen,
   onNext,
-}: EditPlayerDialogProps) => {
+}: EditTeamDialogProps) => {
   const [selectedOption, setSelectedOption] = useState<"create" | "select">(
     "create",
   );

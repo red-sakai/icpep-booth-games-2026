@@ -2,7 +2,7 @@ import { Edit } from "lucide-react";
 import { usePlayers } from "@/contexts/players-context";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { EditPlayerDialog } from "@/components/home/edit-players/edit-player/edit-player-dialog";
+import { EditTeamDialog } from "@/components/home/edit-players/edit-player/edit-team-dialog";
 import { CreatePlayerDialog } from "@/components/home/edit-players/edit-player/create-player-dialog";
 import { SelectPlayerDialog } from "@/components/home/edit-players/edit-player/select-player-dialog";
 
@@ -18,25 +18,34 @@ export const EditPlayers = ({ playerCount }: EditPlayersProps) => {
     setCurrTeam1Player,
     setCurrTeam2Player,
   } = usePlayers();
-  const [isEditPlayerDialogOpen, setIsEditPlayerDialogOpen] = useState(false);
+  const [isEditTeamDialogOpen, setIsEditTeamDialogOpen] = useState(false);
   const [isCreatePlayerDialogOpen, setIsCreatePlayerDialogOpen] =
     useState(false);
   const [isSelectPlayerDialogOpen, setIsSelectPlayerDialogOpen] =
     useState(false);
 
+  // reset current players when player count changes
   useEffect(() => {
     setCurrTeam1Player(null);
     setCurrTeam2Player(null);
   }, [playerCount, setCurrTeam1Player, setCurrTeam2Player]);
 
+  // reset create and select player dialogs when edit team dialog is opened
   useEffect(() => {
-    if (isEditPlayerDialogOpen) {
+    if (isEditTeamDialogOpen) {
       setIsCreatePlayerDialogOpen(false);
       setIsSelectPlayerDialogOpen(false);
     }
-  }, [isEditPlayerDialogOpen]);
+  }, [isEditTeamDialogOpen]);
 
-  const handleEditPlayerNext = (
+  // open edit team dialog when both create and select player dialogs are closed
+  useEffect(() => {
+    if (!isCreatePlayerDialogOpen && !isSelectPlayerDialogOpen) {
+      setIsEditTeamDialogOpen(true);
+    }
+  }, [isCreatePlayerDialogOpen, isSelectPlayerDialogOpen]);
+
+  const handleEditTeamNext = (
     selectedOption: "create" | "select",
     selectedTeam: "team1" | "team2",
   ) => {
@@ -46,7 +55,7 @@ export const EditPlayers = ({ playerCount }: EditPlayersProps) => {
     } else if (selectedOption === "select") {
       setIsSelectPlayerDialogOpen(true);
     }
-    setIsEditPlayerDialogOpen(false);
+    setIsEditTeamDialogOpen(false);
   };
 
   return (
@@ -61,32 +70,30 @@ export const EditPlayers = ({ playerCount }: EditPlayersProps) => {
             "cursor-pointer hover:scale-105 active:scale-95",
             "transition-all duration-200",
           )}
-          onClick={() => setIsEditPlayerDialogOpen(true)}
+          onClick={() => setIsEditTeamDialogOpen(true)}
         >
           <Edit className="size-6 text-gray-700" />
         </button>
       </div>
 
-      <EditPlayerDialog
-        isOpen={isEditPlayerDialogOpen}
-        setIsOpen={setIsEditPlayerDialogOpen}
-        onNext={handleEditPlayerNext}
+      <EditTeamDialog
+        isOpen={isEditTeamDialogOpen}
+        setIsOpen={setIsEditTeamDialogOpen}
+        onNext={handleEditTeamNext}
       />
       <CreatePlayerDialog
         team={team}
         isOpen={isCreatePlayerDialogOpen}
         setIsOpen={setIsCreatePlayerDialogOpen}
-        setIsEditPlayerDialogOpen={setIsEditPlayerDialogOpen}
         currPlayer={team === "team1" ? currTeam1Player : currTeam2Player}
         setCurrPlayer={
           team === "team1" ? setCurrTeam1Player : setCurrTeam2Player
         }
       />
       <SelectPlayerDialog
-        variant={"sky"}
+        team={team}
         isOpen={isSelectPlayerDialogOpen}
         setIsOpen={setIsSelectPlayerDialogOpen}
-        setIsEditPlayerDialogOpen={setIsEditPlayerDialogOpen}
         currPlayer={team === "team1" ? currTeam1Player : currTeam2Player}
         setCurrPlayer={
           team === "team1" ? setCurrTeam1Player : setCurrTeam2Player

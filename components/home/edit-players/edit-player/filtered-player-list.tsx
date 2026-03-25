@@ -1,5 +1,4 @@
 import { usePlayers } from "@/contexts/players-context";
-import { getPlayers } from "@/lib/players-utils/players.client";
 import { BoothPlayerType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
@@ -7,6 +6,7 @@ import { CheckCircle, Circle } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type FilteredPlayerListProps = {
+  team: "team1" | "team2";
   filterNameValue: string;
   filterColor: string;
   selectedPlayer: BoothPlayerType | null;
@@ -16,21 +16,19 @@ type FilteredPlayerListProps = {
 };
 
 export const FilteredPlayerList = ({
+  team,
   filterNameValue,
   filterColor,
   selectedPlayer,
   setSelectedPlayer,
 }: FilteredPlayerListProps) => {
-  const { players, setPlayers } = usePlayers();
+  const { players, updatePlayersData, currTeam1Player, currTeam2Player } =
+    usePlayers();
   const [filteredPlayers, setFilteredPlayers] =
     useState<BoothPlayerType[]>(players);
 
   useEffect(() => {
-    const getPlayersData = async () => {
-      const allPlayers = await getPlayers();
-      setPlayers(allPlayers);
-    };
-    getPlayersData();
+    updatePlayersData();
   }, [players]);
 
   useEffect(() => {
@@ -42,11 +40,30 @@ export const FilteredPlayerList = ({
     setFilteredPlayers(filtered);
   }, [filterNameValue, filterColor, players]);
 
-  const handlePlayerClick = (player: BoothPlayerType) => {
-    if (player.name === selectedPlayer?.name) {
-      setSelectedPlayer(null);
-    } else {
-      setSelectedPlayer(player);
+  const handlePlayerItemClick = (player: BoothPlayerType) => {
+    switch (team) {
+      case "team1":
+        if (selectedPlayer?.name === player.name) {
+          setSelectedPlayer(null);
+        } else if (currTeam2Player?.name === player.name) {
+          alert(
+            "Player is already selected for Team 2. Please choose a different player.",
+          );
+        } else {
+          setSelectedPlayer(player);
+        }
+        break;
+      case "team2":
+        if (selectedPlayer?.name === player.name) {
+          setSelectedPlayer(null);
+        } else if (currTeam1Player?.name === player.name) {
+          alert(
+            "Player is already selected for Team 1. Please choose a different player.",
+          );
+        } else {
+          setSelectedPlayer(player);
+        }
+        break;
     }
   };
 
@@ -65,7 +82,7 @@ export const FilteredPlayerList = ({
             <PlayerItem
               player={player}
               selectedPlayer={selectedPlayer}
-              onClick={() => handlePlayerClick(player)}
+              onClick={() => handlePlayerItemClick(player)}
             />
           </AnimatePresence>
         ))}

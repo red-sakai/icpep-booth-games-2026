@@ -47,7 +47,7 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="rose" />
-              <EditPlayers playerCount={2} />
+              <EditPlayers playerCount={1} />
             </div>
             <LEDMemoryGame />
           </div>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { BoothPlayerType } from "@/lib/types";
 
 type PlayersContextType = {
@@ -14,6 +14,7 @@ type PlayersContextType = {
   >;
   isPlayerEntryDialogOpen: boolean;
   setIsPlayerEntryDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  updatePlayersData: () => Promise<void>;
 };
 
 const PlayersContext = React.createContext<PlayersContextType | null>(null);
@@ -30,13 +31,14 @@ export const PlayersProvider = ({ children }: PlayersProviderProps) => {
   const [isPlayerEntryDialogOpen, setIsPlayerEntryDialogOpen] =
     React.useState(false);
 
+  const updatePlayersData = useCallback(async () => {
+    const response = await fetch("/api/players");
+    const data = await response.json();
+    setPlayers(data);
+  }, []);
+
   useEffect(() => {
-    const getPlayersData = async () => {
-      const response = await fetch("/api/players");
-      const data = await response.json();
-      setPlayers(data);
-    };
-    getPlayersData();
+    updatePlayersData();
   }, []);
 
   return (
@@ -50,6 +52,7 @@ export const PlayersProvider = ({ children }: PlayersProviderProps) => {
         setCurrTeam2Player,
         isPlayerEntryDialogOpen,
         setIsPlayerEntryDialogOpen,
+        updatePlayersData,
       }}
     >
       {children}

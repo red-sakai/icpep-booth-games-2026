@@ -6,7 +6,7 @@ import playerColorPaletteData from "@/data/player-color-pallete.json";
 import { ColorPaletteModal } from "./color-palette-modal";
 
 type FilterPlayersProps = {
-  variant: "sky" | "rose";
+  team: "team1" | "team2";
   filterNameValue: string;
   setFilterNameValue: React.Dispatch<React.SetStateAction<string>>;
   filterColor: string;
@@ -14,16 +14,16 @@ type FilterPlayersProps = {
 };
 
 export const FilterPlayers = ({
-  variant,
+  team,
   filterNameValue,
   setFilterNameValue,
   filterColor,
   setFilterColor,
 }: FilterPlayersProps) => {
   const getClassNames = () => {
-    if (variant === "sky") {
+    if (team === "team1") {
       return ["hover:border-2 hover:border-sky-600/80"];
-    } else if (variant === "rose") {
+    } else if (team === "team2") {
       return ["hover:border-2 hover:border-rose-700/80"];
     } else return [];
   };
@@ -44,7 +44,7 @@ export const FilterPlayers = ({
         )}
       />
       <FilterPlayerColorPicker
-        variant={variant}
+        team={team}
         filterColor={filterColor}
         setSelectedColor={setFilterColor}
       />
@@ -53,20 +53,20 @@ export const FilterPlayers = ({
 };
 
 type FilterPlayerColorPickerProps = {
-  variant: "sky" | "rose";
+  team: "team1" | "team2";
   filterColor: string;
   setSelectedColor: React.Dispatch<React.SetStateAction<string>>;
 };
 const FilterPlayerColorPicker = ({
-  variant,
+  team,
   filterColor,
   setSelectedColor,
 }: FilterPlayerColorPickerProps) => {
   const [isColorPaletteOpen, setIsColorPaletteOpen] = useState(false);
   const getClassNames = () => {
-    if (variant === "sky") {
+    if (team === "team1") {
       return ["hover:border-2 hover:border-sky-600/80"];
-    } else if (variant === "rose") {
+    } else if (team === "team2") {
       return ["hover:border-2 hover:border-rose-700/80"];
     } else return [];
   };
@@ -98,7 +98,7 @@ const FilterPlayerColorPicker = ({
       <AnimatePresence>
         {isColorPaletteOpen && (
           <ColorPaletteModal
-            variant={variant}
+            team={team}
             selectedColor={filterColor}
             setSelectedColor={setSelectedColor}
             setIsColorPaletteOpen={setIsColorPaletteOpen}
