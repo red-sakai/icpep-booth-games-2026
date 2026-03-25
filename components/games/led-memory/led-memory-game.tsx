@@ -162,7 +162,7 @@ export default function LEDMemoryGame() {
             toast(
               `Time's up! You remembered ${playerSequence.length} out of ${sequence.length} correctly.`,
               {
-                className: "bg-amber-100 text-amber-800 border-amber-200",
+                className: "bg-rose-100 text-rose-800 border-rose-200",
               }
             );
             return 0;
@@ -264,7 +264,7 @@ export default function LEDMemoryGame() {
       toast(
         `Game Over! You remembered ${currentScore} out of ${sequence.length} correctly.`,
         {
-          className: "bg-amber-100 text-amber-800 border-amber-200",
+          className: "bg-rose-100 text-rose-800 border-rose-200",
         }
       );
       return;
@@ -322,7 +322,7 @@ export default function LEDMemoryGame() {
       });
     } else {
       toast("No name entered. You can skip this step.", {
-        className: "bg-amber-100 text-amber-800 border-amber-200",
+        className: "bg-rose-100 text-rose-800 border-rose-200",
       });
     }
 
@@ -346,7 +346,7 @@ export default function LEDMemoryGame() {
   // };
 
   return (
-    <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center p-4 sm:p-7 gap-5 sm:gap-6 bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 rounded-2xl border border-amber-100/80 shadow-sm">
+    <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center p-4 sm:p-7 gap-5 sm:gap-6 bg-gradient-to-b from-white-100 via-white-100 to-white-100 rounded-2xl border border-rose-300/50 shadow-xl backdrop-blur-sm">
       <GameHeader
         gameState={gameState}
         playerSequence={playerSequence}
@@ -368,16 +368,16 @@ export default function LEDMemoryGame() {
           onClick={() => setLeaderboardOpen(true)}
           variant="outline"
           size="lg"
-          className="bg-white border-amber-200 hover:bg-amber-50 hover:border-amber-300 text-amber-700 shadow-sm"
+          className="bg-white border-rose-200 hover:bg-rose-50 hover:border-rose-300 text-rose-700 shadow-sm"
         >
           Show Leaderboard
         </Button>
       )}
 
       <Dialog open={leaderboardOpen} onOpenChange={setLeaderboardOpen}>
-        <DialogContent className="sm:max-w-2xl">
+        <DialogContent className="sm:max-w-2xl border-rose-100">
           <DialogHeader>
-            <DialogTitle>Leaderboard</DialogTitle>
+            <DialogTitle className="text-rose-900">Leaderboard</DialogTitle>
             <DialogDescription>LED Memory scores and rankings</DialogDescription>
           </DialogHeader>
 
@@ -396,7 +396,7 @@ export default function LEDMemoryGame() {
           variant="outline"
           size="lg"
           disabled={gameState === "showing"}
-          className="min-w-40 bg-white border-amber-300 hover:bg-amber-50 hover:border-amber-400 text-amber-700 shadow-sm flex items-center gap-2"
+          className="min-w-40 bg-white border-rose-300 hover:bg-rose-50 hover:border-rose-400 text-rose-700 shadow-sm flex items-center gap-2"
         >
           <RotateCcw size={16} />
           Restart
@@ -407,7 +407,7 @@ export default function LEDMemoryGame() {
           variant="outline"
           size="lg"
           disabled={gameState === "showing"}
-          className="min-w-40 bg-white border-slate-300 hover:bg-slate-50 hover:border-slate-400 text-slate-700 shadow-sm"
+          className="min-w-40 bg-white border-rose-200 hover:bg-rose-50 hover:border-rose-300 text-rose-700 shadow-sm"
         >
           Change Level
         </Button>
@@ -416,7 +416,7 @@ export default function LEDMemoryGame() {
       <div className="w-full flex justify-center">
         <LeaderboardPanel
           gameId="led-memory"
-          className="w-full max-w-2xl mx-auto bg-white/90 backdrop-blur-sm border-slate-200"
+          className="w-full max-w-2xl mx-auto bg-white/90 backdrop-blur-sm border-rose-100"
         />
       </div>
 
@@ -429,13 +429,13 @@ export default function LEDMemoryGame() {
         }}
       >
         <DialogContent
-          className="sm:max-w-md rounded-xl border-slate-200 [&>button]:hidden"
+          className="sm:max-w-md rounded-xl border-rose-200 [&>button]:hidden"
           onEscapeKeyDown={(event) => event.preventDefault()}
           onPointerDownOutside={(event) => event.preventDefault()}
           onInteractOutside={(event) => event.preventDefault()}
         >
           <DialogHeader className="space-y-1">
-            <DialogTitle className="text-xl">Choose Difficulty</DialogTitle>
+            <DialogTitle className="text-xl text-rose-900">Choose Difficulty</DialogTitle>
             <DialogDescription>
               Pick a level to start Memory Heist.
             </DialogDescription>
@@ -444,36 +444,36 @@ export default function LEDMemoryGame() {
           <div className="grid grid-cols-1 gap-3">
             <Button
               variant="outline"
-              className="justify-between border-slate-200 hover:border-amber-300 hover:bg-amber-50/70"
+              className="justify-between border-rose-100 hover:border-rose-300 hover:bg-rose-50/70"
               onClick={() => startGame("easy")}
             >
-              <span>Easy</span>
-              <span className="text-xs text-slate-500 font-medium">6 lights • 20s</span>
+              <span className="text-rose-700 font-medium">Easy</span>
+              <span className="text-xs text-rose-400 font-medium">6 lights • 20s</span>
             </Button>
             <Button
               variant="outline"
-              className="justify-between border-slate-200 hover:border-amber-300 hover:bg-amber-50/70"
+              className="justify-between border-rose-100 hover:border-rose-300 hover:bg-rose-50/70"
               onClick={() => startGame("medium")}
             >
-              <span>Medium</span>
-              <span className="text-xs text-slate-500 font-medium">6 lights • 15s</span>
+              <span className="text-rose-700 font-medium">Medium</span>
+              <span className="text-xs text-rose-400 font-medium">6 lights • 15s</span>
             </Button>
             <Button
               variant="outline"
-              className="justify-between border-slate-200 hover:border-amber-300 hover:bg-amber-50/70"
+              className="justify-between border-rose-100 hover:border-rose-300 hover:bg-rose-50/70"
               onClick={() => startGame("hard")}
             >
-              <span>Hard</span>
-              <span className="text-xs text-slate-500 font-medium">6 lights • 10s</span>
+              <span className="text-rose-700 font-medium">Hard</span>
+              <span className="text-xs text-rose-400 font-medium">6 lights • 10s</span>
             </Button>
           </div>
         </DialogContent>
       </Dialog>
 
       <Dialog open={showNameDialog} onOpenChange={setShowNameDialog}>
-        <DialogContent className="sm:max-w-md rounded-xl border-slate-200">
+        <DialogContent className="sm:max-w-md rounded-xl border-rose-200">
           <DialogHeader className="space-y-1">
-            <DialogTitle className="text-xl">Great Game!</DialogTitle>
+            <DialogTitle className="text-xl text-rose-900">Great Game!</DialogTitle>
             <DialogDescription>
               Enter your name for leaderboard preview. You can skip.
             </DialogDescription>
@@ -484,18 +484,18 @@ export default function LEDMemoryGame() {
             onChange={(event) => setPlayerName(event.target.value)}
             placeholder="Enter your name"
             maxLength={20}
-            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-200"
+            className="w-full rounded-md border border-rose-200 bg-white px-3 py-2.5 text-sm text-rose-800 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-200"
           />
 
           <DialogFooter>
             <Button
               variant="outline"
-              className="border-slate-200"
+              className="border-rose-200 text-rose-700"
               onClick={handleSkipName}
             >
               Skip
             </Button>
-            <Button className="bg-amber-600 hover:bg-amber-700" onClick={handleSaveName}>
+            <Button className="bg-rose-600 hover:bg-rose-700 text-white" onClick={handleSaveName}>
               Save Name
             </Button>
           </DialogFooter>

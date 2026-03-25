@@ -39,9 +39,9 @@ export default function LeaderboardPanel({
     switch (gameId) {
       case "led-memory":
         return {
-          card: "bg-amber-50/80 border-amber-200",
-          title: "text-amber-800",
-          metric: "text-amber-700",
+          card: "bg-rose-50/80 border-rose-200",
+          title: "text-rose-800",
+          metric: "text-rose-700",
         };
       case "tech-tac-toe":
         return {
