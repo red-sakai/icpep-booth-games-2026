@@ -5,12 +5,13 @@ import { cn } from "@/lib/utils";
 import { EditTeamDialog } from "@/components/home/edit-players/edit-player/edit-team-dialog";
 import { CreatePlayerDialog } from "@/components/home/edit-players/edit-player/create-player-dialog";
 import { SelectPlayerDialog } from "@/components/home/edit-players/edit-player/select-player-dialog";
+import { GameMode } from "@/lib/types";
 
 type EditPlayersProps = {
-  mode: "solo" | "pvp" | "pve";
+  gameMode: GameMode;
 };
 
-export const EditPlayers = ({ mode }: EditPlayersProps) => {
+export const EditPlayers = ({ gameMode }: EditPlayersProps) => {
   const [team, setTeam] = useState<"team1" | "team2">("team1");
   const {
     currTeam1Player,
@@ -23,12 +24,6 @@ export const EditPlayers = ({ mode }: EditPlayersProps) => {
     useState(false);
   const [isSelectPlayerDialogOpen, setIsSelectPlayerDialogOpen] =
     useState(false);
-
-  // reset current players when player count changes
-  useEffect(() => {
-    setCurrTeam1Player(null);
-    setCurrTeam2Player(null);
-  }, [mode, setCurrTeam1Player, setCurrTeam2Player]);
 
   // reset create and select player dialogs when edit team dialog is opened
   useEffect(() => {
@@ -62,7 +57,7 @@ export const EditPlayers = ({ mode }: EditPlayersProps) => {
     <>
       <div className="flex items-center justify-end gap-4">
         <PlayerNames team="team1" />
-        {mode === "pvp" && <PlayerNames team="team2" />}
+        {gameMode !== "solo" && <PlayerNames team="team2" />}
 
         <button
           className={cn(
@@ -77,7 +72,7 @@ export const EditPlayers = ({ mode }: EditPlayersProps) => {
       </div>
 
       <EditTeamDialog
-        mode={mode}
+        gameMode={gameMode}
         isOpen={isEditTeamDialogOpen}
         setIsOpen={setIsEditTeamDialogOpen}
         onNext={handleEditTeamNext}
@@ -106,8 +101,9 @@ export const EditPlayers = ({ mode }: EditPlayersProps) => {
 
 type PlayerNamesProps = {
   team: "team1" | "team2";
+  defaultPlayer?: string | null;
 };
-const PlayerNames = ({ team }: PlayerNamesProps) => {
+const PlayerNames = ({ team, defaultPlayer = null }: PlayerNamesProps) => {
   const { currTeam1Player, currTeam2Player } = usePlayers();
 
   return (
@@ -120,13 +116,15 @@ const PlayerNames = ({ team }: PlayerNamesProps) => {
           team === "team2" && currTeam2Player && "bg-red-100 text-red-800",
         )}
       >
-        {team === "team1"
-          ? currTeam1Player
-            ? currTeam1Player.name
-            : "None"
-          : currTeam2Player
-            ? currTeam2Player.name
-            : "None"}
+        {defaultPlayer
+          ? defaultPlayer
+          : team === "team1"
+            ? currTeam1Player
+              ? currTeam1Player.name
+              : "None"
+            : currTeam2Player
+              ? currTeam2Player.name
+              : "None"}
       </span>
     </div>
   );

@@ -1,6 +1,7 @@
 import type React from "react";
 // Game types
 export type GameType = "home" | "tech-tac-toe" | "led-memory" | "rj45-game";
+export type GameMode = "solo" | "pvp" | "pve" | null;
 
 // Social QR code types
 export type SocialQRCode = {
@@ -40,6 +41,13 @@ export type RJ45GameState =
   | "arrange"
   | "success"
   | "failure";
+
+export type DifficultyLevel = "easy" | "medium" | "hard";
+export enum EDificultyMultiplyer {
+  easy = 1,
+  medium = 1.5,
+  hard = 2,
+}
 
 // ----- for leaderboard -----
 export type BoothPlayerType = {

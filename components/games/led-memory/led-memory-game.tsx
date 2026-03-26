@@ -4,7 +4,12 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
-import type { GameState, LED } from "@/lib/types";
+import {
+  EDificultyMultiplyer,
+  type DifficultyLevel,
+  type GameState,
+  type LED,
+} from "@/lib/types";
 import { getRandomLED } from "@/lib/game-utils/led-memory-utils";
 import GameHeader from "@/components/games/led-memory/game-header";
 import LEDGrid from "@/components/games/led-memory/led-grid";
@@ -19,13 +24,6 @@ import {
 import { usePlayers } from "@/contexts/players-context";
 import { submitScore } from "@/lib/leaderboard-utils/leaderboard-utils.client";
 import { useLeaderboard } from "@/contexts/leaderboard-context";
-
-type DifficultyLevel = "easy" | "medium" | "hard";
-enum EDificultyMultiplyer {
-  easy = 1,
-  medium = 1.5,
-  hard = 2,
-}
 
 const LEVEL_CONFIG: Record<
   DifficultyLevel,

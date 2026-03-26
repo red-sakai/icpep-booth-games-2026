@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,8 +12,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { User, Cpu } from "lucide-react";
+import { GameMode } from "@/lib/types";
 
-type GameMode = "pvp" | "pve";
 type Difficulty = "easy" | "medium" | "hard";
 
 interface GameModeSelectorProps {
@@ -27,8 +27,16 @@ export default function GameModeSelector({
   onSelect,
   onClose,
 }: GameModeSelectorProps) {
-  const [mode, setMode] = useState<GameMode>("pve");
+  const [mode, setMode] = useState<NonNullable<GameMode>>("pve");
   const [difficulty, setDifficulty] = useState<Difficulty>("medium");
+
+  useEffect(() => {
+    if (open) {
+      setMode("pve");
+    } else {
+      setDifficulty("medium");
+    }
+  }, [open]);
 
   const handleStart = () => {
     onSelect(mode, difficulty);
@@ -59,13 +67,13 @@ export default function GameModeSelector({
               "flex flex-col items-center justify-center p-6 rounded-xl border-2 transition-all space-y-3",
               mode === "pvp"
                 ? "border-sky-500 bg-sky-50 text-sky-700 shadow-md"
-                : "border-slate-100 bg-slate-50 text-slate-500 hover:border-sky-200 hover:bg-sky-25"
+                : "border-slate-100 bg-slate-50 text-slate-500 hover:border-sky-200 hover:bg-sky-25",
             )}
           >
             <div
               className={cn(
                 "p-3 rounded-full",
-                mode === "pvp" ? "bg-sky-500 text-white" : "bg-slate-200"
+                mode === "pvp" ? "bg-sky-500 text-white" : "bg-slate-200",
               )}
             >
               <User size={32} />
@@ -79,13 +87,13 @@ export default function GameModeSelector({
               "flex flex-col items-center justify-center p-6 rounded-xl border-2 transition-all space-y-3",
               mode === "pve"
                 ? "border-sky-500 bg-sky-50 text-sky-700 shadow-md"
-                : "border-slate-100 bg-slate-50 text-slate-500 hover:border-sky-200 hover:bg-sky-25"
+                : "border-slate-100 bg-slate-50 text-slate-500 hover:border-sky-200 hover:bg-sky-25",
             )}
           >
             <div
               className={cn(
                 "p-3 rounded-full",
-                mode === "pve" ? "bg-sky-500 text-white" : "bg-slate-200"
+                mode === "pve" ? "bg-sky-500 text-white" : "bg-slate-200",
               )}
             >
               <Cpu size={32} />
@@ -108,7 +116,7 @@ export default function GameModeSelector({
                     "px-4 py-2 rounded-full text-sm font-semibold capitalize transition-all",
                     difficulty === d
                       ? "bg-sky-600 text-white shadow-sm"
-                      : "bg-sky-50 text-sky-600 hover:bg-sky-100"
+                      : "bg-sky-50 text-sky-600 hover:bg-sky-100",
                   )}
                 >
                   {d}

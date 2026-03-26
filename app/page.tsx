@@ -18,13 +18,14 @@ import GameSelectorCarousel from "@/components/home/game-selector-carousel";
 import BackToHomeButton from "@/components/home/back-to-home-button";
 
 // Types
-import { GameType } from "@/lib/types";
+import { GameMode, GameType } from "@/lib/types";
 import { PlayersProvider } from "@/contexts/players-context";
 import { EditPlayers } from "@/components/home/edit-players/edit-players";
 import { LeaderboardProvider } from "@/contexts/leaderboard-context";
 
 export default function GameHub() {
   const [currentGame, setCurrentGame] = useState<GameType>("home");
+  const [gameMode, setGameMode] = useState<GameMode>(null);
 
   const navigateTo = (game: GameType) => {
     setCurrentGame(game);
@@ -38,9 +39,13 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="pink" />
-              <EditPlayers mode="pvp" />
+              <EditPlayers gameMode={gameMode} />
             </div>
-            <TechTacToe />
+            <TechTacToe
+              gameId="tech-tac-toe"
+              gameMode={gameMode}
+              setGameMode={setGameMode}
+            />
           </div>
         );
       case "led-memory":
@@ -48,7 +53,7 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="rose" />
-              <EditPlayers mode="solo" />
+              <EditPlayers gameMode="solo" />
             </div>
             <LEDMemoryGame gameId="led-memory" />
           </div>
@@ -58,7 +63,7 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="purple" />
-              <EditPlayers mode="solo" />
+              <EditPlayers gameMode="solo" />
             </div>
             <RJ45Game gameId="rj45-game" />
           </div>

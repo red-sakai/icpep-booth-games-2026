@@ -19,20 +19,6 @@ export const ColorPaletteModal = ({
 }: ColorPaletteModalProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
 
-  const getClassNames = (color: string) => {
-    if (team === "team1") {
-      return [
-        "hover: outline-sky-500/80",
-        selectedColor === color ? "bg-sky-300/80 outline-sky-500/80" : "",
-      ];
-    } else if (team === "team2") {
-      return [
-        "hover: outline-rose-500/80",
-        selectedColor === color ? "bg-rose-300/80 outline-rose-500/80" : "",
-      ];
-    } else return [];
-  };
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {

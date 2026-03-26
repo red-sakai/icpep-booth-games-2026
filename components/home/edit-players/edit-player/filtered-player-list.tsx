@@ -41,6 +41,10 @@ export const FilteredPlayerList = ({
   }, [filterNameValue, filterColor, players]);
 
   const handlePlayerItemClick = (player: BoothPlayerType) => {
+    if (["AI (EASY)", "AI (MEDIUM)", "AI (HARD)"].includes(player.name)) {
+      alert("AI players cannot be selected. Please choose a different player.");
+      return;
+    }
     switch (team) {
       case "team1":
         if (selectedPlayer?.name === player.name) {

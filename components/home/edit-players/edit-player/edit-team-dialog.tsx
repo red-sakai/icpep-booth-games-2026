@@ -8,12 +8,13 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { usePlayers } from "@/contexts/players-context";
+import { GameMode } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { MousePointerClick, TextCursorInput, User } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type EditTeamDialogProps = {
-  mode: "solo" | "pvp" | "pve";
+  gameMode: GameMode;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   onNext: (
@@ -22,7 +23,7 @@ type EditTeamDialogProps = {
   ) => void;
 };
 export const EditTeamDialog = ({
-  mode,
+  gameMode,
   isOpen,
   setIsOpen,
   onNext,
@@ -31,10 +32,32 @@ export const EditTeamDialog = ({
     "create",
   );
   const [selectedTeam, setSelectedTeam] = useState<"team1" | "team2">("team1");
-  const { currTeam1Player, currTeam2Player } = usePlayers();
+  const { currTeam1Player, currTeam2Player, setCurrTeam2Player } = usePlayers();
+  const prevGameModeRef = useRef<GameMode>(gameMode);
+
+  // reset selected team and option when game mode changes
+  useEffect(() => {
+    setSelectedTeam("team1");
+    setSelectedOption("create");
+  }, [gameMode]);
+
+  // reset team 2 player when switching to pvp mode from other modes
+  useEffect(() => {
+    if (gameMode === "pvp" && prevGameModeRef.current !== "pvp") {
+      setCurrTeam2Player(null);
+    }
+  }, [gameMode]);
+
+  // open dialog when game mode changes
+  useEffect(() => {
+    if (prevGameModeRef.current !== gameMode) {
+      prevGameModeRef.current = gameMode;
+      setIsOpen(true);
+    }
+  }, [gameMode]);
 
   const handleOnOpenChange = (open: boolean) => {
-    switch (mode) {
+    switch (gameMode) {
       case "solo":
         if (currTeam1Player) {
           setIsOpen(open);
@@ -55,6 +78,9 @@ export const EditTeamDialog = ({
         } else {
           alert("Please create or select a player for Team 1 to continue.");
         }
+        break;
+      case null:
+        setIsOpen(open);
         break;
     }
   };
@@ -107,7 +133,7 @@ export const EditTeamDialog = ({
               team="team2"
               selectedTeam={selectedTeam}
               onClick={() => setSelectedTeam("team2")}
-              disabled={mode === "solo"}
+              disabled={gameMode === "solo" || gameMode === "pve"}
             />
           </div>
 
