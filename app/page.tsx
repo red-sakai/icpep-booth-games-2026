@@ -21,6 +21,7 @@ import BackToHomeButton from "@/components/home/back-to-home-button";
 import { GameType } from "@/lib/types";
 import { PlayersProvider } from "@/contexts/players-context";
 import { EditPlayers } from "@/components/home/edit-players/edit-players";
+import { LeaderboardProvider } from "@/contexts/leaderboard-context";
 
 export default function GameHub() {
   const [currentGame, setCurrentGame] = useState<GameType>("home");
@@ -49,7 +50,7 @@ export default function GameHub() {
               <BackToHomeButton navigateTo={navigateTo} variant="rose" />
               <EditPlayers mode="solo" />
             </div>
-            <LEDMemoryGame />
+            <LEDMemoryGame gameId="led-memory" />
           </div>
         );
       case "rj45-game":
@@ -78,32 +79,34 @@ export default function GameHub() {
 
   return (
     <PlayersProvider>
-      <div className="min-h-screen bg-gradient-to-b from-purple-100 via-pink-200 to-rose-200 p-4 md:p-8">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentGame}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {renderContent()}
-          </motion.div>
-        </AnimatePresence>
-
-        {currentGame !== "home" && (
-          <div className="fixed bottom-4 right-4">
-            <Button
-              onClick={() => navigateTo("home")}
-              size="icon"
-              className="rounded-full bg-white text-sky-600 hover:bg-sky-50 shadow-md"
-              aria-label="Return to home"
+      <LeaderboardProvider>
+        <div className="min-h-screen bg-gradient-to-b from-purple-100 via-pink-200 to-rose-200 p-4 md:p-8">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentGame}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
             >
-              <Home size={20} />
-            </Button>
-          </div>
-        )}
-      </div>
+              {renderContent()}
+            </motion.div>
+          </AnimatePresence>
+
+          {currentGame !== "home" && (
+            <div className="fixed bottom-4 right-4">
+              <Button
+                onClick={() => navigateTo("home")}
+                size="icon"
+                className="rounded-full bg-white text-sky-600 hover:bg-sky-50 shadow-md"
+                aria-label="Return to home"
+              >
+                <Home size={20} />
+              </Button>
+            </div>
+          )}
+        </div>
+      </LeaderboardProvider>
     </PlayersProvider>
   );
 }

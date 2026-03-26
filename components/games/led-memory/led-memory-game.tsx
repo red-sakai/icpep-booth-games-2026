@@ -13,12 +13,19 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { usePlayers } from "@/contexts/players-context";
+import { submitScore } from "@/lib/leaderboard-utils/leaderboard-utils.client";
+import { useLeaderboard } from "@/contexts/leaderboard-context";
 
 type DifficultyLevel = "easy" | "medium" | "hard";
+enum EDificultyMultiplyer {
+  easy = 1,
+  medium = 1.5,
+  hard = 2,
+}
 
 const LEVEL_CONFIG: Record<
   DifficultyLevel,
@@ -76,20 +83,21 @@ const LED_TONE_ATTACK = 0.008;
 const LED_TONE_DECAY = 0.24;
 const LED_TONE_PEAK_GAIN = 0.24;
 
-export default function LEDMemoryGame() {
+type LEDMemoryGameProps = {
+  gameId: string;
+};
+export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
   const [gameState, setGameState] = useState<GameState>("idle");
   const [sequence, setSequence] = useState<LED[]>([]);
   const [playerSequence, setPlayerSequence] = useState<LED[]>([]);
   const [activeLED, setActiveLED] = useState<LED | null>(null);
   const [showInfo, setShowInfo] = useState(false);
   const [timeLeft, setTimeLeft] = useState(20);
-  const [selectedLevel, setSelectedLevel] =
-    useState<DifficultyLevel>("medium");
+  const [selectedLevel, setSelectedLevel] = useState<DifficultyLevel>("medium");
   const [showLevelDialog, setShowLevelDialog] = useState(true);
-  const [showNameDialog, setShowNameDialog] = useState(false);
   const [leaderboardOpen, setLeaderboardOpen] = useState(false);
-  const [playerName, setPlayerName] = useState("");
-  const [hasPromptedName, setHasPromptedName] = useState(false);
+  const { currTeam1Player } = usePlayers();
+  const { updateLeaderboardData } = useLeaderboard();
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -128,11 +136,11 @@ export default function LEDMemoryGame() {
       gain.gain.setValueAtTime(0.0001, context.currentTime);
       gain.gain.exponentialRampToValueAtTime(
         LED_TONE_PEAK_GAIN,
-        context.currentTime + LED_TONE_ATTACK
+        context.currentTime + LED_TONE_ATTACK,
       );
       gain.gain.exponentialRampToValueAtTime(
         0.0001,
-        context.currentTime + LED_TONE_DECAY
+        context.currentTime + LED_TONE_DECAY,
       );
 
       oscillator.connect(gain);
@@ -141,7 +149,7 @@ export default function LEDMemoryGame() {
       oscillator.start(context.currentTime);
       oscillator.stop(context.currentTime + LED_TONE_DECAY + 0.02);
     },
-    [initializeAudio]
+    [initializeAudio],
   );
 
   // Start the level-based timer for guessing
@@ -163,7 +171,7 @@ export default function LEDMemoryGame() {
               `Time's up! You remembered ${playerSequence.length} out of ${sequence.length} correctly.`,
               {
                 className: "bg-rose-100 text-rose-800 border-rose-200",
-              }
+              },
             );
             return 0;
           }
@@ -171,7 +179,7 @@ export default function LEDMemoryGame() {
         });
       }, 1000);
     },
-    [playerSequence.length, sequence.length]
+    [playerSequence.length, sequence.length],
   );
 
   // Show the sequence to the player
@@ -207,7 +215,7 @@ export default function LEDMemoryGame() {
 
       timeoutRef.current = setTimeout(playStep, 900);
     },
-    [startGuessingTimer]
+    [startGuessingTimer],
   );
 
   // Start a new game
@@ -225,14 +233,11 @@ export default function LEDMemoryGame() {
       setPlayerSequence([]);
       setTimeLeft(levelConfig.timeLimit);
       setShowLevelDialog(false);
-      setShowNameDialog(false);
-      setPlayerName("");
-      setHasPromptedName(false);
       setGameState("showing");
       void initializeAudio();
       showSequence(fullSequence, level);
     },
-    [initializeAudio, showSequence]
+    [initializeAudio, showSequence],
   );
 
   // Handle player clicking an LED
@@ -250,7 +255,7 @@ export default function LEDMemoryGame() {
 
     // Check if the player's input is correct so far
     const isCorrectSoFar = newPlayerSequence.every(
-      (led, index) => led === sequence[index]
+      (led, index) => led === sequence[index],
     );
 
     if (!isCorrectSoFar) {
@@ -265,7 +270,7 @@ export default function LEDMemoryGame() {
         `Game Over! You remembered ${currentScore} out of ${sequence.length} correctly.`,
         {
           className: "bg-rose-100 text-rose-800 border-rose-200",
-        }
+        },
       );
       return;
     }
@@ -282,7 +287,7 @@ export default function LEDMemoryGame() {
         `Success! You memorized all ${sequence.length} patterns correctly!`,
         {
           className: "bg-emerald-100 text-emerald-800 border-emerald-200",
-        }
+        },
       );
     }
   };
@@ -307,31 +312,21 @@ export default function LEDMemoryGame() {
   useEffect(() => {
     const isFinished = gameState === "gameover" || gameState === "success";
 
-    if (isFinished && sequence.length > 0 && !hasPromptedName) {
-      setShowNameDialog(true);
-      setHasPromptedName(true);
-    }
-  }, [gameState, hasPromptedName, sequence.length]);
-
-  const handleSaveName = () => {
-    const trimmedName = playerName.trim();
-
-    if (trimmedName.length > 0) {
-      toast(`Nice run, ${trimmedName}! (UI only — not saved)`, {
-        className: "bg-emerald-100 text-emerald-800 border-emerald-200",
+    if (isFinished && sequence.length > 0) {
+      const score =
+        (playerSequence.length - 1) * EDificultyMultiplyer[selectedLevel];
+      submitScore({
+        gameId,
+        score,
+        name: currTeam1Player ? currTeam1Player.name : "Anonymous",
       });
-    } else {
-      toast("No name entered. You can skip this step.", {
-        className: "bg-rose-100 text-rose-800 border-rose-200",
-      });
+      alert(
+        `Hi there, Player ${currTeam1Player ? currTeam1Player.name : "Anonymous"}!
+        Your score has been updated to the leaderboard!`,
+      );
+      updateLeaderboardData();
     }
-
-    setShowNameDialog(false);
-  };
-
-  const handleSkipName = () => {
-    setShowNameDialog(false);
-  };
+  }, [gameState, sequence.length]);
 
   // // Reset game and clear timers
   // const resetGame = () => {
@@ -378,7 +373,9 @@ export default function LEDMemoryGame() {
         <DialogContent className="sm:max-w-2xl border-rose-100">
           <DialogHeader>
             <DialogTitle className="text-rose-900">Leaderboard</DialogTitle>
-            <DialogDescription>LED Memory scores and rankings</DialogDescription>
+            <DialogDescription>
+              LED Memory scores and rankings
+            </DialogDescription>
           </DialogHeader>
 
           <LeaderboardPanel
@@ -435,7 +432,9 @@ export default function LEDMemoryGame() {
           onInteractOutside={(event) => event.preventDefault()}
         >
           <DialogHeader className="space-y-1">
-            <DialogTitle className="text-xl text-rose-900">Choose Difficulty</DialogTitle>
+            <DialogTitle className="text-xl text-rose-900">
+              Choose Difficulty
+            </DialogTitle>
             <DialogDescription>
               Pick a level to start Memory Heist.
             </DialogDescription>
@@ -448,7 +447,9 @@ export default function LEDMemoryGame() {
               onClick={() => startGame("easy")}
             >
               <span className="text-rose-700 font-medium">Easy</span>
-              <span className="text-xs text-rose-400 font-medium">6 lights • 20s</span>
+              <span className="text-xs text-rose-400 font-medium">
+                6 lights • 20s
+              </span>
             </Button>
             <Button
               variant="outline"
@@ -456,7 +457,9 @@ export default function LEDMemoryGame() {
               onClick={() => startGame("medium")}
             >
               <span className="text-rose-700 font-medium">Medium</span>
-              <span className="text-xs text-rose-400 font-medium">6 lights • 15s</span>
+              <span className="text-xs text-rose-400 font-medium">
+                6 lights • 15s
+              </span>
             </Button>
             <Button
               variant="outline"
@@ -464,41 +467,11 @@ export default function LEDMemoryGame() {
               onClick={() => startGame("hard")}
             >
               <span className="text-rose-700 font-medium">Hard</span>
-              <span className="text-xs text-rose-400 font-medium">6 lights • 10s</span>
+              <span className="text-xs text-rose-400 font-medium">
+                6 lights • 10s
+              </span>
             </Button>
           </div>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={showNameDialog} onOpenChange={setShowNameDialog}>
-        <DialogContent className="sm:max-w-md rounded-xl border-rose-200">
-          <DialogHeader className="space-y-1">
-            <DialogTitle className="text-xl text-rose-900">Great Game!</DialogTitle>
-            <DialogDescription>
-              Enter your name for leaderboard preview. You can skip.
-            </DialogDescription>
-          </DialogHeader>
-
-          <input
-            value={playerName}
-            onChange={(event) => setPlayerName(event.target.value)}
-            placeholder="Enter your name"
-            maxLength={20}
-            className="w-full rounded-md border border-rose-200 bg-white px-3 py-2.5 text-sm text-rose-800 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-200"
-          />
-
-          <DialogFooter>
-            <Button
-              variant="outline"
-              className="border-rose-200 text-rose-700"
-              onClick={handleSkipName}
-            >
-              Skip
-            </Button>
-            <Button className="bg-rose-600 hover:bg-rose-700 text-white" onClick={handleSaveName}>
-              Save Name
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

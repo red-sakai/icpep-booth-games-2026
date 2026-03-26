@@ -7,6 +7,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { usePlayers } from "@/contexts/players-context";
 import { cn } from "@/lib/utils";
 import { MousePointerClick, TextCursorInput, User } from "lucide-react";
 import { useState } from "react";
@@ -30,11 +31,38 @@ export const EditTeamDialog = ({
     "create",
   );
   const [selectedTeam, setSelectedTeam] = useState<"team1" | "team2">("team1");
+  const { currTeam1Player, currTeam2Player } = usePlayers();
+
+  const handleOnOpenChange = (open: boolean) => {
+    switch (mode) {
+      case "solo":
+        if (currTeam1Player) {
+          setIsOpen(open);
+        } else {
+          alert("Please create or select a player to continue.");
+        }
+        break;
+      case "pvp":
+        if (currTeam1Player && currTeam2Player) {
+          setIsOpen(open);
+        } else {
+          alert("Please create or select players for both teams to continue.");
+        }
+        break;
+      case "pve":
+        if (currTeam1Player && currTeam2Player) {
+          setIsOpen(open);
+        } else {
+          alert("Please create or select a player for Team 1 to continue.");
+        }
+        break;
+    }
+  };
 
   return (
     <Dialog
       open={isOpen}
-      onOpenChange={setIsOpen}
+      onOpenChange={handleOnOpenChange}
       aria-describedby="player-entry-dialog"
     >
       <DialogContent className="sm:max-w-md bg-white border-sky-100">
