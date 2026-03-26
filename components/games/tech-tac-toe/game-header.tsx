@@ -39,12 +39,12 @@ export default function GameHeader({
   return (
     <div className="text-center space-y-3 w-full max-w-md">
       <div className="flex items-center justify-center gap-2">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-sky-700">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-pink-600 drop-shadow-sm">
           Tech Tac Toe
         </h1>
         <button
           onClick={() => setShowInfo(!showInfo)}
-          className="text-sky-600 hover:text-sky-800 transition-colors"
+          className="text-pink-400 hover:text-pink-600 transition-colors"
           aria-label="Show information about Tech Tac Toe"
         >
           <Info size={20} />
@@ -59,7 +59,7 @@ export default function GameHeader({
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
           >
-            <div className="bg-white/80 backdrop-blur-sm p-3 rounded-lg shadow-sm text-sm text-slate-700 mb-2">
+            <div className="bg-white/60 border border-pink-200 p-3 rounded-xl shadow-sm text-sm text-pink-800 mb-2">
               <p>
                 A binary twist on the classic game with 1s and 0s instead of Xs
                 and Os. Get three in a row to win!
@@ -71,11 +71,11 @@ export default function GameHeader({
 
       <div className="grid grid-cols-2 gap-4 mb-2">
         <div className={cn(
-          "bg-white/80 backdrop-blur-sm rounded-lg p-2 shadow-sm border-b-4 transition-all",
-          currentPlayer === "1" && !winnerPlayer ? "border-sky-500 scale-105" : "border-transparent opacity-80"
+          "bg-white border border-pink-200 rounded-xl p-2 shadow-sm border-b-4 transition-all",
+          currentPlayer === "1" && !winnerPlayer ? "border-b-pink-500 scale-105" : "border-b-transparent opacity-80"
         )}>
-          <div className="text-xs font-bold text-sky-600 uppercase">Player 1</div>
-          <div className="text-lg font-black text-sky-900 flex items-center justify-center gap-1">
+          <div className="text-xs font-bold text-pink-500 uppercase">Player 1</div>
+          <div className="text-lg font-black text-pink-700 flex items-center justify-center gap-1">
             <span className="text-2xl">1</span>
             {p1Streak > 0 && (
               <span className="text-xs bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
@@ -86,13 +86,13 @@ export default function GameHeader({
         </div>
 
         <div className={cn(
-          "bg-white/80 backdrop-blur-sm rounded-lg p-2 shadow-sm border-b-4 transition-all",
-          currentPlayer === "0" && !winnerPlayer ? "border-sky-500 scale-105" : "border-transparent opacity-80"
+          "bg-white border border-pink-200 rounded-xl p-2 shadow-sm border-b-4 transition-all",
+          currentPlayer === "0" && !winnerPlayer ? "border-b-pink-500 scale-105" : "border-b-transparent opacity-80"
         )}>
-          <div className="text-xs font-bold text-sky-600 uppercase">
+          <div className="text-xs font-bold text-pink-500 uppercase">
             {gameMode === "pve" ? "AI" : "Player 2"}
           </div>
-          <div className="text-lg font-black text-sky-900 flex items-center justify-center gap-1">
+          <div className="text-lg font-black text-pink-500 flex items-center justify-center gap-1">
             <span className="text-2xl">0</span>
             {p0Streak > 0 && (
               <span className="text-xs bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
@@ -103,8 +103,8 @@ export default function GameHeader({
         </div>
       </div>
 
-      <div className="bg-white/80 backdrop-blur-sm rounded-lg p-3 shadow-sm min-w-[200px]">
-        <div className="text-slate-700 font-medium">
+      <div className="bg-white border border-pink-200 rounded-xl p-3 shadow-sm min-w-[200px]">
+        <div className="text-pink-800 font-medium">
           {winnerPlayer ? (
             winnerPlayer === "draw" ? (
               "Game ended in a draw!"
@@ -115,12 +115,12 @@ export default function GameHeader({
               </span>
             )
           ) : isAIThinking ? (
-            <span className="flex items-center justify-center gap-2 text-sky-600 animate-pulse">
+            <span className="flex items-center justify-center gap-2 text-pink-500 animate-pulse">
               <Cpu size={16} />
               AI is thinking...
             </span>
           ) : (
-            <span className="flex items-center justify-center gap-2">
+            <span className="flex items-center justify-center gap-2 text-pink-700">
               Current turn: {getPlayerLabel(currentPlayer)}
             </span>
           )}

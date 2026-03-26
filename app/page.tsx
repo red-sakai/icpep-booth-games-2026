@@ -96,7 +96,7 @@ export default function GameHub() {
             <Button
               onClick={() => navigateTo("home")}
               size="icon"
-              className="rounded-full bg-white text-sky-600 hover:bg-sky-50 shadow-md"
+              className="rounded-full bg-white text-purple-600 hover:bg-purple-50 shadow-md"
               aria-label="Return to home"
             >
               <Home size={20} />

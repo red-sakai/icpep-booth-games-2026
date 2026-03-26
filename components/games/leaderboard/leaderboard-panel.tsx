@@ -47,9 +47,9 @@ export default function LeaderboardPanel({
         };
       case "tech-tac-toe":
         return {
-          card: "bg-sky-50/80 border-sky-200",
-          title: "text-sky-800",
-          metric: "text-sky-700",
+          card: "bg-pink-50/80 border-pink-200",
+          title: "text-pink-800",
+          metric: "text-pink-700",
         };
       case "rj45-game":
         return {
