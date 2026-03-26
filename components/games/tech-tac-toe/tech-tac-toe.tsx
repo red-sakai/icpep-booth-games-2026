@@ -7,10 +7,10 @@ import { RotateCcw } from "lucide-react";
 import type { BoardState, Player } from "@/lib/types";
 import { checkWinner } from "@/lib/game-utils/tech-tac-toe-utils";
 import { getBestMove } from "@/lib/game-utils/tech-tac-toe-ai";
-import { usePlayers } from "@/contexts/players-context";
 import GameHeader from "@/components/games/tech-tac-toe/game-header";
 import GameBoard from "@/components/games/tech-tac-toe/game-board";
 import LeaderboardPanel from "@/components/games/leaderboard/leaderboard-panel";
+import { usePlayers } from "@/contexts/players-context";
 import GameModeSelector from "@/components/games/tech-tac-toe/game-mode-selector";
 import PlayerNameDialog from "@/components/games/tech-tac-toe/player-name-dialog";
 
@@ -40,7 +40,9 @@ export default function TechTacToe() {
   const [gameMode, setGameMode] = useState<GameMode | null>(null);
   const [difficulty, setDifficulty] = useState<Difficulty>("medium");
   const [isAIThinking, setIsAIThinking] = useState(false);
-  const [previousGameMode, setPreviousGameMode] = useState<GameMode | null>(null);
+  const [previousGameMode, setPreviousGameMode] = useState<GameMode | null>(
+    null,
+  );
 
   // Leaderboard & Streak State
   const [p1Streak, setP1Streak] = useState(0);
@@ -75,8 +77,9 @@ export default function TechTacToe() {
           setP0Streak(0);
           setLastWinScore(0);
         } else {
-          const winnerLabel = newWinner === "1" ? "1" : gameMode === "pve" ? "AI" : "2";
-          
+          const winnerLabel =
+            newWinner === "1" ? "1" : gameMode === "pve" ? "AI" : "2";
+
           toast(`Player ${winnerLabel} wins! 🎉`, {
             className: "bg-sky-100 text-sky-800 border-sky-200",
           });
@@ -100,7 +103,10 @@ export default function TechTacToe() {
             setShowNameDialog(true);
           } else if (gameMode === "pve" && newWinner === "0") {
             // Auto-submit AI win without dialog
-            handleSubmitName(`AI (${difficulty.toUpperCase()})`, currentWinnerStreak);
+            handleSubmitName(
+              `AI (${difficulty.toUpperCase()})`,
+              currentWinnerStreak,
+            );
           }
         }
       } else {
@@ -108,7 +114,16 @@ export default function TechTacToe() {
         setCurrentPlayer(currentPlayer === "1" ? "0" : "1");
       }
     },
-    [board, winner, isAIThinking, gameMode, currentPlayer, p1Streak, p0Streak, difficulty]
+    [
+      board,
+      winner,
+      isAIThinking,
+      gameMode,
+      currentPlayer,
+      p1Streak,
+      p0Streak,
+      difficulty,
+    ],
   );
 
   // AI Turn Logic
@@ -121,7 +136,7 @@ export default function TechTacToe() {
     ) {
       const timer = setTimeout(() => {
         setIsAIThinking(true);
-        
+
         // Brief delay to simulate "thinking" for better UX
         const thinkTimer = setTimeout(() => {
           const aiMove = getBestMove(board, "0", difficulty);
@@ -136,7 +151,15 @@ export default function TechTacToe() {
 
       return () => clearTimeout(timer);
     }
-  }, [gameMode, currentPlayer, winner, board, difficulty, isAIThinking, handleCellClick]);
+  }, [
+    gameMode,
+    currentPlayer,
+    winner,
+    board,
+    difficulty,
+    isAIThinking,
+    handleCellClick,
+  ]);
 
   const resetBoard = () => {
     setBoard(Array(9).fill(null));
@@ -206,7 +229,7 @@ export default function TechTacToe() {
     }
   };
 
-  const isFinished = winner !== null;
+  const isFinished = winnerPlayer !== null;
 
   return (
     <div className="flex flex-col items-center justify-center p-4 space-y-6 bg-gradient-to-br from-sky-100 via-indigo-50 to-blue-100 rounded-xl shadow-md">
@@ -225,8 +248,8 @@ export default function TechTacToe() {
           gameMode === "pve"
             ? "You Win! 🏆"
             : winnerPlayer === "1"
-            ? "Player 1 Wins! 🎉"
-            : "Player 2 Wins! 🎉"
+              ? "Player 1 Wins! 🎉"
+              : "Player 2 Wins! 🎉"
         }
         playerLabel={
           gameMode === "pvp"
@@ -254,10 +277,7 @@ export default function TechTacToe() {
         handleCellClick={handleCellClick}
       />
 
-      <LeaderboardPanel 
-        gameId="tech-tac-toe" 
-        leaderboardKey={leaderboardKey}
-      />
+      <LeaderboardPanel gameId="tech-tac-toe" leaderboardKey={leaderboardKey} />
 
       <div className="flex gap-2">
         <Button

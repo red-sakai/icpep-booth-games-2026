@@ -6,7 +6,7 @@ import type { GameType } from "@/lib/types";
 
 type BackToHomeButtonProps = {
   navigateTo: (game: GameType) => void;
-  variant: "sky" | "amber" | "cyan";
+  variant: "pink" | "rose" | "purple";
 };
 
 export default function BackToHomeButton({
@@ -14,9 +14,9 @@ export default function BackToHomeButton({
   variant,
 }: BackToHomeButtonProps) {
   const variantStyles = {
-    sky: "bg-sky-50 border-sky-200 hover:bg-sky-100 text-sky-700",
-    amber: "bg-amber-50 border-amber-200 hover:bg-amber-100 text-amber-700",
-    cyan: "bg-cyan-50 border-cyan-200 hover:bg-cyan-100 text-cyan-700",
+    pink: "bg-white/50 backdrop-blur-sm border-pink-300 hover:bg-pink-100/70 hover:border-pink-400 text-pink-600 hover:text-pink-600",
+    rose: "bg-white/50 backdrop-blur-sm border-rose-300 hover:bg-rose-50/70 hover:border-rose-400 text-rose-600 hover:text-rose-600",
+    purple: "bg-white/50 backdrop-blur-sm border-purple-300 hover:bg-purple-100/70 hover:border-purple-400 text-purple-600 hover:text-purple-600",
   };
 
   return (
@@ -24,7 +24,7 @@ export default function BackToHomeButton({
       <Button
         onClick={() => navigateTo("home")}
         variant="outline"
-        className={`${variantStyles[variant]} flex items-center gap-2 shadow-sm`}
+        className={`${variantStyles[variant]} flex items-center gap-2 shadow-sm rounded-xl`}
       >
         <ArrowLeft size={16} />
         Back to Games
