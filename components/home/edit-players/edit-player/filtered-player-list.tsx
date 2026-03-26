@@ -77,10 +77,11 @@ export const FilteredPlayerList = ({
         "h-full w-full bg-slate-50 overflow-y-auto",
         "outline outline-slate-200 rounded-lg",
         "shadow-[inset_4px_0_4px_-4px_rgba(0,0,0,0.1),inset_0_4px_8px_-4px_rgba(0,0,0,0.1)]",
-        "flex flex-col",
       )}
+      onWheelCapture={(e) => e.stopPropagation()}
+      onTouchMoveCapture={(e) => e.stopPropagation()}
     >
-      <div className="flex-1 w-full flex flex-col gap-2 p-2">
+      <div className="w-full flex flex-col gap-2 p-2">
         {[...filteredPlayers].reverse().map((player) => (
           <AnimatePresence key={player.name}>
             <PlayerItem

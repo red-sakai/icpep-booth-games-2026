@@ -43,23 +43,18 @@ export const EditPlayers = ({
     setIsSelectPlayerDialogOpen(false);
     setIsEditTeamDialogOpen(true);
   };
-  // useEffect(() => {
-  //   if (!isCreatePlayerDialogOpen && !isSelectPlayerDialogOpen) {
-  //     setIsEditTeamDialogOpen(true);
-  //   }
-  // }, [isCreatePlayerDialogOpen, isSelectPlayerDialogOpen]);
 
   const handleEditTeamNext = (
     selectedOption: "create" | "select",
     selectedTeam: "team1" | "team2",
   ) => {
     setTeam(selectedTeam);
+    setIsEditTeamDialogOpen(false);
     if (selectedOption === "create") {
       setIsCreatePlayerDialogOpen(true);
     } else if (selectedOption === "select") {
       setIsSelectPlayerDialogOpen(true);
     }
-    setIsEditTeamDialogOpen(false);
   };
 
   return (

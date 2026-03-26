@@ -67,7 +67,7 @@ export const SelectPlayerDialog = ({
   return (
     <Dialog
       open={isOpen}
-      onOpenChange={setIsOpen}
+      onOpenChange={handleOpenChange}
       aria-describedby="create-player-dialog"
     >
       <DialogContent
@@ -105,7 +105,7 @@ export const SelectPlayerDialog = ({
         >
           Result:
         </span>
-        <div className="h-full max-h-40 min-h-40">
+        <div className="h-40 max-h-40 min-h-40">
           <FilteredPlayerList
             team={team}
             filterNameValue={playerName}
