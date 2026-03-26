@@ -1,0 +1,75 @@
+[
+  {
+    "name": "a",
+    "color": "blue",
+    "createdAt": "2026-03-25T19:22:18.065Z",
+    "updatedAt": null
+  },
+  {
+    "name": "s",
+    "color": "blue",
+    "createdAt": "2026-03-25T19:29:29.934Z",
+    "updatedAt": null
+  },
+  {
+    "name": "lkjlkj",
+    "color": "blue",
+    "createdAt": "2026-03-25T19:54:50.181Z",
+    "updatedAt": null
+  },
+  {
+    "name": "ss",
+    "color": "gray",
+    "createdAt": "2026-03-25T20:27:30.213Z",
+    "updatedAt": null
+  },
+  {
+    "name": "sladkjf",
+    "color": "cyan",
+    "createdAt": "2026-03-25T21:05:30.229Z",
+    "updatedAt": null
+  },
+  {
+    "name": "lsakdjf",
+    "color": "purple",
+    "createdAt": "2026-03-26T04:12:50.241Z",
+    "updatedAt": null
+  },
+  {
+    "name": "9",
+    "color": "blue",
+    "createdAt": "2026-03-26T04:26:51.508Z",
+    "updatedAt": null
+  },
+  {
+    "name": "f",
+    "color": "blue",
+    "createdAt": "2026-03-26T04:39:25.031Z",
+    "updatedAt": null
+  },
+  {
+    "name": "AI",
+    "color": "blue",
+    "createdAt": "2026-03-26T07:11:01.981Z",
+    "updatedAt": null
+  },
+  {
+    "name": "AI (HARD)",
+    "color": "blue",
+    "createdAt": "2026-03-26T07:11:36.405Z",
+    "updatedAt": null
+  },
+  {
+    "name": "AI (MEDIUM)",
+    "color": "blue",
+    "createdAt": "2026-03-26T07:15:27.377Z",
+    "updatedAt": null
+  },
+  {
+    "name": "AI (EASY)",
+    "color": "blue",
+    "createdAt": "2026-03-26T07:21:27.255Z",
+    "updatedAt": null
+  }
+]
+

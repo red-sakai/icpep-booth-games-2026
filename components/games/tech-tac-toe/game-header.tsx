@@ -2,23 +2,23 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Info, Trophy, Cpu } from "lucide-react";
-import type { Player } from "@/lib/types";
+import type { GameMode, Player } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 type GameHeaderProps = {
-  winnerPlayer: Player | "draw" | null;
-  currentPlayer: Player | null;
+  winnerTeam: Player | "draw" | null;
+  currentTeam: Player | null;
   showInfo: boolean;
   setShowInfo: (show: boolean) => void;
   isAIThinking?: boolean;
-  gameMode?: "pvp" | "pve" | null;
+  gameMode?: GameMode;
   p1Streak?: number;
   p0Streak?: number;
 };
 
 export default function GameHeader({
-  winnerPlayer,
-  currentPlayer,
+  winnerTeam,
+  currentTeam,
   showInfo,
   setShowInfo,
   isAIThinking,
@@ -31,9 +31,9 @@ export default function GameHeader({
       return "Waiting...";
     }
     if (gameMode === "pve") {
-      return player === "1" ? "Player (1)" : "AI (0)";
+      return player === "1" ? "Team (1)" : "AI (0)";
     }
-    return `Player ${player}`;
+    return `Team ${player}`;
   };
 
   return (
@@ -70,11 +70,15 @@ export default function GameHeader({
       </AnimatePresence>
 
       <div className="grid grid-cols-2 gap-4 mb-2">
-        <div className={cn(
-          "bg-white/80 backdrop-blur-sm rounded-lg p-2 shadow-sm border-b-4 transition-all",
-          currentPlayer === "1" && !winnerPlayer ? "border-sky-500 scale-105" : "border-transparent opacity-80"
-        )}>
-          <div className="text-xs font-bold text-sky-600 uppercase">Player 1</div>
+        <div
+          className={cn(
+            "bg-white/80 backdrop-blur-sm rounded-lg p-2 shadow-sm border-b-4 transition-all",
+            currentTeam === "1" && !winnerTeam
+              ? "border-sky-500 scale-105"
+              : "border-transparent opacity-80",
+          )}
+        >
+          <div className="text-xs font-bold text-sky-600 uppercase">Team 1</div>
           <div className="text-lg font-black text-sky-900 flex items-center justify-center gap-1">
             <span className="text-2xl">1</span>
             {p1Streak > 0 && (
@@ -85,12 +89,16 @@ export default function GameHeader({
           </div>
         </div>
 
-        <div className={cn(
-          "bg-white/80 backdrop-blur-sm rounded-lg p-2 shadow-sm border-b-4 transition-all",
-          currentPlayer === "0" && !winnerPlayer ? "border-sky-500 scale-105" : "border-transparent opacity-80"
-        )}>
+        <div
+          className={cn(
+            "bg-white/80 backdrop-blur-sm rounded-lg p-2 shadow-sm border-b-4 transition-all",
+            currentTeam === "0" && !winnerTeam
+              ? "border-sky-500 scale-105"
+              : "border-transparent opacity-80",
+          )}
+        >
           <div className="text-xs font-bold text-sky-600 uppercase">
-            {gameMode === "pve" ? "AI" : "Player 2"}
+            {gameMode === "pve" ? "AI" : "Team 2"}
           </div>
           <div className="text-lg font-black text-sky-900 flex items-center justify-center gap-1">
             <span className="text-2xl">0</span>
@@ -105,13 +113,13 @@ export default function GameHeader({
 
       <div className="bg-white/80 backdrop-blur-sm rounded-lg p-3 shadow-sm min-w-[200px]">
         <div className="text-slate-700 font-medium">
-          {winnerPlayer ? (
-            winnerPlayer === "draw" ? (
+          {winnerTeam ? (
+            winnerTeam === "draw" ? (
               "Game ended in a draw!"
             ) : (
               <span className="flex items-center justify-center gap-1 text-emerald-600 font-bold">
                 <Trophy size={18} />
-                {getPlayerLabel(winnerPlayer)} wins!
+                {getPlayerLabel(winnerTeam)} wins!
               </span>
             )
           ) : isAIThinking ? (
@@ -121,7 +129,7 @@ export default function GameHeader({
             </span>
           ) : (
             <span className="flex items-center justify-center gap-2">
-              Current turn: {getPlayerLabel(currentPlayer)}
+              Current turn: {getPlayerLabel(currentTeam || "1")}
             </span>
           )}
         </div>

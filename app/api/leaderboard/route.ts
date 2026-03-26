@@ -9,7 +9,10 @@ export async function GET() {
     return NextResponse.json(JSON.parse(fileData));
   } catch (error) {
     console.error("Error reading leaderboard:", error);
-    return NextResponse.json({ error: "Failed to read leaderboard" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to read leaderboard" },
+      { status: 500 },
+    );
   }
 }
 
@@ -19,7 +22,10 @@ export async function POST(request: NextRequest) {
     const { gameId, name, score } = body;
 
     if (!gameId || !name || score === undefined) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 },
+      );
     }
 
     const filePath = path.join(process.cwd(), "public", "leaderboard.json");
@@ -32,7 +38,7 @@ export async function POST(request: NextRequest) {
 
     const entries = leaderboard.games[gameId].entries;
     const existingIndex = entries.findIndex(
-      (entry: any) => entry.name.toUpperCase() === name.toUpperCase()
+      (entry: any) => entry.name.toUpperCase() === name.toUpperCase(),
     );
 
     let savedEntry;
@@ -61,6 +67,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, entry: savedEntry });
   } catch (error) {
     console.error("Error updating leaderboard:", error);
-    return NextResponse.json({ error: "Failed to update leaderboard" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to update leaderboard" },
+      { status: 500 },
+    );
   }
 }
