@@ -92,7 +92,7 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
   const [showInfo, setShowInfo] = useState(false);
   const [timeLeft, setTimeLeft] = useState(20);
   const [selectedLevel, setSelectedLevel] = useState<DifficultyLevel>("medium");
-  const [showLevelDialog, setShowLevelDialog] = useState(true);
+  const [showLevelDialog, setShowLevelDialog] = useState(false);
   const [leaderboardOpen, setLeaderboardOpen] = useState(false);
   const { currTeam1Player } = usePlayers();
   const { updateLeaderboardData } = useLeaderboard();
@@ -100,6 +100,13 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
+
+  useEffect(() => {
+    // show difficulty dialog IF the curr player not emtpy
+    if (currTeam1Player && gameState === "idle" && sequence.length === 0) {
+      setShowLevelDialog(true);
+    }
+  }, [currTeam1Player, gameState, sequence.length]);
 
   const initializeAudio = useCallback(async () => {
     if (typeof window === "undefined") return null;

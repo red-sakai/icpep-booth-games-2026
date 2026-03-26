@@ -20,6 +20,7 @@ type CreatePlayerDialogProps = {
   setIsOpen: (open: boolean) => void;
   currPlayer: BoothPlayerType | null;
   setCurrPlayer: (player: BoothPlayerType | null) => void;
+  onExit: () => void;
 };
 export const CreatePlayerDialog = ({
   team,
@@ -27,6 +28,7 @@ export const CreatePlayerDialog = ({
   setIsOpen,
   currPlayer,
   setCurrPlayer,
+  onExit,
 }: CreatePlayerDialogProps) => {
   const defaultColor = team === "team1" ? "blue" : "red";
   const [playerName, setPlayerName] = useState("");
@@ -39,11 +41,23 @@ export const CreatePlayerDialog = ({
     }
   }, [currPlayer, updatePlayersData]);
 
-  const handleCancel = () => {
-    setPlayerName("");
-    setSelectedColor(defaultColor);
-    setIsOpen(false);
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      // If the user clicks the X, presses Escape, or clicks the backdrop to close it
+      if (onExit) {
+        onExit();
+      } else {
+        setIsOpen(false);
+      }
+    } else {
+      setIsOpen(true);
+    }
   };
+
+  const handleCancel = () => {
+    handleOpenChange(false);
+  };
+
   const handleSubmit = () => {
     const newPlayer = {
       name: playerName,
@@ -64,7 +78,7 @@ export const CreatePlayerDialog = ({
   return (
     <Dialog
       open={isOpen}
-      onOpenChange={setIsOpen}
+      onOpenChange={handleOpenChange}
       aria-describedby="create-player-dialog"
     >
       <DialogContent

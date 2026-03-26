@@ -39,7 +39,7 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="pink" />
-              <EditPlayers gameMode={gameMode} />
+              <EditPlayers gameMode={gameMode} openOnMount={false} />
             </div>
             <TechTacToe
               gameId="tech-tac-toe"

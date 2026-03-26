@@ -52,9 +52,12 @@ export const EditTeamDialog = ({
   useEffect(() => {
     if (prevGameModeRef.current !== gameMode) {
       prevGameModeRef.current = gameMode;
-      setIsOpen(true);
+      // auto-open the dialog if the game mode is actually selected
+      if (gameMode !== null) {
+        setIsOpen(true);
+      }
     }
-  }, [gameMode]);
+  }, [gameMode, setIsOpen]);
 
   const handleOnOpenChange = (open: boolean) => {
     switch (gameMode) {

@@ -18,6 +18,7 @@ type SelectPlayerDialogProps = {
   setIsOpen: (open: boolean) => void;
   currPlayer: BoothPlayerType | null;
   setCurrPlayer: (player: BoothPlayerType | null) => void;
+  onExit: () => void;
 };
 export const SelectPlayerDialog = ({
   team,
@@ -25,6 +26,7 @@ export const SelectPlayerDialog = ({
   setIsOpen,
   currPlayer,
   setCurrPlayer,
+  onExit,
 }: SelectPlayerDialogProps) => {
   const [playerName, setPlayerName] = useState("");
   const defaultColor = "all";
@@ -37,11 +39,23 @@ export const SelectPlayerDialog = ({
     setSelectedPlayer(currPlayer);
   }, [currPlayer]);
 
-  const handleCancel = () => {
-    setPlayerName("");
-    setSelectedColor(defaultColor);
-    setIsOpen(false);
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      // If the user clicks the X, presses Escape, or clicks the backdrop to close it
+      if (onExit) {
+        onExit();
+      } else {
+        setIsOpen(false);
+      }
+    } else {
+      setIsOpen(true);
+    }
   };
+
+  const handleCancel = () => {
+    handleOpenChange(false);
+  };
+
   const handleSubmit = () => {
     if (!selectedPlayer) return;
     setCurrPlayer(selectedPlayer);

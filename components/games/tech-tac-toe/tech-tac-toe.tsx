@@ -279,6 +279,7 @@ export default function TechTacToe({
   return (
     <div className="flex flex-col items-center justify-center p-4 space-y-6 bg-gradient-to-br from-sky-100 via-indigo-50 to-blue-100 rounded-xl shadow-md">
       <GameModeSelector
+        currGameMode={previousGameMode}
         open={gameMode === null}
         onSelect={handleModeSelect}
         onClose={handleCloseModeSelector}

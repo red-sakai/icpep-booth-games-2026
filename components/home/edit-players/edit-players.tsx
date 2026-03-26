@@ -9,9 +9,13 @@ import { GameMode } from "@/lib/types";
 
 type EditPlayersProps = {
   gameMode: GameMode;
+  openOnMount?: boolean;
 };
 
-export const EditPlayers = ({ gameMode }: EditPlayersProps) => {
+export const EditPlayers = ({
+  gameMode,
+  openOnMount = true,
+}: EditPlayersProps) => {
   const [team, setTeam] = useState<"team1" | "team2">("team1");
   const {
     currTeam1Player,
@@ -19,7 +23,7 @@ export const EditPlayers = ({ gameMode }: EditPlayersProps) => {
     setCurrTeam1Player,
     setCurrTeam2Player,
   } = usePlayers();
-  const [isEditTeamDialogOpen, setIsEditTeamDialogOpen] = useState(false);
+  const [isEditTeamDialogOpen, setIsEditTeamDialogOpen] = useState(openOnMount);
   const [isCreatePlayerDialogOpen, setIsCreatePlayerDialogOpen] =
     useState(false);
   const [isSelectPlayerDialogOpen, setIsSelectPlayerDialogOpen] =
@@ -33,12 +37,17 @@ export const EditPlayers = ({ gameMode }: EditPlayersProps) => {
     }
   }, [isEditTeamDialogOpen]);
 
-  // open edit team dialog when both create and select player dialogs are closed
-  useEffect(() => {
-    if (!isCreatePlayerDialogOpen && !isSelectPlayerDialogOpen) {
-      setIsEditTeamDialogOpen(true);
-    }
-  }, [isCreatePlayerDialogOpen, isSelectPlayerDialogOpen]);
+  // open edit team dialog when both create and select player dialogs are exited
+  const onExitCreateOrSelectPlayerDialog = () => {
+    setIsCreatePlayerDialogOpen(false);
+    setIsSelectPlayerDialogOpen(false);
+    setIsEditTeamDialogOpen(true);
+  };
+  // useEffect(() => {
+  //   if (!isCreatePlayerDialogOpen && !isSelectPlayerDialogOpen) {
+  //     setIsEditTeamDialogOpen(true);
+  //   }
+  // }, [isCreatePlayerDialogOpen, isSelectPlayerDialogOpen]);
 
   const handleEditTeamNext = (
     selectedOption: "create" | "select",
@@ -85,6 +94,7 @@ export const EditPlayers = ({ gameMode }: EditPlayersProps) => {
         setCurrPlayer={
           team === "team1" ? setCurrTeam1Player : setCurrTeam2Player
         }
+        onExit={onExitCreateOrSelectPlayerDialog}
       />
       <SelectPlayerDialog
         team={team}
@@ -94,6 +104,7 @@ export const EditPlayers = ({ gameMode }: EditPlayersProps) => {
         setCurrPlayer={
           team === "team1" ? setCurrTeam1Player : setCurrTeam2Player
         }
+        onExit={onExitCreateOrSelectPlayerDialog}
       />
     </>
   );

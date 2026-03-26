@@ -17,26 +17,28 @@ import { GameMode } from "@/lib/types";
 type Difficulty = "easy" | "medium" | "hard";
 
 interface GameModeSelectorProps {
+  currGameMode: GameMode;
   open: boolean;
   onSelect: (mode: GameMode, difficulty: Difficulty) => void;
   onClose?: () => void;
 }
 
 export default function GameModeSelector({
+  currGameMode,
   open,
   onSelect,
   onClose,
 }: GameModeSelectorProps) {
-  const [mode, setMode] = useState<NonNullable<GameMode>>("pve");
+  const [mode, setMode] = useState<GameMode>(currGameMode);
   const [difficulty, setDifficulty] = useState<Difficulty>("medium");
 
   useEffect(() => {
     if (open) {
-      setMode("pve");
+      setMode(currGameMode);
     } else {
       setDifficulty("medium");
     }
-  }, [open]);
+  }, [open, currGameMode]);
 
   const handleStart = () => {
     onSelect(mode, difficulty);
