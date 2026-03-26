@@ -19,8 +19,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { submitScore } from "@/lib/leaderboard-utils/leaderboard-utils.client";
+import { usePlayers } from "@/contexts/players-context";
 
-export default function RJ45Game() {
+type RJ45GameProps = {
+  gameId: string;
+};
+export default function RJ45Game({ gameId }: RJ45GameProps) {
   const [gameState, setGameState] = useState<RJ45GameState>("select");
   const [standard, setStandard] = useState<WireStandard>("T568A");
   const [wires, setWires] = useState<Wire[]>([]);
@@ -30,6 +35,7 @@ export default function RJ45Game() {
   const [showInfo, setShowInfo] = useState(false);
   const [timeExpired, setTimeExpired] = useState(false);
   const [leaderboardOpen, setLeaderboardOpen] = useState(false);
+  const { currTeam1Player } = usePlayers();
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const gameContainerRef = useRef<HTMLDivElement>(null);
@@ -50,7 +56,7 @@ export default function RJ45Game() {
     setTimeout(() => {
       // Jumble the wires
       const jumbledWires = [...WIRE_STANDARDS[selected]].sort(
-        () => Math.random() - 0.5
+        () => Math.random() - 0.5,
       );
       setWires(jumbledWires);
       setShowCorrectPattern(false);
@@ -89,7 +95,7 @@ export default function RJ45Game() {
     if (timeExpired && gameState === "arrange") {
       // Check if wiring is correct
       const isCorrect = wires.every(
-        (wire, index) => wire.id === correctWires[index].id
+        (wire, index) => wire.id === correctWires[index].id,
       );
 
       if (isCorrect) {
@@ -98,13 +104,23 @@ export default function RJ45Game() {
           "Perfect arrangement! You've successfully wired the RJ45 connector!",
           {
             className: "bg-green-100 text-green-800 border-green-200",
-          }
+          },
         );
+        submitScore({
+          gameId,
+          score: 1,
+          name: currTeam1Player?.name || "Anonymous",
+        });
       } else {
         setGameState("failure");
         setShowCorrectPattern(true);
         toast("Time's up! Incorrect wire arrangement.", {
           className: "bg-red-100 text-red-800 border-red-200",
+        });
+        submitScore({
+          gameId,
+          score: 0,
+          name: currTeam1Player?.name || "Anonymous",
         });
       }
     }
@@ -117,7 +133,7 @@ export default function RJ45Game() {
     }
 
     const isCorrect = wires.every(
-      (wire, index) => wire.id === correctWires[index].id
+      (wire, index) => wire.id === correctWires[index].id,
     );
 
     if (isCorrect) {
@@ -127,14 +143,24 @@ export default function RJ45Game() {
         "Perfect arrangement! You've successfully wired the RJ45 connector!",
         {
           className: "bg-green-100 text-green-800 border-green-200",
-        }
+        },
       );
+      submitScore({
+        gameId,
+        score: 1,
+        name: currTeam1Player?.name || "Anonymous",
+      });
     } else {
       // Game over - wrong arrangement
       setGameState("failure");
       setShowCorrectPattern(true); // Show the correct pattern
       toast("Incorrect wire arrangement! Check the correct pattern.", {
         className: "bg-red-100 text-red-800 border-red-200",
+      });
+      submitScore({
+        gameId,
+        score: 0,
+        name: currTeam1Player?.name || "Anonymous",
       });
     }
   };

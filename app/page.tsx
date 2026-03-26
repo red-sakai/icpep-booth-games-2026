@@ -60,7 +60,7 @@ export default function GameHub() {
               <BackToHomeButton navigateTo={navigateTo} variant="purple" />
               <EditPlayers mode="solo" />
             </div>
-            <RJ45Game />
+            <RJ45Game gameId="rj45-game" />
           </div>
         );
       default:
