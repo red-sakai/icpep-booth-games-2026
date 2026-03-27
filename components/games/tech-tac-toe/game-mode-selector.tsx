@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,23 +12,33 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { User, Cpu } from "lucide-react";
+import { GameMode } from "@/lib/types";
 
-type GameMode = "pvp" | "pve";
 type Difficulty = "easy" | "medium" | "hard";
 
 interface GameModeSelectorProps {
+  currGameMode: GameMode;
   open: boolean;
   onSelect: (mode: GameMode, difficulty: Difficulty) => void;
   onClose?: () => void;
 }
 
 export default function GameModeSelector({
+  currGameMode,
   open,
   onSelect,
   onClose,
 }: GameModeSelectorProps) {
-  const [mode, setMode] = useState<GameMode>("pve");
+  const [mode, setMode] = useState<GameMode>(currGameMode);
   const [difficulty, setDifficulty] = useState<Difficulty>("medium");
+
+  useEffect(() => {
+    if (open) {
+      setMode(currGameMode);
+    } else {
+      setDifficulty("medium");
+    }
+  }, [open, currGameMode]);
 
   const handleStart = () => {
     onSelect(mode, difficulty);
@@ -59,13 +69,13 @@ export default function GameModeSelector({
               "flex flex-col items-center justify-center p-6 rounded-xl border-2 transition-all space-y-3",
               mode === "pvp"
                 ? "border-pink-500 bg-pink-50 text-pink-700 shadow-md"
-                : "border-slate-100 bg-slate-50 text-slate-500 hover:border-pink-200 hover:bg-pink-25"
+                : "border-slate-100 bg-slate-50 text-slate-500 hover:border-pink-200 hover:bg-pink-25",
             )}
           >
             <div
               className={cn(
                 "p-3 rounded-full",
-                mode === "pvp" ? "bg-pink-500 text-white" : "bg-slate-200"
+                mode === "pvp" ? "bg-pink-500 text-white" : "bg-slate-200",
               )}
             >
               <User size={32} />
@@ -79,13 +89,13 @@ export default function GameModeSelector({
               "flex flex-col items-center justify-center p-6 rounded-xl border-2 transition-all space-y-3",
               mode === "pve"
                 ? "border-pink-500 bg-pink-50 text-pink-700 shadow-md"
-                : "border-slate-100 bg-slate-50 text-slate-500 hover:border-pink-200 hover:bg-pink-25"
+                : "border-slate-100 bg-slate-50 text-slate-500 hover:border-pink-200 hover:bg-pink-25",
             )}
           >
             <div
               className={cn(
                 "p-3 rounded-full",
-                mode === "pve" ? "bg-pink-500 text-white" : "bg-slate-200"
+                mode === "pve" ? "bg-pink-500 text-white" : "bg-slate-200",
               )}
             >
               <Cpu size={32} />
@@ -108,7 +118,7 @@ export default function GameModeSelector({
                     "px-4 py-2 rounded-full text-sm font-semibold capitalize transition-all",
                     difficulty === d
                       ? "bg-pink-600 text-white shadow-sm"
-                      : "bg-pink-50 text-pink-600 hover:bg-pink-100"
+                      : "bg-pink-50 text-pink-600 hover:bg-pink-100",
                   )}
                 >
                   {d}

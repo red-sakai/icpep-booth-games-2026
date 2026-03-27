@@ -3,24 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-
-type LeaderboardEntry = {
-  name: string;
-  score: number;
-  createdAt: string;
-};
-
-type LeaderboardGame = {
-  metric: string;
-  order: "asc" | "desc";
-  entries: LeaderboardEntry[];
-};
-
-type LeaderboardFile = {
-  version: number;
-  generatedAt: string;
-  games: Record<string, LeaderboardGame>;
-};
+import { useLeaderboard } from "@/contexts/leaderboard-context";
 
 type LeaderboardPanelProps = {
   gameId: string;
@@ -66,7 +49,7 @@ export default function LeaderboardPanel({
     }
   }, [gameId]);
 
-  const [data, setData] = useState<LeaderboardFile | null>(null);
+  const { leaderboardData, updateLeaderboardData } = useLeaderboard();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -74,30 +57,15 @@ export default function LeaderboardPanel({
     const controller = new AbortController();
 
     const load = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+      setLoading(true);
+      setError(null);
 
-        // Fetch from the API instead of static JSON to ensure we get the latest data
-        const res = await fetch(`/api/leaderboard?cb=${Date.now()}`, {
-          signal: controller.signal,
-          cache: "no-store",
-        });
-
-        if (!res.ok) {
-          throw new Error(`Failed to load leaderboard (${res.status})`);
-        }
-
-        const json = (await res.json()) as LeaderboardFile;
-        setData(json);
-      } catch (err) {
+      const result = await updateLeaderboardData();
+      if (result.error) {
         if (controller.signal.aborted) return;
-        setError(err instanceof Error ? err.message : "Unknown error");
-        setData(null);
-      } finally {
-        if (controller.signal.aborted) return;
-        setLoading(false);
+        setError(result.error);
       }
+      setLoading(false);
     };
 
     void load();
@@ -105,7 +73,7 @@ export default function LeaderboardPanel({
     return () => controller.abort();
   }, [gameId, leaderboardKey]);
 
-  const game = data?.games?.[gameId] ?? null;
+  const game = leaderboardData?.games?.[gameId] ?? null;
 
   const entries = useMemo(() => {
     if (!game?.entries) return [];
@@ -120,11 +88,7 @@ export default function LeaderboardPanel({
 
   return (
     <Card
-      className={cn(
-        "w-full max-w-2xl backdrop-blur-sm",
-        theme.card,
-        className
-      )}
+      className={cn("w-full max-w-2xl backdrop-blur-sm", theme.card, className)}
     >
       <div className="p-5 sm:p-6 space-y-3">
         <div className="flex items-center justify-between">
@@ -140,9 +104,7 @@ export default function LeaderboardPanel({
           <p className="text-sm text-slate-600">Loading leaderboard…</p>
         )}
 
-        {!loading && error && (
-          <p className="text-sm text-rose-700">{error}</p>
-        )}
+        {!loading && error && <p className="text-sm text-rose-700">{error}</p>}
 
         {!loading && !error && !game && (
           <p className="text-sm text-slate-600">
@@ -155,9 +117,7 @@ export default function LeaderboardPanel({
         )}
 
         {!loading && !error && game && entries.length > 0 && (
-          <ol
-            className={cn("space-y-2", entriesClassName)}
-          >
+          <ol className={cn("space-y-2", entriesClassName)}>
             {entries.map((entry, index) => (
               <li
                 key={`${entry.name}-${entry.createdAt}-${index}`}

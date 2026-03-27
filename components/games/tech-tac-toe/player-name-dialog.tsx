@@ -48,9 +48,10 @@ export default function PlayerNameDialog({
             <DialogTitle className="text-2xl font-bold text-pink-700 text-center">
               {title}
             </DialogTitle>
-            <DialogDescription className="text-center text-pink-400">
+            <DialogDescription className="text-center text-sky-600">
               {playerLabel ? `${playerLabel}, you` : "You"} won with a streak of{" "}
-              <span className="font-bold text-pink-600">{score}</span>! Enter your name to save your score.
+              <span className="font-bold text-pink-600">{score}</span>! Enter
+              your name to save your score.
             </DialogDescription>
           </DialogHeader>
 

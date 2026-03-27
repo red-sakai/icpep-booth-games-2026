@@ -18,12 +18,14 @@ import GameSelectorCarousel from "@/components/home/game-selector-carousel";
 import BackToHomeButton from "@/components/home/back-to-home-button";
 
 // Types
-import { GameType } from "@/lib/types";
+import { GameMode, GameType } from "@/lib/types";
 import { PlayersProvider } from "@/contexts/players-context";
-import { PlayersSelection } from "@/components/home/player-selection/players-selection";
+import { EditPlayers } from "@/components/home/edit-players/edit-players";
+import { LeaderboardProvider } from "@/contexts/leaderboard-context";
 
 export default function GameHub() {
   const [currentGame, setCurrentGame] = useState<GameType>("home");
+  const [gameMode, setGameMode] = useState<GameMode>(null);
 
   const navigateTo = (game: GameType) => {
     setCurrentGame(game);
@@ -37,9 +39,13 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="pink" />
-              <PlayersSelection playerCount={2} />
+              <EditPlayers gameMode={gameMode} openOnMount={false} />
             </div>
-            <TechTacToe />
+            <TechTacToe
+              gameId="tech-tac-toe"
+              gameMode={gameMode}
+              setGameMode={setGameMode}
+            />
           </div>
         );
       case "led-memory":
@@ -47,9 +53,9 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="rose" />
-              <PlayersSelection playerCount={1} />
+              <EditPlayers gameMode="solo" />
             </div>
-            <LEDMemoryGame />
+            <LEDMemoryGame gameId="led-memory" />
           </div>
         );
       case "rj45-game":
@@ -57,9 +63,9 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="purple" />
-              <PlayersSelection playerCount={1} />
+              <EditPlayers gameMode="solo" />
             </div>
-            <RJ45Game />
+            <RJ45Game gameId="rj45-game" />
           </div>
         );
       default:
@@ -78,32 +84,34 @@ export default function GameHub() {
 
   return (
     <PlayersProvider>
-      <div className="min-h-screen bg-gradient-to-b from-purple-100 via-pink-200 to-rose-200 p-4 md:p-8">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentGame}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {renderContent()}
-          </motion.div>
-        </AnimatePresence>
-
-        {currentGame !== "home" && (
-          <div className="fixed bottom-4 right-4">
-            <Button
-              onClick={() => navigateTo("home")}
-              size="icon"
-              className="rounded-full bg-white text-purple-600 hover:bg-purple-50 shadow-md"
-              aria-label="Return to home"
+      <LeaderboardProvider>
+        <div className="min-h-screen bg-gradient-to-b from-purple-100 via-pink-200 to-rose-200 p-4 md:p-8">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentGame}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
             >
-              <Home size={20} />
-            </Button>
-          </div>
-        )}
-      </div>
+              {renderContent()}
+            </motion.div>
+          </AnimatePresence>
+
+          {currentGame !== "home" && (
+            <div className="fixed bottom-4 right-4">
+              <Button
+                onClick={() => navigateTo("home")}
+                size="icon"
+                className="rounded-full bg-white text-pink-600 hover:bg-pink-50 shadow-md"
+                aria-label="Return to home"
+              >
+                <Home size={20} />
+              </Button>
+            </div>
+          )}
+        </div>
+      </LeaderboardProvider>
     </PlayersProvider>
   );
 }
