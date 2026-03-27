@@ -30,9 +30,9 @@ export default function LeaderboardPanel({
         };
       case "tech-tac-toe":
         return {
-          card: "bg-sky-50/80 border-sky-200",
-          title: "text-sky-800",
-          metric: "text-sky-700",
+          card: "bg-white/60 backdrop-blur-xl border border-blue-200 shadow-[0_8px_30px_rgba(59,130,246,0.15)] rounded-2xl",
+          title: "bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-500 font-black tracking-tight",
+          metric: "text-cyan-600 font-bold uppercase tracking-wider text-xs",
         };
       case "rj45-game":
         return {

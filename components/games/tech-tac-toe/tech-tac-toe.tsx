@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { RotateCcw } from "lucide-react";
@@ -34,6 +34,7 @@ type TechTacToeProps = {
   gameMode: GameMode;
   setGameMode: (gameMode: GameMode) => void;
 };
+
 export default function TechTacToe({
   gameId,
   gameMode,
@@ -50,7 +51,6 @@ export default function TechTacToe({
   const [winnerTeam, setWinnerTeam] = useState<Player | "draw" | null>(null);
   const [winningPattern, setWinningPattern] = useState<number[] | null>(null);
   const [showInfo, setShowInfo] = useState(false);
-  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
   const { updateLeaderboardData } = useLeaderboard();
 
   // AI & Game Mode State
@@ -63,7 +63,8 @@ export default function TechTacToe({
   const [p0Streak, setP0Streak] = useState(0);
   const [lastWinScore, setLastWinScore] = useState(0);
   const [showNameDialog, setShowNameDialog] = useState(false);
-  const [leaderboardKey, setLeaderboardKey] = useState(0); // For refreshing leaderboard
+  const [leaderboardKey, setLeaderboardKey] = useState(0);
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
 
   useEffect(() => {
     if (gameMode === "pve") {
@@ -79,7 +80,7 @@ export default function TechTacToe({
     if (currTeam1Player && currTeam2Player) {
       setCurrentTeam("1");
       toast(`${currTeam1Player.name} starts!`, {
-        className: "bg-sky-100 text-sky-800 border-sky-200",
+        className: "bg-violet-100 text-violet-800 border-violet-200",
       });
     }
   }, [currTeam1Player, currTeam2Player]);
@@ -104,10 +105,7 @@ export default function TechTacToe({
 
   const handleCellClick = useCallback(
     (index: number, isAutoMove = false) => {
-      // Ignore click if cell is already filled, game is over, or AI is thinking (unless it's an auto-move)
       if (board[index] || winnerTeam || (isAIThinking && !isAutoMove)) return;
-
-      // In PvE, only allow clicks when it's Team 1's turn (unless it's an auto-move)
       if (gameMode === "pve" && currentTeam !== "1" && !isAutoMove) return;
 
       const newBoard = [...board];
@@ -121,8 +119,8 @@ export default function TechTacToe({
         setWinningPattern(pattern);
 
         if (newWinner === "draw") {
-          toast("It's a draw! 🤝", {
-            className: "bg-sky-100 text-sky-800 border-sky-200",
+          toast("It's a draw!", {
+            className: "bg-violet-100 text-violet-800 border-violet-200",
           });
           setP1Streak(0);
           setP0Streak(0);
@@ -131,36 +129,24 @@ export default function TechTacToe({
           const winnerLabel =
             newWinner === "1" ? currTeam1Player?.name : currTeam2Player?.name;
 
-          toast(`Team ${winnerLabel} wins! 🎉`, {
-            className: "bg-sky-100 text-sky-800 border-sky-200",
+          toast(`Team ${winnerLabel} wins!`, {
+            className: "bg-violet-100 text-violet-800 border-violet-200",
           });
 
           let currentWinnerStreak = 1;
           if (newWinner === "1") {
             currentWinnerStreak = p1Streak + 1;
             setP1Streak(currentWinnerStreak);
-            setP0Streak(0); // Reset opponent streak
+            setP0Streak(0);
           } else {
             currentWinnerStreak = p0Streak + 1;
             setP0Streak(currentWinnerStreak);
-            setP1Streak(0); // Reset opponent streak
+            setP1Streak(0);
           }
 
           setLastWinScore(currentWinnerStreak);
-
-          // Show name dialog if a human won (or any win in PvP)
-          // updateLeaderboardForWinner();
-          // if (gameMode === "pvp" || (gameMode === "pve" && newWinner === "1")) {
-          // } else if (gameMode === "pve" && newWinner === "0") {
-          //   // Auto-submit AI win without dialog
-          //   handleSubmitName(
-          //     `AI (${difficulty.toUpperCase()})`,
-          //     currentWinnerStreak,
-          //   );
-          // }
         }
       } else {
-        // Switch player
         setCurrentTeam(currentTeam === "1" ? "0" : "1");
       }
     },
@@ -173,10 +159,11 @@ export default function TechTacToe({
       p1Streak,
       p0Streak,
       difficulty,
+      currTeam1Player,
+      currTeam2Player,
     ],
   );
 
-  // AI Turn Logic
   useEffect(() => {
     if (
       gameMode === "pve" &&
@@ -186,8 +173,6 @@ export default function TechTacToe({
     ) {
       const timer = setTimeout(() => {
         setIsAIThinking(true);
-
-        // Brief delay to simulate "thinking" for better UX
         const thinkTimer = setTimeout(() => {
           const aiMove = getBestMove(board, "0", difficulty);
           if (aiMove !== -1) {
@@ -195,10 +180,8 @@ export default function TechTacToe({
           }
           setIsAIThinking(false);
         }, 600);
-
         return () => clearTimeout(thinkTimer);
       }, 400);
-
       return () => clearTimeout(timer);
     }
   }, [
@@ -214,7 +197,6 @@ export default function TechTacToe({
   const resetBoard = () => {
     setBoard(Array(9).fill(null));
     setCurrentTeam("1");
-    setWinnerTeam(null);
     setWinnerTeam(null);
     setWinningPattern(null);
     setIsAIThinking(false);
@@ -232,11 +214,9 @@ export default function TechTacToe({
 
   const handleCloseModeSelector = () => {
     if (previousGameMode) {
-      // User cancelled mode change, restore previous mode
       setGameMode(previousGameMode);
       setPreviousGameMode(null);
     } else {
-      // Initial load with no previous mode - select default
       setGameMode("pve");
     }
   };
@@ -245,7 +225,6 @@ export default function TechTacToe({
     selectedGameMode: GameMode,
     selectedDiff: DifficultyLevel,
   ) => {
-    // Only reset streaks if switching modes or difficulty
     if (gameMode !== selectedGameMode || difficulty !== selectedDiff) {
       setP1Streak(0);
       setP0Streak(0);
@@ -269,7 +248,7 @@ export default function TechTacToe({
 
       if (response.ok) {
         toast.success("Score saved to leaderboard!");
-        setLeaderboardKey((prev) => prev + 1); // Refresh leaderboard
+        setLeaderboardKey((prev) => prev + 1);
       } else {
         toast.error("Failed to save score.");
       }
@@ -281,10 +260,9 @@ export default function TechTacToe({
     }
   };
 
-  const isFinished = winnerTeam !== null;
-
   return (
-    <div className="flex flex-col items-center justify-center p-4 space-y-6 bg-gradient-to-br from-sky-100 via-indigo-50 to-blue-100 rounded-xl shadow-md">
+    // Updated container background to match the vibrant theme
+    <div className="flex flex-col items-center justify-center p-4 space-y-6 bg-gradient-to-br from-fuchsia-100 via-violet-100 to-cyan-100 rounded-2xl shadow-lg border border-white/40">
       <GameModeSelector
         currGameMode={previousGameMode}
         open={gameMode === null}
@@ -299,10 +277,10 @@ export default function TechTacToe({
         onCancel={() => setShowNameDialog(false)}
         title={
           gameMode === "pve"
-            ? "You Win! 🏆"
+            ? "You Win! 🎉"
             : winnerTeam === "1"
-              ? "Team 1 Wins! 🎉"
-              : "Team 2 Wins! 🎉"
+              ? "Team 1 Wins! 🏆"
+              : "Team 2 Wins! 🏆"
         }
         playerLabel={
           gameMode === "pvp"
@@ -330,6 +308,28 @@ export default function TechTacToe({
         handleCellClick={handleCellClick}
       />
 
+      {/* Buttons MOVED UP to be directly under the board */}
+      <div className="flex gap-3 mt-2 w-full max-w-[320px] justify-center">
+        <Button
+          onClick={resetBoard}
+          variant="outline"
+          size="lg"
+          // Updated button styles to match the vibrant theme with a glowing effect on hover
+          className="bg-white/80 backdrop-blur-sm border-violet-200 hover:bg-fuchsia-50 hover:border-fuchsia-300 text-violet-700 shadow-sm flex items-center gap-2 transition-all rounded-xl"
+        >
+          <RotateCcw size={16} />
+          Play Again
+        </Button>
+        <Button
+          onClick={handleChangeMode}
+          variant="ghost"
+          size="lg"
+          className="text-violet-700 hover:bg-violet-100/50 hover:text-violet-900 rounded-xl transition-all"
+        >
+          Change Mode
+        </Button>
+      </div>
+
       <Button
         onClick={() => setLeaderboardOpen(true)}
         variant="outline"
@@ -347,7 +347,6 @@ export default function TechTacToe({
               Tech-Tac-Toe scores and rankings
             </DialogDescription>
           </DialogHeader>
-
           <LeaderboardPanel
             gameId="led-memory"
             limit={9999}
@@ -357,27 +356,13 @@ export default function TechTacToe({
         </DialogContent>
       </Dialog>
 
-      <LeaderboardPanel gameId="tech-tac-toe" leaderboardKey={leaderboardKey} />
-
-      <div className="flex gap-2">
-        <Button
-          onClick={resetBoard}
-          variant="outline"
-          size="lg"
-          className="bg-white border-sky-200 hover:bg-sky-50 hover:border-sky-300 text-sky-700 shadow-sm flex items-center gap-2"
-        >
-          <RotateCcw size={16} />
-          Play Again
-        </Button>
-        <Button
-          onClick={handleChangeMode}
-          variant="ghost"
-          size="lg"
-          className="text-sky-600 hover:bg-sky-50"
-        >
-          Change Mode
-        </Button>
+      <div className="w-full mt-4 justify-center flex">
+        <LeaderboardPanel
+          gameId="tech-tac-toe"
+          leaderboardKey={leaderboardKey}
+        />
       </div>
     </div>
   );
 }
+
