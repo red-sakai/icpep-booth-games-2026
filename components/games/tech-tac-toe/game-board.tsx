@@ -16,47 +16,72 @@ export default function GameBoard({
   handleCellClick,
 }: GameBoardProps) {
   return (
-    <div className="grid grid-cols-3 gap-3 sm:gap-4 p-5 sm:p-6 rounded-2xl bg-white border border-pink-200 shadow-md">
-      {board.map((cell, index) => (
-        <motion.div
-          key={index}
-          initial={{ scale: 0.8 }}
-          animate={{
-            scale: 1,
-            borderColor: winningPattern?.includes(index)
-              ? "rgb(236 72 153)" // Highlighted winning cells
-              : undefined,
-          }}
-          whileHover={{ scale: cell ? 1 : 1.05 }}
-          transition={{ duration: 0.2 }}
-        >
-          <Card
-            className={`relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 cursor-pointer flex items-center
-                        justify-center border-2 transition-all rounded-xl ${
-              cell
-                ? "bg-fuchsia-50 border-fuchsia-300"
-                : "bg-pink-50 border-pink-200 hover:border-pink-300 hover:bg-pink-50"
-            } ${
-              winningPattern?.includes(index)
-                ? "border-fuchsia-500 shadow-[0_0_20px_rgba(217,70,239,0.4)] bg-fuchsia-100"
-                : ""
-            }`}
-            onClick={() => handleCellClick(index)}
-          >
-            {cell && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className={`text-3xl sm:text-4xl md:text-5xl font-bold ${
-                  cell === "1" ? "text-green-400" : "text-pink-400"
+    // Vibrant frosted glass container with a glowing violet shadow
+    <div className="p-5 sm:p-6 rounded-2xl bg-white/40 backdrop-blur-xl shadow-[0_8px_32px_rgba(236,72,153,0.2)] border border-pink-100/60">
+      <div className="grid grid-cols-3 gap-3 sm:gap-4">
+        {board.map((cell, index) => {
+          const isWinningCell = winningPattern?.includes(index);
+          return (
+            <motion.div
+              key={index}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{
+                scale: 1,
+                opacity: 1,
+                boxShadow: isWinningCell
+                  ? ["0px 0px 15px rgba(236,72,153,0.4)", "0px 0px 30px rgba(236,72,153,0.7)", "0px 0px 15px rgba(236,72,153,0.4)"]
+                  : "0px 0px 0px rgba(236,72,153,0)",
+              }}
+              transition={{
+                duration: 0.3,
+                delay: isWinningCell ? 0 : index * 0.05,
+                boxShadow: isWinningCell
+                  ? { repeat: Infinity, duration: 1.5, ease: "easeInOut" }
+                  : { duration: 0.3 },
+              }}
+              whileHover={{ scale: cell ? 1 : 1.05 }}
+              whileTap={{ scale: cell ? 1 : 0.95 }}
+              className="rounded-xl"
+            >
+              <Card
+                className={`relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 cursor-pointer flex items-center justify-center transition-all duration-300 ${
+                  cell
+                    ? "bg-gradient-to-br from-pink-50 to-fuchsia-50 border-pink-200"
+                    : "bg-white/70 border-pink-100 shadow-sm hover:shadow-lg hover:border-pink-300 hover:bg-white"
+                } ${
+                  isWinningCell
+                    ? "border-pink-400 bg-pink-50 ring-2 ring-pink-400/60 z-10"
+                    : cell ? "shadow-inner" : ""
                 }`}
+                onClick={() => handleCellClick(index)}
               >
-                {cell}
-              </motion.div>
-            )}
-          </Card>
-        </motion.div>
-      ))}
+                {cell && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.2, rotate: -60 }}
+                    animate={{
+                      opacity: 1,
+                      scale: isWinningCell ? [1, 1.1, 1] : 1,
+                      rotate: 0,
+                    }}
+                    transition={{
+                      scale: isWinningCell
+                        ? { repeat: Infinity, duration: 1.5, ease: "easeInOut" }
+                        : { type: "spring", stiffness: 300, damping: 20 },
+                      rotate: { type: "spring", stiffness: 300, damping: 20 },
+                      opacity: { duration: 0.2 },
+                    }}
+                    className={`text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter drop-shadow-md ${
+                      cell === "1" ? "text-pink-500" : "text-fuchsia-500"
+                    }`}
+                  >
+                    {cell}
+                  </motion.div>
+                )}
+              </Card>
+            </motion.div>
+          );
+        })}
+      </div>
     </div>
   );
 }

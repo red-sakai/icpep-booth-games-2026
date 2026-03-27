@@ -22,12 +22,12 @@ export default function GameHeader({
   return (
     <div className="text-center space-y-3 max-w-md mx-auto">
       <div className="flex items-center justify-center gap-2">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-cyan-700 tracking-tight">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-purple-700 tracking-tight">
           Connect Me Not: Ethernet Color Coding Game
         </h1>
         <button
           onClick={() => setShowInfo(!showInfo)}
-          className="text-cyan-600 hover:text-cyan-800 transition-colors"
+          className="text-purple-400 hover:text-purple-600 transition-colors"
           aria-label="Show information about RJ45 wiring"
         >
           <Info size={20} />
@@ -42,7 +42,7 @@ export default function GameHeader({
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
           >
-            <div className="bg-white/80 backdrop-blur-sm p-3 rounded-lg shadow-sm text-sm text-slate-700">
+            <div className="bg-white/40 backdrop-blur-md border border-white/50 p-3 rounded-xl shadow-sm text-sm text-purple-900">
               <p>
                 RJ45 connectors use specific color patterns for network cables.
                 T568A and T568B are the two standard wiring patterns used in
@@ -54,8 +54,8 @@ export default function GameHeader({
       </AnimatePresence>
 
       {gameState === "select" && (
-        <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg shadow-sm">
-          <p className="text-slate-700 text-base sm:text-lg">
+        <div className="bg-white/40 backdrop-blur-md border border-white/50 p-4 rounded-xl shadow-sm">
+          <p className="text-purple-800 text-base sm:text-sm">
             Select a wiring standard to begin. You&apos;ll need to memorize the
             pattern, then arrange the wires correctly in 15 seconds.
           </p>
@@ -63,7 +63,7 @@ export default function GameHeader({
       )}
 
       {gameState === "learn" && (
-        <div className="flex items-center justify-center space-x-2 text-emerald-600 bg-emerald-50 p-3 rounded-lg shadow-sm">
+        <div className="flex items-center justify-center space-x-2 text-emerald-700 bg-emerald-50/80 backdrop-blur-sm border border-emerald-200 p-3 rounded-xl shadow-sm">
           <AlertCircle size={20} />
           <p className="font-medium text-base sm:text-lg">
             Memorize this pattern! Jumbling in 5 seconds...
@@ -72,7 +72,7 @@ export default function GameHeader({
       )}
 
       {gameState === "arrange" && (
-        <div className="flex items-center justify-center space-x-2 text-amber-600 bg-amber-50 p-3 rounded-lg shadow-sm">
+        <div className="flex items-center justify-center space-x-2 text-amber-700 bg-amber-50/80 backdrop-blur-sm border border-amber-200 p-3 rounded-xl shadow-sm">
           <Clock size={20} />
           <p className="font-medium text-base sm:text-lg">
             Arrange the wires correctly! Time left: {timeLeft}s
@@ -81,7 +81,7 @@ export default function GameHeader({
       )}
 
       {gameState === "success" && (
-        <div className="flex items-center justify-center space-x-2 text-emerald-600 bg-emerald-50 p-3 rounded-lg shadow-sm">
+        <div className="flex items-center justify-center space-x-2 text-emerald-700 bg-emerald-50/80 backdrop-blur-sm border border-emerald-200 p-3 rounded-xl shadow-sm">
           <Award size={20} />
           <p className="font-medium text-base sm:text-lg">
             Perfect wiring! You win!
@@ -90,7 +90,7 @@ export default function GameHeader({
       )}
 
       {gameState === "failure" && (
-        <div className="flex items-center justify-center space-x-2 text-red-600 bg-red-50 p-3 rounded-lg shadow-sm">
+        <div className="flex items-center justify-center space-x-2 text-rose-700 bg-rose-50/80 backdrop-blur-sm border border-rose-200 p-3 rounded-xl shadow-sm">
           <AlertCircle size={20} />
           <p className="font-medium text-base sm:text-lg">
             {timeExpired

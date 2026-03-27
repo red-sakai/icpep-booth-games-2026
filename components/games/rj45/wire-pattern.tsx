@@ -9,9 +9,9 @@ type WirePatternProps = {
 
 export default function WirePattern({ standard, wires }: WirePatternProps) {
   return (
-    <Card className="p-4 bg-white shadow-md">
-      <h3 className="text-lg font-semibold text-center mb-4 text-cyan-700 flex items-center justify-center gap-2">
-        <span className="bg-cyan-100 text-cyan-700 px-2 py-1 rounded text-sm font-bold">
+    <Card className="p-4 bg-white/40 backdrop-blur-md border border-white/50 shadow-md rounded-2xl">
+      <h3 className="text-lg font-semibold text-center mb-4 text-purple-700 flex items-center justify-center gap-2">
+        <span className="bg-purple-100/80 text-purple-700 px-2 py-1 rounded text-sm font-bold">
           {standard}
         </span>
         Standard Pattern

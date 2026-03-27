@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Grid3X3,
@@ -68,22 +67,21 @@ const games: GameOption[] = [
       "Master the art of RJ45 connector wiring standards. Learn T568A and T568B in this interactive challenge.",
     icon: <Cable size={100} />,
     color: {
-      from: "from-cyan-500",
-      to: "to-teal-600",
-      accent: "bg-cyan-500",
-      button: "bg-cyan-600",
-      buttonHover: "hover:bg-cyan-700",
+      from: "from-purple-500",
+      to: "to-fuchsia-600",
+      accent: "bg-purple-500",
+      button: "bg-purple-600",
+      buttonHover: "hover:bg-purple-700",
     },
   },
 ];
 
 export default function GameSelectorCarousel({ navigateTo }: GameCardsProps) {
   const [current, setCurrent] = useState(0);
-  const [scrollPosition, setScrollPosition] = useState(0);
 
-  const paginate = (newDirection: number) => {
+  const paginate = useCallback((newDirection: number) => {
     setCurrent((prev) => (prev + newDirection + games.length) % games.length);
-  };
+  }, []);
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -93,20 +91,9 @@ export default function GameSelectorCarousel({ navigateTo }: GameCardsProps) {
 
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
-  }, []);
+  }, [paginate]);
 
   const game = games[current];
-
-  const scrollThumbnails = (direction: number) => {
-    const container = document.getElementById("thumbnails-container");
-    if (container) {
-      const scrollAmount = 200;
-      container.scrollBy({
-        left: direction * scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
 
   return (
     <div className="w-full bg-white rounded-2xl overflow-hidden shadow-lg">
