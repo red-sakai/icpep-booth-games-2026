@@ -115,7 +115,7 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
         setGameState("failure");
         setShowCorrectPattern(true);
         toast("Time's up! Incorrect wire arrangement.", {
-          className: "bg-red-100 text-red-800 border-red-200",
+          className: "bg-rose-100 text-rose-800 border-rose-200",
         });
         submitScore({
           gameId,
@@ -155,7 +155,7 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
       setGameState("failure");
       setShowCorrectPattern(true); // Show the correct pattern
       toast("Incorrect wire arrangement! Check the correct pattern.", {
-        className: "bg-red-100 text-red-800 border-red-200",
+        className: "bg-rose-100 text-rose-800 border-rose-200",
       });
       submitScore({
         gameId,
@@ -192,7 +192,14 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
   return (
     <div
       ref={gameContainerRef}
-      className="flex flex-col items-center justify-center p-4 md:p-8 space-y-6 bg-gradient-to-br from-cyan-50 via-sky-50 to-blue-50 rounded-xl shadow-md relative"
+      className="flex flex-col items-center justify-center p-4 md:p-8 space-y-6 
+                relative overflow-hidden rounded-2xl shadow-2xl 
+                bg-purple-400/10 backdrop-blur-xl 
+                border border-white/30 
+                ring-1 ring-purple-200/20
+                after:pointer-events-none after:absolute after:inset-0 after:-z-10
+                after:content-[''] after:bg-gradient-to-br 
+                after:from-purple-300/20 after:via-transparent after:to-purple-800/20"
     >
       <GameHeader
         gameState={gameState}
@@ -228,19 +235,18 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
           onClick={() => setLeaderboardOpen(true)}
           variant="outline"
           size="lg"
-          className="bg-white border-cyan-200 hover:bg-cyan-50 hover:border-cyan-300 text-cyan-700 shadow-md"
+          className="bg-white/50 backdrop-blur-sm border-purple-300 hover:bg-purple-50/70 hover:border-purple-400 text-purple-600 shadow-sm rounded-xl"
         >
           Show Leaderboard
         </Button>
       )}
 
       <Dialog open={leaderboardOpen} onOpenChange={setLeaderboardOpen}>
-        <DialogContent className="sm:max-w-2xl">
+        <DialogContent className="sm:max-w-2xl border-purple-100">
           <DialogHeader>
-            <DialogTitle>Leaderboard</DialogTitle>
+            <DialogTitle className="text-purple-900">Leaderboard</DialogTitle>
             <DialogDescription>RJ45 scores and rankings</DialogDescription>
           </DialogHeader>
-
           <LeaderboardPanel
             gameId="rj45-game"
             limit={9999}
@@ -255,7 +261,8 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
           onClick={resetGame}
           variant="outline"
           size="lg"
-          className="bg-white border-cyan-200 hover:bg-cyan-50 hover:border-cyan-300 text-cyan-700 shadow-md flex items-center gap-2"
+          className="bg-white/50 backdrop-blur-sm border-purple-300 hover:bg-purple-50/70 hover:border-purple-400 text-purple-600 shadow-sm 
+                    flex items-center gap-2 rounded-xl"
         >
           <RotateCcw size={16} />
           Play Again

@@ -67,11 +67,11 @@ const games: GameOption[] = [
       "Master the art of RJ45 connector wiring standards. Learn T568A and T568B in this interactive challenge.",
     icon: <Cable size={100} />,
     color: {
-      from: "from-cyan-500",
-      to: "to-teal-600",
-      accent: "bg-cyan-500",
-      button: "bg-cyan-600",
-      buttonHover: "hover:bg-cyan-700",
+      from: "from-purple-500",
+      to: "to-fuchsia-600",
+      accent: "bg-purple-500",
+      button: "bg-purple-600",
+      buttonHover: "hover:bg-purple-700",
     },
   },
 ];
