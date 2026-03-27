@@ -2,9 +2,12 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertCircle, Clock, Award, Info } from "lucide-react";
-import type { RJ45GameState } from "@/lib/types";
+import type { RJ45GameState, Wire } from "@/lib/types";
 
 type GameHeaderProps = {
+  points: number;
+  matchedWires: Wire[];
+  correctWires: Wire[];
   gameState: RJ45GameState;
   timeLeft: number;
   timeExpired: boolean;
@@ -13,6 +16,9 @@ type GameHeaderProps = {
 };
 
 export default function GameHeader({
+  points,
+  matchedWires,
+  correctWires,
   gameState,
   timeLeft,
   timeExpired,
@@ -84,7 +90,8 @@ export default function GameHeader({
         <div className="flex items-center justify-center space-x-2 text-emerald-600 bg-emerald-50 p-3 rounded-lg shadow-sm">
           <Award size={20} />
           <p className="font-medium text-base sm:text-lg">
-            Perfect wiring! You win!
+            Perfect wiring! You win! You got {points} points:{" "}
+            {matchedWires.length}/{correctWires.length} wires matched.
           </p>
         </div>
       )}
@@ -94,8 +101,8 @@ export default function GameHeader({
           <AlertCircle size={20} />
           <p className="font-medium text-base sm:text-lg">
             {timeExpired
-              ? "Time's up! Incorrect wiring."
-              : "Incorrect wiring! Try again."}
+              ? `Time's up! You got ${points} points: ${matchedWires.length}/${correctWires.length} wires matched.`
+              : `Incorrect wiring! You got ${points} points: ${matchedWires.length}/${correctWires.length} wires matched.`}
           </p>
         </div>
       )}
