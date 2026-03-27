@@ -22,6 +22,10 @@ import {
 import { submitScore } from "@/lib/leaderboard-utils/leaderboard-utils.client";
 import { usePlayers } from "@/contexts/players-context";
 
+enum EStandardMultiplier {
+  T568B = 1,
+  T568A = 1.5, // mas mahirap since ung orange pair at brown pair ay magkadikit, so mas madaling magkamali
+}
 type RJ45GameProps = {
   gameId: string;
 };
@@ -108,7 +112,7 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
         );
         submitScore({
           gameId,
-          score: 1,
+          score: 1 * EStandardMultiplier[standard],
           name: currTeam1Player?.name || "Anonymous",
         });
       } else {
@@ -225,14 +229,24 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
 
       {(gameState === "success" || gameState === "failure") && (
         <Button
-          onClick={() => setLeaderboardOpen(true)}
+          onClick={resetGame}
           variant="outline"
           size="lg"
-          className="bg-white border-cyan-200 hover:bg-cyan-50 hover:border-cyan-300 text-cyan-700 shadow-md"
+          className="bg-white border-cyan-200 hover:bg-cyan-50 hover:border-cyan-300 text-cyan-700 shadow-md flex items-center gap-2"
         >
-          Show Leaderboard
+          <RotateCcw size={16} />
+          Play Again
         </Button>
       )}
+
+      <Button
+        onClick={() => setLeaderboardOpen(true)}
+        variant="outline"
+        size="lg"
+        className="bg-white border-sky-200 hover:text-sky-600 hover:bg-sky-50 hover:border-sky-300 text-sky-700 shadow-sm"
+      >
+        Show Leaderboard
+      </Button>
 
       <Dialog open={leaderboardOpen} onOpenChange={setLeaderboardOpen}>
         <DialogContent className="sm:max-w-2xl">
@@ -250,17 +264,12 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
         </DialogContent>
       </Dialog>
 
-      {(gameState === "success" || gameState === "failure") && (
-        <Button
-          onClick={resetGame}
-          variant="outline"
-          size="lg"
-          className="bg-white border-cyan-200 hover:bg-cyan-50 hover:border-cyan-300 text-cyan-700 shadow-md flex items-center gap-2"
-        >
-          <RotateCcw size={16} />
-          Play Again
-        </Button>
-      )}
+      <LeaderboardPanel
+        gameId="rj45-game"
+        limit={5}
+        className="w-full max-w-none"
+        entriesClassName="max-h-[60vh] overflow-y-auto pr-2"
+      />
     </div>
   );
 }
