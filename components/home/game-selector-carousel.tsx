@@ -39,11 +39,11 @@ const games: GameOption[] = [
       "Test your memory by repeating a sequence of 6 LED patterns in the correct order. Challenge yourself and climb the leaderboard!",
     icon: <Lightbulb size={100} />,
     color: {
-      from: "from-amber-500",
-      to: "to-orange-600",
-      accent: "bg-amber-500",
-      button: "bg-amber-500",
-      buttonHover: "hover:bg-amber-600",
+      from: "from-rose-400",
+      to: "to-rose-600",
+      accent: "bg-rose-500",
+      button: "bg-rose-500",
+      buttonHover: "hover:bg-rose-600",
     },
   },
   {
@@ -53,11 +53,11 @@ const games: GameOption[] = [
       "A binary twist on the classic game with 1s and 0s instead of Xs and Os. Strategic gameplay meets digital innovation.",
     icon: <Grid3X3 size={100} />,
     color: {
-      from: "from-sky-500",
-      to: "to-blue-600",
-      accent: "bg-sky-500",
-      button: "bg-sky-600",
-      buttonHover: "hover:bg-sky-700",
+      from: "from-pink-400",
+      to: "to-pink-600",
+      accent: "bg-pink-500",
+      button: "bg-pink-600",
+      buttonHover: "hover:bg-pink-700",
     },
   },
   {
