@@ -1,4 +1,9 @@
-import React, { useCallback, useEffect } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+} from "react";
 import { BoothPlayerType } from "@/lib/types";
 
 type PlayersContextType = {
@@ -17,11 +22,12 @@ type PlayersContextType = {
   updatePlayersData: () => Promise<void>;
 };
 
-const PlayersContext = React.createContext<PlayersContextType | null>(null);
+const PlayersContext = createContext<PlayersContextType | null>(null);
 
 type PlayersProviderProps = {
   children: React.ReactNode;
 };
+
 export const PlayersProvider = ({ children }: PlayersProviderProps) => {
   const [players, setPlayers] = React.useState<BoothPlayerType[]>([]);
   const [currTeam1Player, setCurrTeam1Player] =
@@ -61,7 +67,7 @@ export const PlayersProvider = ({ children }: PlayersProviderProps) => {
 };
 
 export const usePlayers = () => {
-  const context = React.useContext(PlayersContext);
+  const context = useContext(PlayersContext);
   if (!context) {
     throw new Error("usePlayers must be used within a PlayersProvider");
   }

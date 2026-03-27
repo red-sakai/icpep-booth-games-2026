@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Grid3X3,
@@ -79,11 +78,10 @@ const games: GameOption[] = [
 
 export default function GameSelectorCarousel({ navigateTo }: GameCardsProps) {
   const [current, setCurrent] = useState(0);
-  const [scrollPosition, setScrollPosition] = useState(0);
 
-  const paginate = (newDirection: number) => {
+  const paginate = useCallback((newDirection: number) => {
     setCurrent((prev) => (prev + newDirection + games.length) % games.length);
-  };
+  }, []);
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -93,20 +91,9 @@ export default function GameSelectorCarousel({ navigateTo }: GameCardsProps) {
 
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
-  }, []);
+  }, [paginate]);
 
   const game = games[current];
-
-  const scrollThumbnails = (direction: number) => {
-    const container = document.getElementById("thumbnails-container");
-    if (container) {
-      const scrollAmount = 200;
-      container.scrollBy({
-        left: direction * scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
 
   return (
     <div className="w-full bg-white rounded-2xl overflow-hidden shadow-lg">
