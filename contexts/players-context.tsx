@@ -45,7 +45,7 @@ export const PlayersProvider = ({ children }: PlayersProviderProps) => {
 
   useEffect(() => {
     updatePlayersData();
-  }, []);
+  }, [updatePlayersData]);
 
   return (
     <PlayersContext.Provider

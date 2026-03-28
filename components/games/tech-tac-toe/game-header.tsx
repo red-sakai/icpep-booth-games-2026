@@ -111,6 +111,7 @@ export default function GameHeader({
             )}
           </div>
         </div>
+      </div>
 
       {/* Status Bar */}
       <div className="bg-white/60 backdrop-blur-xl border border-pink-100/50 rounded-xl p-3 sm:p-4 shadow-lg min-w-[200px] transition-all">
@@ -145,5 +146,6 @@ export default function GameHeader({
           )}
         </div>
       </div>
+    </div>
   );
 }

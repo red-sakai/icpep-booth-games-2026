@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ReactLenis } from "lenis/react";
 
 
 export const metadata: Metadata = {
@@ -21,9 +20,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <ReactLenis root options={{ lerp: 0.1, duration: 0.5, smoothWheel: true }} >
-          {children}
-        </ReactLenis>
+        {children}
       </body>
     </html>
   );

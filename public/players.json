@@ -94,5 +94,11 @@
     "color": "blue",
     "createdAt": "2026-03-27T13:01:39.744Z",
     "updatedAt": null
+  },
+  {
+    "name": "red",
+    "color": "red",
+    "createdAt": "2026-03-28T05:40:11.335Z",
+    "updatedAt": null
   }
 ]
