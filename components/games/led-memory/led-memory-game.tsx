@@ -24,6 +24,7 @@ import {
 import { usePlayers } from "@/contexts/players-context";
 import { submitScore } from "@/lib/leaderboard-utils/leaderboard-utils.client";
 import { useLeaderboard } from "@/contexts/leaderboard-context";
+import { NotificationToaster } from "@/components/home/notification/notification-toaster";
 
 const LEVEL_CONFIG: Record<
   DifficultyLevel,
@@ -172,12 +173,12 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
           if (prev <= 1) {
             clearInterval(timerRef.current!);
             setGameState("gameover");
-            toast(
-              `Time's up! You remembered ${playerSequence.length} out of ${sequence.length} correctly.`,
-              {
-                className: "bg-rose-100 text-rose-800 border-rose-200",
-              },
-            );
+            // toast(
+            //   `Time's up! You remembered ${playerSequence.length} out of ${sequence.length} correctly.`,
+            //   {
+            //     className: "bg-rose-100 text-rose-800 border-rose-200",
+            //   },
+            // );
             return 0;
           }
           return prev - 1;
@@ -241,6 +242,7 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
       setGameState("showing");
       void initializeAudio();
       showSequence(fullSequence, level);
+      toast.dismiss();
     },
     [initializeAudio, showSequence],
   );
@@ -269,14 +271,14 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
         clearInterval(timerRef.current);
       }
       setGameState("gameover");
-
-      const currentScore = newPlayerSequence.length - 1;
-      toast(
-        `Game Over! You remembered ${currentScore} out of ${sequence.length} correctly.`,
-        {
-          className: "bg-rose-100 text-rose-800 border-rose-200",
-        },
-      );
+      //
+      // const currentScore = newPlayerSequence.length - 1;
+      // toast(
+      //   `Game Over! You remembered ${currentScore} out of ${sequence.length} correctly.`,
+      //   {
+      //     className: "bg-rose-100 text-rose-800 border-rose-200",
+      //   },
+      // );
       return;
     }
 
@@ -288,12 +290,12 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
       }
       setGameState("success");
 
-      toast(
-        `Success! You memorized all ${sequence.length} patterns correctly!`,
-        {
-          className: "bg-emerald-100 text-emerald-800 border-emerald-200",
-        },
-      );
+      // toast(
+      //   `Success! You memorized all ${sequence.length} patterns correctly!`,
+      //   {
+      //     className: "bg-emerald-100 text-emerald-800 border-emerald-200",
+      //   },
+      // );
     }
   };
 
@@ -318,16 +320,22 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
     const isFinished = gameState === "gameover" || gameState === "success";
 
     if (isFinished && sequence.length > 0) {
-      const score =
-        (playerSequence.length - 1) * EDificultyMultiplyer[selectedLevel];
+      const correctSequenceCount = playerSequence.length - 1;
+      const score = correctSequenceCount * EDificultyMultiplyer[selectedLevel];
       submitScore({
         gameId,
         score,
         name: currTeam1Player ? currTeam1Player.name : "Anonymous",
       });
-      alert(
-        `Hi there, Player ${currTeam1Player ? currTeam1Player.name : "Anonymous"}!
-        Your score has been updated to the leaderboard!`,
+      toast.custom(
+        () => (
+          <NotificationToaster
+            variant={"rose"}
+            message={`Player ${currTeam1Player ? currTeam1Player.name : "Anonymous"} got ${score} points!`}
+            description={`You remembered ${correctSequenceCount} out of ${sequence.length} correctly on ${LEVEL_CONFIG[selectedLevel].label} level.`}
+          />
+        ),
+        { duration: 5000 },
       );
       updateLeaderboardData();
     }

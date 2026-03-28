@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
 import { FilteredPlayerList } from "@/components/home/edit-players/edit-player/filtered-player-list";
 import { BoothPlayerType } from "@/lib/types";
 import { FilterPlayers } from "./filter-players";
+import { toast } from "sonner";
+import { NotificationToaster } from "../../notification/notification-toaster";
 
 type SelectPlayerDialogProps = {
   team: "team1" | "team2";
@@ -57,7 +59,16 @@ export const SelectPlayerDialog = ({
   };
 
   const handleSubmit = () => {
-    if (!selectedPlayer) return;
+    if (!selectedPlayer) {
+      toast.custom(() => (
+        <NotificationToaster
+          variant={team === "team1" ? "sky" : "rose"}
+          message="No player selected!"
+          description="Please select a player before submitting."
+        />
+      ));
+      return;
+    }
     setCurrPlayer(selectedPlayer);
     setPlayerName("");
     setSelectedColor(defaultColor);

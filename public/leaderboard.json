@@ -50,6 +50,12 @@
           "createdAt": "2026-03-19T11:03:00.000Z"
         },
         {
+          "name": "SD",
+          "score": 3,
+          "createdAt": "2026-03-28T13:45:35.008Z",
+          "updatedAt": "2026-03-28T13:56:40.186Z"
+        },
+        {
           "name": "PTK",
           "score": 3,
           "createdAt": "2026-03-19T15:27:00.000Z"
@@ -88,7 +94,7 @@
           "name": "SLDKJF",
           "score": -3,
           "createdAt": "2026-03-28T12:38:34.041Z",
-          "updatedAt": "2026-03-28T12:47:06.306Z"
+          "updatedAt": "2026-03-28T14:07:58.522Z"
         }
       ]
     },
@@ -149,6 +155,12 @@
           "updatedAt": "2026-03-27T12:50:45.424Z"
         },
         {
+          "name": "SLDKJF",
+          "score": 3,
+          "createdAt": "2026-03-28T14:09:49.744Z",
+          "updatedAt": "2026-03-28T14:13:51.355Z"
+        },
+        {
           "name": "SLADKJF",
           "score": 0,
           "createdAt": "2026-03-26T03:53:32.577Z"
@@ -167,9 +179,9 @@
       "entries": [
         {
           "name": "AI (MEDIUM)",
-          "score": 10.5,
+          "score": 12,
           "createdAt": "2026-03-22T16:23:08.996Z",
-          "updatedAt": "2026-03-26T07:23:20.831Z"
+          "updatedAt": "2026-03-28T14:22:06.185Z"
         },
         {
           "name": "AI (HARD)",
@@ -193,6 +205,12 @@
           "score": 4.5,
           "createdAt": "2026-03-26T07:21:27.255Z",
           "updatedAt": "2026-03-26T07:23:37.266Z"
+        },
+        {
+          "name": "SLDKJF",
+          "score": 4.5,
+          "createdAt": "2026-03-28T14:22:27.715Z",
+          "updatedAt": "2026-03-28T14:23:44.512Z"
         },
         {
           "name": "PG",

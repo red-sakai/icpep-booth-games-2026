@@ -18,7 +18,7 @@ import GameBoard from "@/components/games/tech-tac-toe/game-board";
 import LeaderboardPanel from "@/components/games/leaderboard/leaderboard-panel";
 import { usePlayers } from "@/contexts/players-context";
 import GameModeSelector from "@/components/games/tech-tac-toe/game-mode-selector";
-import PlayerNameDialog from "@/components/games/tech-tac-toe/player-name-dialog";
+// import PlayerNameDialog from "@/components/games/tech-tac-toe/player-name-dialog";
 import { submitScore } from "@/lib/leaderboard-utils/leaderboard-utils.client";
 import { useLeaderboard } from "@/contexts/leaderboard-context";
 import {
@@ -28,6 +28,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { NotificationToaster } from "@/components/home/notification/notification-toaster";
 
 type TechTacToeProps = {
   gameId: string;
@@ -74,9 +75,16 @@ export default function TechTacToe({
   useEffect(() => {
     if (currTeam1Player && currTeam2Player) {
       setCurrentTeam("1");
-      toast(`${currTeam1Player.name} starts!`, {
-        className: "bg-violet-100 text-violet-800 border-violet-200",
-      });
+      toast.custom(
+        () => (
+          <NotificationToaster
+            variant={"rose"}
+            message={`Start!`}
+            description={`Player ${currTeam1Player ? currTeam1Player.name : "Anonymous"} will start the game!`}
+          />
+        ),
+        { duration: 5000 },
+      );
     }
   }, [currTeam1Player, currTeam2Player]);
 
@@ -91,8 +99,23 @@ export default function TechTacToe({
     if (winnerPlayerName) {
       const score = 1 * EDificultyMultiplyer[difficulty];
       submitScore({ gameId, score, name: winnerPlayerName });
-      alert(
-        `Congratulations ${winnerPlayerName}! Your score of ${score} has been submitted to the leaderboard!`,
+      toast.custom(
+        () => (
+          <NotificationToaster
+            variant={"rose"}
+            message={
+              winnerTeam === "draw"
+                ? "It's a draw!"
+                : `Player ${winnerPlayerName} won!`
+            }
+            description={
+              winnerTeam === "draw"
+                ? "No team/player won this round."
+                : `You got ${score} points!`
+            }
+          />
+        ),
+        { duration: 5000 },
       );
       updateLeaderboardData();
     }
@@ -114,9 +137,9 @@ export default function TechTacToe({
         setWinningPattern(pattern);
 
         if (newWinner === "draw") {
-          toast("It's a draw!", {
-            className: "bg-pink-100 text-pink-800 border-pink-200",
-          });
+          // toast("It's a draw!", {
+          //   className: "bg-pink-100 text-pink-800 border-pink-200",
+          // });
           setP1Streak(0);
           setP0Streak(0);
           setLastWinScore(0);
@@ -124,9 +147,9 @@ export default function TechTacToe({
           const winnerLabel =
             newWinner === "1" ? currTeam1Player?.name : currTeam2Player?.name;
 
-          toast(`Team ${winnerLabel} wins!`, {
-            className: "bg-pink-100 text-pink-800 border-pink-200",
-          });
+          // toast(`Team ${winnerLabel} wins!`, {
+          //   className: "bg-pink-100 text-pink-800 border-pink-200",
+          // });
 
           let currentWinnerStreak = 1;
           if (newWinner === "1") {
@@ -228,33 +251,33 @@ export default function TechTacToe({
     setDifficulty(selectedDiff);
   };
 
-  const handleSubmitName = async (name: string, scoreOverride?: number) => {
-    try {
-      const score = scoreOverride !== undefined ? scoreOverride : lastWinScore;
-      const response = await fetch("/api/leaderboard", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          gameId: "tech-tac-toe",
-          name,
-          score,
-        }),
-      });
-
-      if (response.ok) {
-        toast.success("Score saved to leaderboard!");
-        setLeaderboardKey((prev) => prev + 1);
-      } else {
-        toast.error("Failed to save score.");
-      }
-    } catch (error) {
-      console.error("Error submitting score:", error);
-      toast.error("An error occurred while saving your score.");
-    } finally {
-      setShowNameDialog(false);
-    }
-  };
-
+  // const handleSubmitName = async (name: string, scoreOverride?: number) => {
+  //   try {
+  //     const score = scoreOverride !== undefined ? scoreOverride : lastWinScore;
+  //     const response = await fetch("/api/leaderboard", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         gameId: "tech-tac-toe",
+  //         name,
+  //         score,
+  //       }),
+  //     });
+  //
+  //     if (response.ok) {
+  //       toast.success("Score saved to leaderboard!");
+  //       setLeaderboardKey((prev) => prev + 1);
+  //     } else {
+  //       toast.error("Failed to save score.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error submitting score:", error);
+  //     toast.error("An error occurred while saving your score.");
+  //   } finally {
+  //     setShowNameDialog(false);
+  //   }
+  // };
+  //
   return (
     <div
       className="flex flex-col items-center justify-center p-6 space-y-6 bg-
@@ -266,27 +289,6 @@ export default function TechTacToe({
         open={gameMode === null}
         onSelect={handleModeSelect}
         onClose={handleCloseModeSelector}
-      />
-
-      <PlayerNameDialog
-        open={showNameDialog}
-        score={lastWinScore}
-        onSubmit={handleSubmitName}
-        onCancel={() => setShowNameDialog(false)}
-        title={
-          gameMode === "pve"
-            ? "You Win! 🎉"
-            : winnerTeam === "1"
-              ? "Team 1 Wins! 🏆"
-              : "Team 2 Wins! 🏆"
-        }
-        playerLabel={
-          gameMode === "pvp"
-            ? winnerTeam === "1"
-              ? "Team 1"
-              : "Team 2"
-            : undefined
-        }
       />
 
       <GameHeader

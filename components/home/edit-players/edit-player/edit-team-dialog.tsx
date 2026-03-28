@@ -12,6 +12,8 @@ import { BoothPlayerType, GameMode } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Bot, MousePointerClick, TextCursorInput, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+import { NotificationToaster } from "../../notification/notification-toaster";
 
 type EditTeamDialogProps = {
   gameMode: GameMode;
@@ -71,21 +73,39 @@ export const EditTeamDialog = ({
         if (currTeam1Player) {
           setIsOpen(open);
         } else {
-          alert("Please create or select a player to continue.");
+          toast.custom(() => (
+            <NotificationToaster
+              variant="rose"
+              message="No player assigned!"
+              description="Please create or select a player to continue."
+            />
+          ));
         }
         break;
       case "pvp":
         if (currTeam1Player && currTeam2Player) {
           setIsOpen(open);
         } else {
-          alert("Please create or select players for both teams to continue.");
+          toast.custom(() => (
+            <NotificationToaster
+              variant="rose"
+              message="Players missing!"
+              description="Please create or select players for both teams to continue."
+            />
+          ));
         }
         break;
       case "pve":
         if (currTeam1Player && currTeam2Player) {
           setIsOpen(open);
         } else {
-          alert("Please create or select a player for Team 1 to continue.");
+          toast.custom(() => (
+            <NotificationToaster
+              variant="rose"
+              message="Player missing!"
+              description="Please create or select a player for Team 1 to continue."
+            />
+          ));
         }
         break;
       case null:

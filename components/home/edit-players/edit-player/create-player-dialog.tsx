@@ -13,6 +13,8 @@ import { createPlayer } from "@/lib/players-utils/players.client";
 import { BoothPlayerType } from "@/lib/types";
 import { ColorPaletteSelection } from "./color-palette-selection";
 import { usePlayers } from "@/contexts/players-context";
+import { toast } from "sonner";
+import { NotificationToaster } from "../../notification/notification-toaster";
 
 type CreatePlayerDialogProps = {
   team: "team1" | "team2";
@@ -60,7 +62,13 @@ export const CreatePlayerDialog = ({
 
   const handleSubmit = () => {
     if (playerName.trim() === "") {
-      alert("Player name cannot be empty.");
+      toast.custom(() => (
+        <NotificationToaster
+          variant={team === "team1" ? "sky" : "rose"}
+          message="Player name cannot be empty!"
+          description="Please enter a valid player name before submitting."
+        />
+      ));
       return;
     }
     const newPlayer = {
@@ -69,7 +77,13 @@ export const CreatePlayerDialog = ({
       createdAt: new Date().toISOString(),
     };
     if (players.some((player) => player.name === newPlayer.name)) {
-      alert("Player name already exists. Please choose a different name.");
+      toast.custom(() => (
+        <NotificationToaster
+          variant={team === "team1" ? "sky" : "rose"}
+          message="Player name already exists!"
+          description="Please choose a different name."
+        />
+      ));
       return;
     }
     createPlayer(newPlayer);
