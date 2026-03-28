@@ -1,6 +1,7 @@
+"use client";
 import { getLeaderboard } from "@/lib/leaderboard-utils/leaderboard-utils.client";
 import { LeaderboardDataType } from "@/lib/types";
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 
 type LeaderboardContextType = {
   leaderboardData: LeaderboardDataType;
@@ -20,28 +21,27 @@ type LeaderboardProviderProps = {
   children: React.ReactNode;
 };
 export const LeaderboardProvider = ({ children }: LeaderboardProviderProps) => {
-  const [leaderboardData, setLeaderboardData] =
-    React.useState<LeaderboardDataType>({
-      version: 1,
-      generatedAt: "2026-03-20T00:00:00.000Z",
-      games: {
-        "led-memory": {
-          metric: "patternsRemembered",
-          order: "desc",
-          entries: [],
-        },
-        "rj45-game": {
-          metric: "timeRemainingSeconds",
-          order: "desc",
-          entries: [],
-        },
-        "tech-tac-toe": {
-          metric: "totalWins",
-          order: "desc",
-          entries: [],
-        },
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardDataType>({
+    version: 1,
+    generatedAt: "2026-03-20T00:00:00.000Z",
+    games: {
+      "led-memory": {
+        metric: "patternsRemembered",
+        order: "desc",
+        entries: [],
       },
-    });
+      "rj45-game": {
+        metric: "timeRemainingSeconds",
+        order: "desc",
+        entries: [],
+      },
+      "tech-tac-toe": {
+        metric: "totalWins",
+        order: "desc",
+        entries: [],
+      },
+    },
+  });
   const updateLeaderboardData = async () => {
     const result = await getLeaderboard();
     if (result.data) {
@@ -51,10 +51,6 @@ export const LeaderboardProvider = ({ children }: LeaderboardProviderProps) => {
       return result;
     }
   };
-
-  useEffect(() => {
-    updateLeaderboardData();
-  }, []);
 
   return (
     <LeaderboardContext.Provider

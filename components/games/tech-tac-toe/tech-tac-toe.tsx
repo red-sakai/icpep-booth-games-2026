@@ -41,12 +41,7 @@ export default function TechTacToe({
   setGameMode,
 }: TechTacToeProps) {
   const [board, setBoard] = useState<BoardState>(Array(9).fill(null));
-  const {
-    currTeam1Player,
-    currTeam2Player,
-    setCurrTeam1Player,
-    setCurrTeam2Player,
-  } = usePlayers();
+  const { currTeam1Player, currTeam2Player, setCurrTeam2Player } = usePlayers();
   const [currentTeam, setCurrentTeam] = useState<Player | null>(null);
   const [winnerTeam, setWinnerTeam] = useState<Player | "draw" | null>(null);
   const [winningPattern, setWinningPattern] = useState<number[] | null>(null);
@@ -261,9 +256,11 @@ export default function TechTacToe({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 space-y-6 bg-
+    <div
+      className="flex flex-col items-center justify-center p-6 space-y-6 bg-
                     [radial-gradient(ellipse_80%_60%_at_50%_40%,_#fce7f3_0%,_#fbcfe8_50%,_#fda4af_100%)] 
-                    rounded-2xl shadow-xl border border-pink-200">
+                    rounded-2xl shadow-xl border border-pink-200"
+    >
       <GameModeSelector
         currGameMode={previousGameMode}
         open={gameMode === null}
@@ -325,7 +322,7 @@ export default function TechTacToe({
           onClick={handleChangeMode}
           variant="ghost"
           size="lg"
-            className="bg-white/80 backdrop-blur-sm border-pink-200 hover:bg-pink-50 hover:border-pink-300 text-pink-600 
+          className="bg-white/80 backdrop-blur-sm border-pink-200 hover:bg-pink-50 hover:border-pink-300 text-pink-600 
                        shadow-sm flex items-center gap-2 transition-all rounded-xl"
         >
           Change Mode
@@ -367,4 +364,3 @@ export default function TechTacToe({
     </div>
   );
 }
-
