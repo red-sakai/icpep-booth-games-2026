@@ -68,13 +68,13 @@ export default function GameCards({ navigateTo }: GameCardsProps) {
               <Button
                 onClick={() => setLeaderboardGame("led-memory")}
                 variant="outline"
-                className="w-full bg-white border-amber-200 hover:bg-amber-50 hover:border-amber-300 text-amber-700 shadow-sm"
+                className="w-full bg-white border-rose-200 hover:bg-rose-50 hover:border-rose-300 text-rose-700 shadow-sm"
               >
                 Leaderboards
               </Button>
               <Button
                 onClick={() => navigateTo("led-memory")}
-                className="w-full bg-amber-500 hover:bg-amber-600 text-white shadow-sm"
+                className="w-full bg-rose-500 hover:bg-rose-600 text-white shadow-sm"
               >
                 Play LED Memory
               </Button>
@@ -113,13 +113,13 @@ export default function GameCards({ navigateTo }: GameCardsProps) {
               <Button
                 onClick={() => setLeaderboardGame("tech-tac-toe")}
                 variant="outline"
-                className="w-full bg-white border-sky-200 hover:bg-sky-50 hover:border-sky-300 text-sky-700 shadow-sm"
+                className="w-full bg-white border-pink-200 hover:bg-pink-50 hover:border-pink-300 text-pink-700 shadow-sm"
               >
                 Leaderboards
               </Button>
               <Button
                 onClick={() => navigateTo("tech-tac-toe")}
-                className="w-full bg-sky-600 hover:bg-sky-700 text-white shadow-sm"
+                className="w-full bg-pink-600 hover:bg-pink-700 text-white shadow-sm"
               >
                 Play Tech Tac Toe
               </Button>

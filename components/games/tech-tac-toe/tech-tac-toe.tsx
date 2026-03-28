@@ -120,7 +120,7 @@ export default function TechTacToe({
 
         if (newWinner === "draw") {
           toast("It's a draw!", {
-            className: "bg-violet-100 text-violet-800 border-violet-200",
+            className: "bg-pink-100 text-pink-800 border-pink-200",
           });
           setP1Streak(0);
           setP0Streak(0);
@@ -130,7 +130,7 @@ export default function TechTacToe({
             newWinner === "1" ? currTeam1Player?.name : currTeam2Player?.name;
 
           toast(`Team ${winnerLabel} wins!`, {
-            className: "bg-violet-100 text-violet-800 border-violet-200",
+            className: "bg-pink-100 text-pink-800 border-pink-200",
           });
 
           let currentWinnerStreak = 1;
@@ -261,8 +261,9 @@ export default function TechTacToe({
   };
 
   return (
-    // Updated container background to match the vibrant theme
-    <div className="flex flex-col items-center justify-center p-4 space-y-6 bg-gradient-to-br from-fuchsia-100 via-violet-100 to-cyan-100 rounded-2xl shadow-lg border border-white/40">
+    <div className="flex flex-col items-center justify-center p-6 space-y-6 bg-
+                    [radial-gradient(ellipse_80%_60%_at_50%_40%,_#fce7f3_0%,_#fbcfe8_50%,_#fda4af_100%)] 
+                    rounded-2xl shadow-xl border border-pink-200">
       <GameModeSelector
         currGameMode={previousGameMode}
         open={gameMode === null}
@@ -314,8 +315,8 @@ export default function TechTacToe({
           onClick={resetBoard}
           variant="outline"
           size="lg"
-          // Updated button styles to match the vibrant theme with a glowing effect on hover
-          className="bg-white/80 backdrop-blur-sm border-violet-200 hover:bg-fuchsia-50 hover:border-fuchsia-300 text-violet-700 shadow-sm flex items-center gap-2 transition-all rounded-xl"
+          className="bg-white/50 backdrop-blur-sm border-pink-300 hover:bg-pink-50/70 
+                    hover:border-pink-400 text-pink-600 shadow-sm flex items-center gap-2 rounded-xl"
         >
           <RotateCcw size={16} />
           Play Again
@@ -324,7 +325,8 @@ export default function TechTacToe({
           onClick={handleChangeMode}
           variant="ghost"
           size="lg"
-          className="text-violet-700 hover:bg-violet-100/50 hover:text-violet-900 rounded-xl transition-all"
+            className="bg-white/80 backdrop-blur-sm border-pink-200 hover:bg-pink-50 hover:border-pink-300 text-pink-600 
+                       shadow-sm flex items-center gap-2 transition-all rounded-xl"
         >
           Change Mode
         </Button>

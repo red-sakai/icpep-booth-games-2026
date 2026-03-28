@@ -7,6 +7,11 @@
       "order": "desc",
       "entries": [
         {
+          "name": "CEDRIC",
+          "score": 10,
+          "createdAt": "2026-03-27T02:37:39.924Z"
+        },
+        {
           "name": "SLADKJF",
           "score": 8,
           "createdAt": "2026-03-26T03:09:00.489Z",
@@ -160,6 +165,12 @@
           "updatedAt": "2026-03-26T07:23:20.831Z"
         },
         {
+          "name": "AI (HARD)",
+          "score": 9,
+          "createdAt": "2026-03-23T06:35:48.935Z",
+          "updatedAt": "2026-03-27T02:39:03.584Z"
+        },
+        {
           "name": "KIAN",
           "score": 8,
           "createdAt": "2026-03-22T16:22:25.495Z",
@@ -169,12 +180,6 @@
           "name": "SGA",
           "score": 5,
           "createdAt": "2026-03-18T10:00:00.000Z"
-        },
-        {
-          "name": "AI (HARD)",
-          "score": 5,
-          "createdAt": "2026-03-23T06:35:48.935Z",
-          "updatedAt": "2026-03-26T07:20:47.306Z"
         },
         {
           "name": "F",
@@ -196,6 +201,12 @@
           "name": "GUM",
           "score": 3,
           "createdAt": "2026-03-19T13:50:00.000Z"
+        },
+        {
+          "name": "CEDRIC",
+          "score": 3,
+          "createdAt": "2026-03-27T02:38:14.736Z",
+          "updatedAt": "2026-03-27T02:38:24.591Z"
         },
         {
           "name": "BAL",
