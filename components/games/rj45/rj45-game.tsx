@@ -22,6 +22,7 @@ import {
 import { submitScore } from "@/lib/leaderboard-utils/leaderboard-utils.client";
 import { usePlayers } from "@/contexts/players-context";
 
+const SCORE_MULTIPLIER = 0.5;
 type RJ45GameProps = {
   gameId: string;
 };
@@ -39,6 +40,10 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const gameContainerRef = useRef<HTMLDivElement>(null);
+
+  // scoring
+  const [mathedWires, setMatchedWires] = useState<Wire[]>([]);
+  const [points, setPoints] = useState(0);
 
   // Check if screen is mobile
   const isMobile = useMediaQuery("(max-width: 640px)");
@@ -94,11 +99,19 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
   useEffect(() => {
     if (timeExpired && gameState === "arrange") {
       // Check if wiring is correct
-      const isCorrect = wires.every(
+      const newMatchedWires = wires.filter(
         (wire, index) => wire.id === correctWires[index].id,
       );
+      setMatchedWires(newMatchedWires);
+      // right minus wrong, times multiplier (0 if negative)
+      const rawPoints =
+        (newMatchedWires.length -
+          (correctWires.length - newMatchedWires.length)) *
+        SCORE_MULTIPLIER;
+      const newPoints = Math.max(0, rawPoints);
+      setPoints(newPoints);
 
-      if (isCorrect) {
+      if (newMatchedWires.length === correctWires.length) {
         setGameState("success");
         toast(
           "Perfect arrangement! You've successfully wired the RJ45 connector!",
@@ -106,23 +119,19 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
             className: "bg-green-100 text-green-800 border-green-200",
           },
         );
-        submitScore({
-          gameId,
-          score: 1,
-          name: currTeam1Player?.name || "Anonymous",
-        });
       } else {
         setGameState("failure");
         setShowCorrectPattern(true);
         toast("Time's up! Incorrect wire arrangement.", {
           className: "bg-rose-100 text-rose-800 border-rose-200",
         });
-        submitScore({
-          gameId,
-          score: 0,
-          name: currTeam1Player?.name || "Anonymous",
-        });
       }
+
+      submitScore({
+        gameId,
+        score: newPoints,
+        name: currTeam1Player?.name || "Anonymous",
+      });
     }
   }, [timeExpired, gameState, wires, correctWires]);
 
@@ -132,11 +141,19 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
       clearInterval(timerRef.current);
     }
 
-    const isCorrect = wires.every(
+    const newMatchedWires = wires.filter(
       (wire, index) => wire.id === correctWires[index].id,
     );
+    setMatchedWires(newMatchedWires);
+    // right minus wrong, times multiplier
+    const rawPoints =
+      (newMatchedWires.length -
+        (correctWires.length - newMatchedWires.length)) *
+      SCORE_MULTIPLIER;
+    const newPoints = Math.max(0, rawPoints);
+    setPoints(newPoints);
 
-    if (isCorrect) {
+    if (newMatchedWires.length === correctWires.length) {
       // Success!
       setGameState("success");
       toast(
@@ -145,11 +162,6 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
           className: "bg-green-100 text-green-800 border-green-200",
         },
       );
-      submitScore({
-        gameId,
-        score: 1,
-        name: currTeam1Player?.name || "Anonymous",
-      });
     } else {
       // Game over - wrong arrangement
       setGameState("failure");
@@ -157,12 +169,14 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
       toast("Incorrect wire arrangement! Check the correct pattern.", {
         className: "bg-rose-100 text-rose-800 border-rose-200",
       });
-      submitScore({
-        gameId,
-        score: 0,
-        name: currTeam1Player?.name || "Anonymous",
-      });
     }
+
+    submitScore({
+      gameId,
+      // right minus wrong
+      score: newPoints,
+      name: currTeam1Player?.name || "Anonymous",
+    });
   };
 
   // Reset the game
@@ -174,6 +188,8 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
     setGameState("select");
     setWires([]);
     setCorrectWires([]);
+    setMatchedWires([]);
+    setPoints(0);
     setTimeLeft(15);
     setShowCorrectPattern(true);
     setTimeExpired(false);
@@ -202,6 +218,9 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
                 after:from-purple-300/20 after:via-transparent after:to-purple-800/20"
     >
       <GameHeader
+        points={points}
+        matchedWires={mathedWires}
+        correctWires={correctWires}
         gameState={gameState}
         timeLeft={timeLeft}
         timeExpired={timeExpired}
@@ -232,14 +251,24 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
 
       {(gameState === "success" || gameState === "failure") && (
         <Button
-          onClick={() => setLeaderboardOpen(true)}
+          onClick={resetGame}
           variant="outline"
           size="lg"
           className="bg-white/50 backdrop-blur-sm border-purple-300 hover:bg-purple-50/70 hover:border-purple-400 text-purple-600 shadow-sm rounded-xl"
         >
-          Show Leaderboard
+          <RotateCcw size={16} />
+          Play Again
         </Button>
       )}
+
+      <Button
+        onClick={() => setLeaderboardOpen(true)}
+        variant="outline"
+        size="lg"
+        className="bg-white border-sky-200 hover:text-sky-600 hover:bg-sky-50 hover:border-sky-300 text-sky-700 shadow-sm"
+      >
+        Show Leaderboard
+      </Button>
 
       <Dialog open={leaderboardOpen} onOpenChange={setLeaderboardOpen}>
         <DialogContent className="sm:max-w-2xl border-purple-100">

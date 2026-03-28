@@ -61,7 +61,7 @@ export const SelectPlayerDialog = ({
     setCurrPlayer(selectedPlayer);
     setPlayerName("");
     setSelectedColor(defaultColor);
-    setIsOpen(false);
+    handleOpenChange(false);
   };
 
   return (

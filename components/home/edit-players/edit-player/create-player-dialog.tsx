@@ -59,6 +59,10 @@ export const CreatePlayerDialog = ({
   };
 
   const handleSubmit = () => {
+    if (playerName.trim() === "") {
+      alert("Player name cannot be empty.");
+      return;
+    }
     const newPlayer = {
       name: playerName,
       color: selectedColor,
@@ -72,7 +76,7 @@ export const CreatePlayerDialog = ({
     setCurrPlayer(newPlayer);
     setPlayerName("");
     setSelectedColor(defaultColor);
-    setIsOpen(false);
+    handleOpenChange(false);
   };
 
   return (

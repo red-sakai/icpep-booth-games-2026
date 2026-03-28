@@ -8,13 +8,14 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { usePlayers } from "@/contexts/players-context";
-import { GameMode } from "@/lib/types";
+import { BoothPlayerType, GameMode } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { MousePointerClick, TextCursorInput, User } from "lucide-react";
+import { Bot, MousePointerClick, TextCursorInput, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 type EditTeamDialogProps = {
   gameMode: GameMode;
+  team: "team1" | "team2";
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   onNext: (
@@ -24,6 +25,7 @@ type EditTeamDialogProps = {
 };
 export const EditTeamDialog = ({
   gameMode,
+  team,
   isOpen,
   setIsOpen,
   onNext,
@@ -31,9 +33,13 @@ export const EditTeamDialog = ({
   const [selectedOption, setSelectedOption] = useState<"create" | "select">(
     "create",
   );
-  const [selectedTeam, setSelectedTeam] = useState<"team1" | "team2">("team1");
+  const [selectedTeam, setSelectedTeam] = useState<"team1" | "team2">(team);
   const { currTeam1Player, currTeam2Player, setCurrTeam2Player } = usePlayers();
   const prevGameModeRef = useRef<GameMode>(gameMode);
+
+  useEffect(() => {
+    setSelectedTeam(team);
+  }, [team]);
 
   // reset selected team and option when game mode changes
   useEffect(() => {
@@ -128,12 +134,14 @@ export const EditTeamDialog = ({
             <TeamButton
               label="Team 1"
               team="team1"
+              player={currTeam1Player}
               selectedTeam={selectedTeam}
               onClick={() => setSelectedTeam("team1")}
             />
             <TeamButton
               label="Team 2"
               team="team2"
+              player={currTeam2Player}
               selectedTeam={selectedTeam}
               onClick={() => setSelectedTeam("team2")}
               disabled={gameMode === "solo" || gameMode === "pve"}
@@ -191,6 +199,7 @@ export const EditTeamDialog = ({
 type TeamButtonProps = {
   label: string;
   team: "team1" | "team2";
+  player: BoothPlayerType | null;
   selectedTeam: "team1" | "team2";
   onClick: () => void;
   disabled?: boolean;
@@ -198,10 +207,21 @@ type TeamButtonProps = {
 const TeamButton = ({
   label,
   team,
+  player,
   selectedTeam,
   onClick,
   disabled = false,
 }: TeamButtonProps) => {
+  const [isAi, setIsAi] = useState(false);
+
+  useEffect(() => {
+    if (team === "team2") {
+      setIsAi(
+        ["AI (EASY)", "AI (MEDIUM)", "AI (HARD)"].includes(player?.name || ""),
+      );
+    }
+  }, [player, team]);
+
   const getButtonClasses = () => {
     if (team === "team1") {
       return team === selectedTeam
@@ -213,19 +233,48 @@ const TeamButton = ({
         : "border-slate-100 bg-slate-50 text-slate-500 hover:border-sky-200 hover:bg-sky-25";
     }
   };
+  const getCircleStyle = () => {
+    if (player) {
+      return { backgroundColor: player.color };
+    }
+    if (selectedTeam !== team) {
+      return {
+        border: "2px solid var(--color-slate-400)",
+        backgroundColor: "transparent",
+      };
+    }
+    switch (team) {
+      case "team1":
+        return {
+          border: "2px solid var(--color-sky-600)",
+          backgroundColor: "transparent",
+        };
+      case "team2":
+        return {
+          border: "2px solid var(--color-rose-600)",
+          backgroundColor: "transparent",
+        };
+    }
+  };
 
   return (
     <button
       className={cn(
-        "flex items-center justify-evenly gap-4",
         "py-3 px-6 rounded-xl border-2 transition-all",
         getButtonClasses(),
         disabled && "cursor-not-allowed opacity-50",
+        "flex flex-col items-center justify-between gap-1",
       )}
       onClick={!disabled ? onClick : () => {}}
     >
-      <User className="size-6" />
-      <span className="font-bold">{label}</span>
+      <div className="flex items-center justify-evenly gap-4">
+        {isAi ? <Bot className="size-6" /> : <User className="size-6" />}
+        <span className="font-bold">{label}</span>
+      </div>
+      <div className="flex items-center justify-start gap-4">
+        <span className="size-4 rounded-full" style={getCircleStyle()} />
+        <span className="text-sm">{player ? player.name : "N/A"}</span>
+      </div>
     </button>
   );
 };

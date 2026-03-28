@@ -21,6 +21,13 @@ import GameModeSelector from "@/components/games/tech-tac-toe/game-mode-selector
 import PlayerNameDialog from "@/components/games/tech-tac-toe/player-name-dialog";
 import { submitScore } from "@/lib/leaderboard-utils/leaderboard-utils.client";
 import { useLeaderboard } from "@/contexts/leaderboard-context";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type TechTacToeProps = {
   gameId: string;
@@ -57,6 +64,7 @@ export default function TechTacToe({
   const [lastWinScore, setLastWinScore] = useState(0);
   const [showNameDialog, setShowNameDialog] = useState(false);
   const [leaderboardKey, setLeaderboardKey] = useState(0);
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
 
   useEffect(() => {
     if (gameMode === "pve") {
@@ -324,9 +332,39 @@ export default function TechTacToe({
         </Button>
       </div>
 
+      <Button
+        onClick={() => setLeaderboardOpen(true)}
+        variant="outline"
+        size="lg"
+        className="bg-white border-sky-200 hover:text-sky-600 hover:bg-sky-50 hover:border-sky-300 text-sky-700 shadow-sm"
+      >
+        Show Leaderboard
+      </Button>
+
+      <Dialog open={leaderboardOpen} onOpenChange={setLeaderboardOpen}>
+        <DialogContent className="sm:max-w-2xl border-sky-100">
+          <DialogHeader>
+            <DialogTitle className="text-sky-900">Leaderboard</DialogTitle>
+            <DialogDescription>
+              Tech-Tac-Toe scores and rankings
+            </DialogDescription>
+          </DialogHeader>
+          <LeaderboardPanel
+            gameId="led-memory"
+            limit={9999}
+            className="w-full max-w-none"
+            entriesClassName="max-h-[60vh] overflow-y-auto pr-2"
+          />
+        </DialogContent>
+      </Dialog>
+
       <div className="w-full mt-4 justify-center flex">
-        <LeaderboardPanel gameId="tech-tac-toe" leaderboardKey={leaderboardKey} />
+        <LeaderboardPanel
+          gameId="tech-tac-toe"
+          leaderboardKey={leaderboardKey}
+        />
       </div>
     </div>
   );
 }
+
