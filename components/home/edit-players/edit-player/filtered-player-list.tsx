@@ -46,7 +46,7 @@ export const FilteredPlayerList = ({
     if (["AI (EASY)", "AI (MEDIUM)", "AI (HARD)"].includes(player.name)) {
       toast.custom(() => (
         <NotificationToaster
-          variant="rose"
+          variant="warning"
           message="Can't select this player!"
           description="AI players cannot be selected. Please choose a different player."
         />
@@ -61,7 +61,7 @@ export const FilteredPlayerList = ({
         } else if (currTeam2Player?.name === player.name) {
           toast.custom(() => (
             <NotificationToaster
-              variant="rose"
+              variant="warning"
               message="Can't select this player!"
               description="Player is already selected for Team 2. Please choose a different player."
             />
@@ -76,7 +76,7 @@ export const FilteredPlayerList = ({
         } else if (currTeam1Player?.name === player.name) {
           toast.custom(() => (
             <NotificationToaster
-              variant="rose"
+              variant="warning"
               message="Can't select this player!"
               description="Player is already selected for Team 1. Please choose a different player."
             />

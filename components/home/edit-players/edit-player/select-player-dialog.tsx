@@ -62,7 +62,7 @@ export const SelectPlayerDialog = ({
     if (!selectedPlayer) {
       toast.custom(() => (
         <NotificationToaster
-          variant={team === "team1" ? "sky" : "rose"}
+          variant="warning"
           message="No player selected!"
           description="Please select a player before submitting."
         />
@@ -73,6 +73,15 @@ export const SelectPlayerDialog = ({
     setPlayerName("");
     setSelectedColor(defaultColor);
     handleOpenChange(false);
+    toast.custom(() => (
+      <NotificationToaster
+        variant="success"
+        message="Player selected!"
+        description={`${selectedPlayer.name} has been selected for ${
+          team === "team1" ? "Team 1" : "Team 2"
+        }.`}
+      />
+    ));
   };
 
   return (

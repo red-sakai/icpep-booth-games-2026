@@ -64,7 +64,7 @@ export const CreatePlayerDialog = ({
     if (playerName.trim() === "") {
       toast.custom(() => (
         <NotificationToaster
-          variant={team === "team1" ? "sky" : "rose"}
+          variant="warning"
           message="Player name cannot be empty!"
           description="Please enter a valid player name before submitting."
         />
@@ -79,7 +79,7 @@ export const CreatePlayerDialog = ({
     if (players.some((player) => player.name === newPlayer.name)) {
       toast.custom(() => (
         <NotificationToaster
-          variant={team === "team1" ? "sky" : "rose"}
+          variant="warning"
           message="Player name already exists!"
           description="Please choose a different name."
         />
@@ -91,6 +91,13 @@ export const CreatePlayerDialog = ({
     setPlayerName("");
     setSelectedColor(defaultColor);
     handleOpenChange(false);
+    toast.custom(() => (
+      <NotificationToaster
+        variant="success"
+        message="Player created successfully!"
+        description={`Welcome, ${newPlayer.name}! You have joined ${team === "team1" ? "Team 1" : "Team 2"}.`}
+      />
+    ));
   };
 
   return (

@@ -75,7 +75,7 @@ export const EditTeamDialog = ({
         } else {
           toast.custom(() => (
             <NotificationToaster
-              variant="rose"
+              variant="warning"
               message="No player assigned!"
               description="Please create or select a player to continue."
             />
@@ -88,7 +88,7 @@ export const EditTeamDialog = ({
         } else {
           toast.custom(() => (
             <NotificationToaster
-              variant="rose"
+              variant="warning"
               message="Players missing!"
               description="Please create or select players for both teams to continue."
             />
@@ -101,7 +101,7 @@ export const EditTeamDialog = ({
         } else {
           toast.custom(() => (
             <NotificationToaster
-              variant="rose"
+              variant="warning"
               message="Player missing!"
               description="Please create or select a player for Team 1 to continue."
             />

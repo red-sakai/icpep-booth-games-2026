@@ -136,7 +136,7 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
       toast.custom(
         () => (
           <NotificationToaster
-            variant={"rose"}
+            variant={"purple"}
             message={`Player ${currTeam1Player ? currTeam1Player.name : "Anonymous"} got ${newPoints} points!`}
             description={`You matched ${newMatchedWires.length} out of ${correctWires.length} correctly on ${standard} standard.`}
           />
@@ -191,7 +191,7 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
     toast.custom(
       () => (
         <NotificationToaster
-          variant={"rose"}
+          variant={"purple"}
           message={`Player ${currTeam1Player ? currTeam1Player.name : "Anonymous"} got ${newPoints} points!`}
           description={`You matched ${newMatchedWires.length} out of ${correctWires.length} correctly on ${standard} standard.`}
         />
