@@ -24,6 +24,8 @@ import { usePlayers } from "@/contexts/players-context";
 import { NotificationToaster } from "@/components/home/notification/notification-toaster";
 
 const SCORE_MULTIPLIER = 0.5;
+const TOTAL_TIME = 15;
+const LEARN_TIME = 5;
 type RJ45GameProps = {
   gameId: string;
 };
@@ -36,10 +38,12 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
   const [showCorrectPattern, setShowCorrectPattern] = useState(true);
   const [showInfo, setShowInfo] = useState(false);
   const [timeExpired, setTimeExpired] = useState(false);
+  const [learnCountdown, setLearnCountdown] = useState(LEARN_TIME);
   const [leaderboardOpen, setLeaderboardOpen] = useState(false);
   const { currTeam1Player } = usePlayers();
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const learnTimerRef = useRef<NodeJS.Timeout | null>(null);
   const gameContainerRef = useRef<HTMLDivElement>(null);
 
   // scoring
@@ -57,23 +61,36 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
     setCorrectWires([...WIRE_STANDARDS[selected]]);
     setGameState("learn");
     setTimeExpired(false);
+    setLearnCountdown(LEARN_TIME);
 
-    // Show the correct pattern for 5 seconds
-    setTimeout(() => {
-      // Jumble the wires
-      const jumbledWires = [...WIRE_STANDARDS[selected]].sort(
-        () => Math.random() - 0.5,
-      );
-      setWires(jumbledWires);
-      setShowCorrectPattern(false);
-      setGameState("arrange");
-      startTimer();
-    }, 5000);
+    if (learnTimerRef.current) {
+      clearInterval(learnTimerRef.current);
+    }
+
+    learnTimerRef.current = setInterval(() => {
+      setLearnCountdown((prev) => {
+        if (prev <= 1) {
+          if (learnTimerRef.current) {
+            clearInterval(learnTimerRef.current);
+          }
+
+          const jumbledWires = [...WIRE_STANDARDS[selected]].sort(
+            () => Math.random() - 0.5,
+          );
+          setWires(jumbledWires);
+          setShowCorrectPattern(false);
+          setGameState("arrange");
+          startTimer();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
   };
 
   // Simple timer function
   const startTimer = () => {
-    setTimeLeft(15);
+    setTimeLeft(TOTAL_TIME);
     setTimeExpired(false);
 
     // Clear any existing timer
@@ -99,12 +116,10 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
   // Effect to handle timer expiration
   useEffect(() => {
     if (timeExpired && gameState === "arrange") {
-      // Check if wiring is correct
       const newMatchedWires = wires.filter(
         (wire, index) => wire.id === correctWires[index].id,
       );
       setMatchedWires(newMatchedWires);
-      // right minus wrong, times multiplier (0 if negative)
       const rawPoints =
         (newMatchedWires.length -
           (correctWires.length - newMatchedWires.length)) *
@@ -211,10 +226,15 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
     setCorrectWires([]);
     setMatchedWires([]);
     setPoints(0);
-    setTimeLeft(15);
+    setTimeLeft(TOTAL_TIME);
+    setLearnCountdown(LEARN_TIME);
     setShowCorrectPattern(true);
     setTimeExpired(false);
     setLeaderboardOpen(false);
+
+    if (learnTimerRef.current) {
+      clearInterval(learnTimerRef.current);
+    }
   };
 
   // Clean up on unmount
@@ -223,6 +243,9 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
+      if (learnTimerRef.current) {
+        clearInterval(learnTimerRef.current);
+      }
     };
   }, []);
 
@@ -230,20 +253,25 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
     <div
       ref={gameContainerRef}
       className="flex flex-col items-center justify-center p-4 md:p-8 space-y-6 
-                relative overflow-hidden rounded-2xl shadow-2xl 
-                bg-purple-400/10 backdrop-blur-xl 
+                relative overflow-hidden rounded-2xl shadow-2xl
+                bg-gradient-to-br from-purple-300/15 via-white/20 to-fuchsia-300/15 backdrop-blur-xl
                 border border-white/30 
                 ring-1 ring-purple-200/20
                 after:pointer-events-none after:absolute after:inset-0 after:-z-10
                 after:content-[''] after:bg-gradient-to-br 
                 after:from-purple-300/20 after:via-transparent after:to-purple-800/20"
     >
+      <div className="pointer-events-none absolute -top-14 -left-10 h-40 w-40 rounded-full bg-fuchsia-300/20 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-16 -right-10 h-44 w-44 rounded-full bg-cyan-300/20 blur-3xl" />
+
       <GameHeader
         points={points}
         matchedWires={mathedWires}
         correctWires={correctWires}
         gameState={gameState}
         timeLeft={timeLeft}
+        totalTime={TOTAL_TIME}
+        learnCountdown={learnCountdown}
         timeExpired={timeExpired}
         showInfo={showInfo}
         setShowInfo={setShowInfo}
@@ -286,7 +314,7 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
         onClick={() => setLeaderboardOpen(true)}
         variant="outline"
         size="lg"
-        className="bg-white border-sky-200 hover:text-sky-600 hover:bg-sky-50 hover:border-sky-300 text-sky-700 shadow-sm"
+        className="bg-white/80 backdrop-blur-sm border-sky-200 hover:text-sky-700 hover:bg-sky-50 hover:border-sky-300 text-sky-700 shadow-sm rounded-xl"
       >
         Show Leaderboard
       </Button>
@@ -305,19 +333,6 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
           />
         </DialogContent>
       </Dialog>
-
-      {(gameState === "success" || gameState === "failure") && (
-        <Button
-          onClick={resetGame}
-          variant="outline"
-          size="lg"
-          className="bg-white/50 backdrop-blur-sm border-purple-300 hover:bg-purple-50/70 hover:border-purple-400 text-purple-600 shadow-sm 
-                    flex items-center gap-2 rounded-xl"
-        >
-          <RotateCcw size={16} />
-          Play Again
-        </Button>
-      )}
     </div>
   );
 }

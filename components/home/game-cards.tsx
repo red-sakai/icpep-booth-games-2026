@@ -140,12 +140,17 @@ export default function GameCards({ navigateTo }: GameCardsProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <Card className="overflow-hidden border-2 border-purple-400 shadow-lg h-full">
+        <Card className="overflow-hidden border-2 border-purple-400 shadow-lg h-full hover:shadow-xl transition-shadow">
           <div className="p-6 h-full flex flex-col bg-gradient-to-b from-purple-200 via-purple-100 to-white">
             <div className="flex justify-center mb-4">
               <div className="bg-white p-4 rounded-2xl shadow-sm">
                 <Cable size={48} className="text-purple-500" />
               </div>
+            </div>
+            <div className="flex justify-center mb-2">
+              <span className="text-xs font-semibold tracking-wide uppercase px-3 py-1 rounded-full bg-cyan-100 text-cyan-700 border border-cyan-200">
+                Fast 15s Challenge
+              </span>
             </div>
             <h2 className="text-lg font-bold text-purple-600 text-center mb-2">
               Connect Me Not: Ethernet Color Coding Game
