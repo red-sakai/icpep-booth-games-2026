@@ -1,9 +1,5 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-} from "react";
+"use client";
+import React, { createContext, useCallback, useContext, useState } from "react";
 import { BoothPlayerType } from "@/lib/types";
 
 type PlayersContextType = {
@@ -29,23 +25,18 @@ type PlayersProviderProps = {
 };
 
 export const PlayersProvider = ({ children }: PlayersProviderProps) => {
-  const [players, setPlayers] = React.useState<BoothPlayerType[]>([]);
+  const [players, setPlayers] = useState<BoothPlayerType[]>([]);
   const [currTeam1Player, setCurrTeam1Player] =
-    React.useState<BoothPlayerType | null>(null);
+    useState<BoothPlayerType | null>(null);
   const [currTeam2Player, setCurrTeam2Player] =
-    React.useState<BoothPlayerType | null>(null);
-  const [isPlayerEntryDialogOpen, setIsPlayerEntryDialogOpen] =
-    React.useState(false);
+    useState<BoothPlayerType | null>(null);
+  const [isPlayerEntryDialogOpen, setIsPlayerEntryDialogOpen] = useState(false);
 
   const updatePlayersData = useCallback(async () => {
     const response = await fetch("/api/players");
     const data = await response.json();
     setPlayers(data);
   }, []);
-
-  useEffect(() => {
-    updatePlayersData();
-  }, [updatePlayersData]);
 
   return (
     <PlayersContext.Provider

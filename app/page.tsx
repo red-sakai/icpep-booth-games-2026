@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Home } from "lucide-react";
@@ -19,13 +19,26 @@ import BackToHomeButton from "@/components/home/back-to-home-button";
 
 // Types
 import { GameMode, GameType } from "@/lib/types";
-import { PlayersProvider } from "@/contexts/players-context";
 import { EditPlayers } from "@/components/home/edit-players/edit-players";
-import { LeaderboardProvider } from "@/contexts/leaderboard-context";
+import { usePlayers } from "@/contexts/players-context";
+import { useLeaderboard } from "@/contexts/leaderboard-context";
 
 export default function GameHub() {
   const [currentGame, setCurrentGame] = useState<GameType>("home");
   const [gameMode, setGameMode] = useState<GameMode>(null);
+  const { updatePlayersData, setCurrTeam1Player, setCurrTeam2Player } =
+    usePlayers();
+  const { updateLeaderboardData } = useLeaderboard();
+
+  useEffect(() => {
+    updatePlayersData();
+    updateLeaderboardData();
+  }, []);
+
+  useEffect(() => {
+    setCurrTeam1Player(null);
+    setCurrTeam2Player(null);
+  }, [setCurrTeam1Player, setCurrTeam2Player, currentGame]);
 
   const navigateTo = (game: GameType) => {
     setCurrentGame(game);
@@ -83,35 +96,31 @@ export default function GameHub() {
   };
 
   return (
-    <PlayersProvider>
-      <LeaderboardProvider>
-        <div className="min-h-screen bg-gradient-to-b from-purple-100 via-pink-200 to-rose-200 p-4 md:p-8">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentGame}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              {renderContent()}
-            </motion.div>
-          </AnimatePresence>
+    <div className="min-h-screen bg-gradient-to-b from-purple-100 via-pink-200 to-rose-200 p-4 md:p-8">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentGame}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {renderContent()}
+        </motion.div>
+      </AnimatePresence>
 
-          {currentGame !== "home" && (
-            <div className="fixed bottom-4 right-4">
-              <Button
-                onClick={() => navigateTo("home")}
-                size="icon"
-                className="rounded-full bg-white text-pink-600 hover:bg-pink-50 shadow-md"
-                aria-label="Return to home"
-              >
-                <Home size={20} />
-              </Button>
-            </div>
-          )}
+      {currentGame !== "home" && (
+        <div className="fixed bottom-4 right-4">
+          <Button
+            onClick={() => navigateTo("home")}
+            size="icon"
+            className="rounded-full bg-white text-pink-600 hover:bg-pink-50 shadow-md"
+            aria-label="Return to home"
+          >
+            <Home size={20} />
+          </Button>
         </div>
-      </LeaderboardProvider>
-    </PlayersProvider>
+      )}
+    </div>
   );
 }

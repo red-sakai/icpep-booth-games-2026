@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle, Circle } from "lucide-react";
 import { useEffect, useState } from "react";
+import { NotificationToaster } from "../../notification/notification-toaster";
+import { toast } from "sonner";
 
 type FilteredPlayerListProps = {
   team: "team1" | "team2";
@@ -42,7 +44,14 @@ export const FilteredPlayerList = ({
 
   const handlePlayerItemClick = (player: BoothPlayerType) => {
     if (["AI (EASY)", "AI (MEDIUM)", "AI (HARD)"].includes(player.name)) {
-      alert("AI players cannot be selected. Please choose a different player.");
+      toast.custom(() => (
+        <NotificationToaster
+          variant="warning"
+          message="Can't select this player!"
+          description="AI players cannot be selected. Please choose a different player."
+        />
+      ));
+
       return;
     }
     switch (team) {
@@ -50,9 +59,13 @@ export const FilteredPlayerList = ({
         if (selectedPlayer?.name === player.name) {
           setSelectedPlayer(null);
         } else if (currTeam2Player?.name === player.name) {
-          alert(
-            "Player is already selected for Team 2. Please choose a different player.",
-          );
+          toast.custom(() => (
+            <NotificationToaster
+              variant="warning"
+              message="Can't select this player!"
+              description="Player is already selected for Team 2. Please choose a different player."
+            />
+          ));
         } else {
           setSelectedPlayer(player);
         }
@@ -61,9 +74,13 @@ export const FilteredPlayerList = ({
         if (selectedPlayer?.name === player.name) {
           setSelectedPlayer(null);
         } else if (currTeam1Player?.name === player.name) {
-          alert(
-            "Player is already selected for Team 1. Please choose a different player.",
-          );
+          toast.custom(() => (
+            <NotificationToaster
+              variant="warning"
+              message="Can't select this player!"
+              description="Player is already selected for Team 1. Please choose a different player."
+            />
+          ));
         } else {
           setSelectedPlayer(player);
         }

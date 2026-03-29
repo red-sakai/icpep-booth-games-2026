@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-
+import { PlayersProvider } from "@/contexts/players-context";
+import { LeaderboardProvider } from "@/contexts/leaderboard-context";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "ICpEP Booth Games",
@@ -20,7 +22,10 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        {children}
+        <Toaster />
+        <PlayersProvider>
+          <LeaderboardProvider>{children}</LeaderboardProvider>
+        </PlayersProvider>
       </body>
     </html>
   );

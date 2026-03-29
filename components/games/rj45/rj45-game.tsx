@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import { submitScore } from "@/lib/leaderboard-utils/leaderboard-utils.client";
 import { usePlayers } from "@/contexts/players-context";
+import { NotificationToaster } from "@/components/home/notification/notification-toaster";
 
 const SCORE_MULTIPLIER = 0.5;
 type RJ45GameProps = {
@@ -113,18 +114,18 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
 
       if (newMatchedWires.length === correctWires.length) {
         setGameState("success");
-        toast(
-          "Perfect arrangement! You've successfully wired the RJ45 connector!",
-          {
-            className: "bg-green-100 text-green-800 border-green-200",
-          },
-        );
+        // toast(
+        //   "Perfect arrangement! You've successfully wired the RJ45 connector!",
+        //   {
+        //     className: "bg-green-100 text-green-800 border-green-200",
+        //   },
+        // );
       } else {
         setGameState("failure");
         setShowCorrectPattern(true);
-        toast("Time's up! Incorrect wire arrangement.", {
-          className: "bg-rose-100 text-rose-800 border-rose-200",
-        });
+        // toast("Time's up! Incorrect wire arrangement.", {
+        //   className: "bg-rose-100 text-rose-800 border-rose-200",
+        // });
       }
 
       submitScore({
@@ -132,6 +133,16 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
         score: newPoints,
         name: currTeam1Player?.name || "Anonymous",
       });
+      toast.custom(
+        () => (
+          <NotificationToaster
+            variant={"purple"}
+            message={`Player ${currTeam1Player ? currTeam1Player.name : "Anonymous"} got ${newPoints} points!`}
+            description={`You matched ${newMatchedWires.length} out of ${correctWires.length} correctly on ${standard} standard.`}
+          />
+        ),
+        { duration: 5000 },
+      );
     }
   }, [timeExpired, gameState, wires, correctWires]);
 
@@ -156,19 +167,19 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
     if (newMatchedWires.length === correctWires.length) {
       // Success!
       setGameState("success");
-      toast(
-        "Perfect arrangement! You've successfully wired the RJ45 connector!",
-        {
-          className: "bg-green-100 text-green-800 border-green-200",
-        },
-      );
+      // toast(
+      //   "Perfect arrangement! You've successfully wired the RJ45 connector!",
+      //   {
+      //     className: "bg-green-100 text-green-800 border-green-200",
+      //   },
+      // );
     } else {
       // Game over - wrong arrangement
       setGameState("failure");
       setShowCorrectPattern(true); // Show the correct pattern
-      toast("Incorrect wire arrangement! Check the correct pattern.", {
-        className: "bg-rose-100 text-rose-800 border-rose-200",
-      });
+      // toast("Incorrect wire arrangement! Check the correct pattern.", {
+      //   className: "bg-rose-100 text-rose-800 border-rose-200",
+      // });
     }
 
     submitScore({
@@ -177,6 +188,16 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
       score: newPoints,
       name: currTeam1Player?.name || "Anonymous",
     });
+    toast.custom(
+      () => (
+        <NotificationToaster
+          variant={"purple"}
+          message={`Player ${currTeam1Player ? currTeam1Player.name : "Anonymous"} got ${newPoints} points!`}
+          description={`You matched ${newMatchedWires.length} out of ${correctWires.length} correctly on ${standard} standard.`}
+        />
+      ),
+      { duration: 5000 },
+    );
   };
 
   // Reset the game
