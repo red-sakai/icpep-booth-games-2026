@@ -4,33 +4,22 @@ import { useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useLeaderboard } from "@/contexts/leaderboard-context";
+import { buildOverallLeaderboard } from "@/lib/leaderboard-utils/overall-leaderboard";
 import TopThreePodium from "@/components/games/leaderboard/top-three-podium";
 
-type LeaderboardPanelProps = {
-  gameId: string;
+type OverallLeaderboardPanelProps = {
   limit?: number;
   className?: string;
   leaderboardKey?: number;
   entriesClassName?: string;
 };
 
-export default function LeaderboardPanel({
-  gameId,
-  limit = 5,
+export default function OverallLeaderboardPanel({
+  limit = 20,
   className,
   leaderboardKey = 0,
   entriesClassName,
-}: LeaderboardPanelProps) {
-  const theme = useMemo(
-    () => ({
-      card: "bg-white/60 backdrop-blur-sm border border-pink-200 shadow-[0_8px_30px_rgba(236,72,153,0.15)] rounded-2xl",
-      title:
-        "bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-fuchsia-500 font-black tracking-tight",
-      metric: "text-fuchsia-600 font-bold uppercase tracking-wider text-xs",
-    }),
-    [],
-  );
-
+}: OverallLeaderboardPanelProps) {
   const { leaderboardData, updateLeaderboardData } = useLeaderboard();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -53,67 +42,61 @@ export default function LeaderboardPanel({
     void load();
 
     return () => controller.abort();
-  }, [gameId, leaderboardKey]);
+  }, [leaderboardKey]);
 
-  const game = leaderboardData?.games?.[gameId] ?? null;
-
-  const entries = useMemo(() => {
-    if (!game?.entries) return [];
-
-    const sorted = [...game.entries].sort((a, b) => {
-      const delta = a.score - b.score;
-      return game.order === "asc" ? delta : -delta;
-    });
-
-    return sorted.slice(0, Math.max(0, limit));
-  }, [game?.entries, game?.order, limit]);
+  const entries = useMemo(
+    () => buildOverallLeaderboard(leaderboardData, limit),
+    [leaderboardData, limit],
+  );
 
   const remainingEntries = useMemo(() => entries.slice(3), [entries]);
 
   return (
     <Card
-      className={cn("w-full max-w-2xl backdrop-blur-sm", theme.card, className)}
+      className={cn(
+        "w-full max-w-2xl bg-white/60 backdrop-blur-sm border border-pink-200 shadow-[0_8px_30px_rgba(236,72,153,0.15)] rounded-2xl",
+        className,
+      )}
     >
       <div className="p-5 sm:p-6 space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className={cn("text-lg sm:text-xl font-semibold", theme.title)}>
+          <h2 className="text-lg sm:text-xl bg-clip-text text-transparent bg-gradient-to-r from-pink-600 to-fuchsia-500 font-black tracking-tight">
             Leaderboard
           </h2>
-          {game?.metric && (
-            <span className={cn("text-sm", theme.metric)}>{game.metric}</span>
-          )}
+          <span className="text-fuchsia-600 font-bold uppercase tracking-wider text-xs">
+            TOTAL SCORE
+          </span>
         </div>
 
         {loading && <p className="text-sm text-slate-600">Loading leaderboard...</p>}
 
         {!loading && error && <p className="text-sm text-rose-700">{error}</p>}
 
-        {!loading && !error && !game && (
-          <p className="text-sm text-slate-600">
-            No leaderboard data found for this game.
-          </p>
-        )}
-
-        {!loading && !error && game && entries.length === 0 && (
+        {!loading && !error && entries.length === 0 && (
           <p className="text-sm text-slate-600">No entries yet.</p>
         )}
 
-        {!loading && !error && game && entries.length > 0 && (
+        {!loading && !error && entries.length > 0 && (
           <>
-            <TopThreePodium entries={entries.map((entry) => ({ name: entry.name, score: entry.score }))} />
+            <TopThreePodium
+              entries={entries.map((entry) => ({
+                name: entry.name,
+                score: entry.totalScore,
+              }))}
+            />
 
             {remainingEntries.length > 0 && (
               <ol className={cn("space-y-2", entriesClassName)}>
                 {remainingEntries.map((entry, index) => (
                   <li
-                    key={`${entry.name}-${entry.createdAt}-${index}`}
+                    key={`${entry.name}-${entry.latestActivityAt}-${index}`}
                     className="flex items-center justify-between text-base text-slate-700"
                   >
                     <span className="font-medium">
                       {index + 4}. {entry.name}
                     </span>
                     <span className="tabular-nums text-slate-800">
-                      {entry.score}
+                      {entry.totalScore}
                     </span>
                   </li>
                 ))}

@@ -10,8 +10,17 @@ import {
   ChevronLeft,
   ChevronRight,
   Play,
+  Trophy,
 } from "lucide-react";
 import type { GameType } from "@/lib/types";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import LeaderboardPanel from "@/components/games/leaderboard/leaderboard-panel";
 
 type GameCardsProps = {
   navigateTo: (game: GameType) => void;
@@ -78,6 +87,7 @@ const games: GameOption[] = [
 
 export default function GameSelectorCarousel({ navigateTo }: GameCardsProps) {
   const [current, setCurrent] = useState(0);
+  const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
 
   const paginate = useCallback((newDirection: number) => {
     setCurrent((prev) => (prev + newDirection + games.length) % games.length);
@@ -136,13 +146,23 @@ export default function GameSelectorCarousel({ navigateTo }: GameCardsProps) {
                   {game.title}
                 </h2>
 
-                <Button
-                  onClick={() => navigateTo(game.id)}
-                  className={`${game.color.button} ${game.color.buttonHover} text-white font-bold px-6 py-3 shadow-lg flex items-center gap-2`}
-                >
-                  <Play size={20} fill="white" />
-                  Play Now
-                </Button>
+                <div className="flex flex-wrap items-center gap-3">
+                  <Button
+                    onClick={() => navigateTo(game.id)}
+                    className={`${game.color.button} ${game.color.buttonHover} text-white font-bold px-6 py-3 shadow-lg flex items-center gap-2`}
+                  >
+                    <Play size={20} fill="white" />
+                    Play Now
+                  </Button>
+                  <Button
+                    onClick={() => setIsLeaderboardOpen(true)}
+                    variant="outline"
+                    className="bg-white/85 border-white/90 text-slate-900 hover:bg-white font-semibold inline-flex items-center gap-2"
+                  >
+                    <Trophy size={16} />
+                    Leaderboard
+                  </Button>
+                </div>
               </motion.div>
             </div>
           </motion.div>
@@ -246,6 +266,18 @@ export default function GameSelectorCarousel({ navigateTo }: GameCardsProps) {
           <ChevronRight size={24} />
         </motion.button>
       </div>
+
+      <Dialog open={isLeaderboardOpen} onOpenChange={setIsLeaderboardOpen}>
+        <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{game.title} Leaderboard</DialogTitle>
+            <DialogDescription>
+              Top players for this game.
+            </DialogDescription>
+          </DialogHeader>
+          <LeaderboardPanel gameId={game.id} limit={50} className="w-full max-w-none" />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

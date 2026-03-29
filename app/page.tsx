@@ -15,6 +15,7 @@ import GameHeader from "@/components/home/game-header";
 import HowToJoinSection from "@/components/home/how-to-join-section";
 import GameMechanicsSection from "@/components/home/game-mechanics-section";
 import GameSelectorCarousel from "@/components/home/game-selector-carousel";
+import OverallLeaderboardSection from "@/components/home/overall-leaderboard-section";
 import BackToHomeButton from "@/components/home/back-to-home-button";
 
 // Types
@@ -90,6 +91,7 @@ export default function GameHub() {
               <GameMechanicsSection />
             </div>
             <GameSelectorCarousel navigateTo={navigateTo} />
+            <OverallLeaderboardSection />
           </div>
         );
     }
