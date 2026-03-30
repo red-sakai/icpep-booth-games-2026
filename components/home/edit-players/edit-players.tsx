@@ -38,10 +38,14 @@ export const EditPlayers = ({
   }, [isEditTeamDialogOpen]);
 
   // open edit team dialog when both create and select player dialogs are exited
-  const onExitCreateOrSelectPlayerDialog = () => {
+  const onExitCreateOrSelectPlayerDialog = (value: boolean) => {
     setIsCreatePlayerDialogOpen(false);
     setIsSelectPlayerDialogOpen(false);
-    setIsEditTeamDialogOpen(true);
+    if (value) {
+      setIsEditTeamDialogOpen(true);
+    } else {
+      setIsEditTeamDialogOpen(false);
+    }
   };
 
   const handleEditTeamNext = (
