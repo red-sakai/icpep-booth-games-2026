@@ -20,7 +20,7 @@ type SelectPlayerDialogProps = {
   setIsOpen: (open: boolean) => void;
   currPlayer: BoothPlayerType | null;
   setCurrPlayer: (player: BoothPlayerType | null) => void;
-  onExit: () => void;
+  onExit: (value: boolean) => void;
 };
 export const SelectPlayerDialog = ({
   team,
@@ -45,7 +45,7 @@ export const SelectPlayerDialog = ({
     if (!open) {
       // If the user clicks the X, presses Escape, or clicks the backdrop to close it
       if (onExit) {
-        onExit();
+        onExit(true);
       } else {
         setIsOpen(false);
       }
@@ -73,6 +73,7 @@ export const SelectPlayerDialog = ({
     setPlayerName("");
     setSelectedColor(defaultColor);
     handleOpenChange(false);
+    onExit(false);
     toast.custom(() => (
       <NotificationToaster
         variant="success"
