@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import colorPaletteData from "@/data/player-color-pallete.json";
 import { createPlayer } from "@/lib/players-utils/players.client";
-import { BoothPlayerType, GameMode } from "@/lib/types";
+import { BoothPlayerType, EGamePlayLimit, GameMode } from "@/lib/types";
 import { ColorPaletteSelection } from "./color-palette-selection";
 import { usePlayers } from "@/contexts/players-context";
 import { toast } from "sonner";
@@ -76,9 +76,23 @@ export const CreatePlayerDialog = ({
       ));
       return;
     }
-    const newPlayer = {
+    const newPlayer: BoothPlayerType = {
       name: playerName,
       color: selectedColor,
+      status: {
+        "tech-tac-toe": {
+          playsRemaining: EGamePlayLimit.TECH_TAC_TOE,
+          isLocked: false,
+        },
+        "led-memory": {
+          playsRemaining: EGamePlayLimit.LED_MEMORY,
+          isLocked: false,
+        },
+        "rj45-game": {
+          playsRemaining: EGamePlayLimit.RJ45_GAME,
+          isLocked: false,
+        },
+      },
       createdAt: new Date().toISOString(),
     };
     if (

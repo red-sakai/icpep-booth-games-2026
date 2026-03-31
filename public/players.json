@@ -1,146 +1,42 @@
 [
   {
-    "name": "a",
-    "color": "blue",
-    "createdAt": "2026-03-25T19:22:18.065Z",
-    "updatedAt": null
-  },
-  {
-    "name": "s",
-    "color": "blue",
-    "createdAt": "2026-03-25T19:29:29.934Z",
-    "updatedAt": null
-  },
-  {
-    "name": "lkjlkj",
-    "color": "blue",
-    "createdAt": "2026-03-25T19:54:50.181Z",
-    "updatedAt": null
-  },
-  {
-    "name": "ss",
-    "color": "gray",
-    "createdAt": "2026-03-25T20:27:30.213Z",
-    "updatedAt": null
-  },
-  {
-    "name": "sladkjf",
-    "color": "cyan",
-    "createdAt": "2026-03-25T21:05:30.229Z",
-    "updatedAt": null
-  },
-  {
-    "name": "lsakdjf",
-    "color": "purple",
-    "createdAt": "2026-03-26T04:12:50.241Z",
-    "updatedAt": null
-  },
-  {
-    "name": "9",
-    "color": "blue",
-    "createdAt": "2026-03-26T04:26:51.508Z",
-    "updatedAt": null
-  },
-  {
-    "name": "f",
-    "color": "blue",
-    "createdAt": "2026-03-26T04:39:25.031Z",
-    "updatedAt": null
-  },
-  {
-    "name": "AI",
-    "color": "blue",
-    "createdAt": "2026-03-26T07:11:01.981Z",
-    "updatedAt": null
-  },
-  {
-    "name": "AI (HARD)",
-    "color": "blue",
-    "createdAt": "2026-03-26T07:11:36.405Z",
+    "name": "sldkf",
+    "color": "orange",
+    "status": {
+      "tech-tac-toe": {
+        "playsRemaining": 3,
+        "isLocked": false
+      },
+      "led-memory": {
+        "playsRemaining": 2,
+        "isLocked": false
+      },
+      "rj45-game": {
+        "playsRemaining": 2,
+        "isLocked": false
+      }
+    },
+    "createdAt": "2026-03-31T12:56:54.232Z",
     "updatedAt": null
   },
   {
     "name": "AI (MEDIUM)",
-    "color": "blue",
-    "createdAt": "2026-03-26T07:15:27.377Z",
-    "updatedAt": null
-  },
-  {
-    "name": "AI (EASY)",
-    "color": "blue",
-    "createdAt": "2026-03-26T07:21:27.255Z",
-    "updatedAt": null
-  },
-  {
-    "name": "sdlfkj",
-    "color": "cyan",
-    "createdAt": "2026-03-27T11:12:18.350Z",
-    "updatedAt": null
-  },
-  {
-    "name": "lsjfd",
-    "color": "blue",
-    "createdAt": "2026-03-27T11:13:41.914Z",
-    "updatedAt": null
-  },
-  {
-    "name": "sldkjf",
-    "color": "blue",
-    "createdAt": "2026-03-27T11:18:17.862Z",
-    "updatedAt": null
-  },
-  {
-    "name": "sd",
-    "color": "blue",
-    "createdAt": "2026-03-27T13:01:39.744Z",
-    "updatedAt": null
-  },
-  {
-    "name": "red",
-    "color": "red",
-    "createdAt": "2026-03-28T05:40:11.335Z",
-    "updatedAt": null
-  },
-  {
-    "name": "kjk",
-    "color": "blue",
-    "createdAt": "2026-03-28T15:02:18.082Z",
-    "updatedAt": null
-  },
-  {
-    "name": "l",
-    "color": "blue",
-    "createdAt": "2026-03-28T15:02:59.659Z",
-    "updatedAt": null
-  },
-  {
-    "name": "asdsadasd",
-    "color": "blue",
-    "createdAt": "2026-03-29T08:12:55.520Z",
-    "updatedAt": null
-  },
-  {
-    "name": "4",
-    "color": "blue",
-    "createdAt": "2026-03-31T11:59:08.651Z",
-    "updatedAt": null
-  },
-  {
-    "name": "1",
-    "color": "blue",
-    "createdAt": "2026-03-31T11:59:22.654Z",
-    "updatedAt": null
-  },
-  {
-    "name": "ii",
-    "color": "blue",
-    "createdAt": "2026-03-31T12:03:29.865Z",
-    "updatedAt": null
-  },
-  {
-    "name": "yi",
-    "color": "purple",
-    "createdAt": "2026-03-31T12:03:49.857Z",
+    "color": "gray",
+    "status": {
+      "tech-tac-toe": {
+        "playsRemaining": null,
+        "isLocked": false
+      },
+      "led-memory": {
+        "playsRemaining": null,
+        "isLocked": false
+      },
+      "rj45-game": {
+        "playsRemaining": null,
+        "isLocked": false
+      }
+    },
+    "createdAt": "2026-03-31T12:58:52.140Z",
     "updatedAt": null
   }
 ]

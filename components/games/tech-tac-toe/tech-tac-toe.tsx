@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { RotateCcw } from "lucide-react";
 import {
+  BoothPlayerType,
   DifficultyLevel,
   EDificultyMultiplyer,
   type BoardState,
@@ -29,6 +30,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { NotificationToaster } from "@/components/home/notification/notification-toaster";
+import { createPlayer } from "@/lib/players-utils/players.client";
 
 type TechTacToeProps = {
   gameId: string;
@@ -42,7 +44,8 @@ export default function TechTacToe({
   setGameMode,
 }: TechTacToeProps) {
   const [board, setBoard] = useState<BoardState>(Array(9).fill(null));
-  const { currTeam1Player, currTeam2Player, setCurrTeam2Player } = usePlayers();
+  const { currTeam1Player, currTeam2Player, setCurrTeam2Player, players } =
+    usePlayers();
   const [currentTeam, setCurrentTeam] = useState<Player | null>(null);
   const [winnerTeam, setWinnerTeam] = useState<Player | "draw" | null>(null);
   const [winningPattern, setWinningPattern] = useState<number[] | null>(null);
@@ -63,11 +66,25 @@ export default function TechTacToe({
 
   useEffect(() => {
     if (gameMode === "pve") {
-      setCurrTeam2Player({
-        name: `AI (${difficulty.toUpperCase()})`,
-        color: "red",
-        createdAt: new Date().toISOString(),
-      });
+      const aiName = `AI (${difficulty.toUpperCase()})`;
+      const existingAIPlayer = players.find((p) => p.name === aiName);
+      if (existingAIPlayer) {
+        setCurrTeam2Player(existingAIPlayer);
+      } else {
+        const newAIPlayer: BoothPlayerType = {
+          name: aiName,
+          color: "gray",
+          status: {
+            "tech-tac-toe": { playsRemaining: null, isLocked: false },
+            "led-memory": { playsRemaining: null, isLocked: false },
+            "rj45-game": { playsRemaining: null, isLocked: false },
+          },
+          createdAt: new Date().toISOString(),
+          updatedAt: null,
+        };
+        createPlayer(newAIPlayer);
+        setCurrTeam2Player(newAIPlayer);
+      }
     }
   }, [gameMode, setCurrTeam2Player, difficulty]);
 
@@ -223,7 +240,6 @@ export default function TechTacToe({
     setWinningPattern(null);
     setIsAIThinking(false);
     setLastWinScore(0);
-    setShowNameDialog(false);
   };
 
   const handleChangeMode = () => {
