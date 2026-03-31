@@ -36,6 +36,7 @@ export const PlayersProvider = ({ children }: PlayersProviderProps) => {
     const response = await fetch("/api/players");
     const data = await response.json();
     setPlayers(data);
+    console.debug("Players data updated");
   }, []);
 
   return (

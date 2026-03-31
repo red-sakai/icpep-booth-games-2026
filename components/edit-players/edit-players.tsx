@@ -49,6 +49,9 @@ export const EditPlayers = ({
       }
       return prev;
     });
+  }, [players, gameMode, setCurrTeam1Player]);
+
+  useEffect(() => {
     setCurrTeam2Player((prev) => {
       if (prev) {
         const updatedCurrTeam2Player = players.find(
@@ -64,7 +67,7 @@ export const EditPlayers = ({
       }
       return prev;
     });
-  }, [players, gameMode, setCurrTeam1Player, setCurrTeam2Player]);
+  }, [players, gameMode, setCurrTeam2Player]);
 
   // reset create and select player dialogs when edit team dialog is opened
   useEffect(() => {
@@ -166,6 +169,7 @@ export const EditPlayers = ({
         onExit={onExitCreateOrSelectPlayerDialog}
       />
       <SelectPlayerDialog
+        gameName={gameName}
         gameMode={gameMode}
         team={team}
         setTeam={setTeam}

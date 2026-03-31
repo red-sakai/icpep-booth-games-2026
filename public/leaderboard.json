@@ -5,32 +5,37 @@
     "led-memory": {
       "metric": "patternsRemembered",
       "order": "desc",
-      "entries": []
+      "entries": [
+        {
+          "name": "BADSFS",
+          "score": 0,
+          "createdAt": "2026-03-31T18:50:10.310Z"
+        }
+      ]
     },
     "rj45-game": {
       "metric": "timeRemainingSeconds",
       "order": "desc",
-      "entries": [
-        {
-          "name": "LKJ",
-          "score": 0,
-          "createdAt": "2026-03-31T16:44:43.694Z"
-        }
-      ]
+      "entries": []
     },
     "tech-tac-toe": {
       "metric": "totalWins",
       "order": "desc",
       "entries": [
         {
-          "name": "SDAF",
-          "score": 5,
-          "createdAt": "2026-03-31T16:47:18.847Z"
+          "name": "SADFASDF",
+          "score": 4.5,
+          "createdAt": "2026-03-31T18:51:43.913Z"
         },
         {
-          "name": "LKJ",
+          "name": "BADSFS",
           "score": 0,
-          "createdAt": "2026-03-31T16:46:21.709Z"
+          "createdAt": "2026-03-31T18:38:40.438Z"
+        },
+        {
+          "name": "ASDF",
+          "score": 0,
+          "createdAt": "2026-03-31T18:50:52.830Z"
         }
       ]
     }

@@ -48,8 +48,12 @@ export default function TechTacToe({
   const [winnerTeam, setWinnerTeam] = useState<Player | "draw" | null>(null);
   const [winningPattern, setWinningPattern] = useState<number[] | null>(null);
   const [showInfo, setShowInfo] = useState(false);
-  const [score, setScore] = useState(0);
-  const [isLockInScoreDialogOpen, setIsLockInScoreDialogOpen] = useState(false);
+  const [score1, setScore1] = useState(0);
+  const [score2, setScore2] = useState(0);
+  const [isLockInScoreDialogOpen1, setIsLockInScoreDialogOpen1] =
+    useState(false);
+  const [isLockInScoreDialogOpen2, setIsLockInScoreDialogOpen2] =
+    useState(false);
 
   // AI & Game Mode State
   const [difficulty, setDifficulty] = useState<DifficultyLevel>("medium");
@@ -111,54 +115,71 @@ export default function TechTacToe({
     } else if (winnerTeam === "0" && currTeam2Player) {
       winnerPlayerName = currTeam2Player.name;
     }
-    if (winnerPlayerName) {
-      if (winnerTeam === "draw") {
-        toast.custom(
-          () => (
-            <NotificationToaster
-              variant={"purple"}
-              message={"It's a draw!"}
-              description={"No team/player won this round."}
-            />
-          ),
-          { duration: 5000 },
-        );
-      }
 
-      if (winnerPlayerName === `AI (${difficulty.toUpperCase()})`) {
+    if (winnerTeam === "draw") {
+      toast.custom(
+        () => (
+          <NotificationToaster
+            variant={"purple"}
+            message={"It's a draw!"}
+            description={"No team/player won this round."}
+          />
+        ),
+        { duration: 5000 },
+      );
+      setScore1(0);
+      setIsLockInScoreDialogOpen1(true);
+      if (gameMode === "pvp") {
+        setScore2(0);
+        setIsLockInScoreDialogOpen2(true);
+      }
+    }
+
+    if (winnerPlayerName && winnerTeam && winnerTeam !== "draw") {
+      if (gameMode === "pve") {
+        let newScore1 = 0;
+        if (winnerTeam === "1") {
+          newScore1 = 3 * (EDificultyMultiplyer[difficulty] || 1);
+        } else if (winnerTeam === "0") {
+          newScore1 = 0;
+        }
         toast.custom(
           () => (
             <NotificationToaster
               variant={winnerTeam === "1" ? "sky" : "rose"}
-              message={`${winnerPlayerName} won!`}
-              description={`Player <${currTeam1Player?.name}> got ${0} points!`}
+              message={`Player <${currTeam1Player?.name}> ${winnerTeam === "1" ? "won" : "lost"}!`}
+              description={`You got ${newScore1} points!`}
             />
           ),
           { duration: 5000 },
         );
-        setScore(0);
-        setIsLockInScoreDialogOpen(true);
+        setScore1(newScore1);
+        setIsLockInScoreDialogOpen1(true);
       }
 
-      if (winnerPlayerName !== `AI (${difficulty.toUpperCase()})`) {
-        let newScore = 0;
-        if (gameMode === "pve") {
-          newScore = 2 * EDificultyMultiplyer[difficulty];
-        } else {
-          newScore = 5; // pvp
+      if (gameMode === "pvp") {
+        let newScore1 = 0;
+        let newScore2 = 0;
+        if (winnerTeam === "1") {
+          newScore1 = 5;
+          newScore2 = 0;
+        } else if (winnerTeam === "0") {
+          newScore1 = 0;
+          newScore2 = 5;
         }
         toast.custom(
           () => (
             <NotificationToaster
               variant={winnerTeam === "1" ? "sky" : "rose"}
               message={`Player <${winnerPlayerName}> won!`}
-              description={`You got ${newScore} points!`}
+              description={`You got ${winnerTeam === "1" ? newScore1 : newScore2} points!`}
             />
           ),
           { duration: 5000 },
         );
-        setScore(newScore);
-        setIsLockInScoreDialogOpen(true);
+        setScore1(newScore1);
+        setIsLockInScoreDialogOpen1(true);
+        setIsLockInScoreDialogOpen2(true);
       }
     }
   }, [winnerTeam]);
@@ -326,17 +347,20 @@ export default function TechTacToe({
                     rounded-2xl shadow-xl border border-pink-200"
     >
       <LockInScoreDialog
-        isOpen={isLockInScoreDialogOpen}
-        setIsOpen={setIsLockInScoreDialogOpen}
+        variant="sky"
+        isOpen={isLockInScoreDialogOpen1}
+        setIsOpen={setIsLockInScoreDialogOpen1}
         gameName={EGame.TECH_TAC_TOE}
-        player={
-          gameMode === "pve"
-            ? currTeam1Player
-            : winnerTeam === "1"
-              ? currTeam1Player
-              : currTeam2Player
-        }
-        score={score}
+        player={currTeam1Player}
+        score={score1}
+      />
+      <LockInScoreDialog
+        variant="rose"
+        isOpen={isLockInScoreDialogOpen2}
+        setIsOpen={setIsLockInScoreDialogOpen2}
+        gameName={EGame.TECH_TAC_TOE}
+        player={currTeam2Player}
+        score={score2}
       />
 
       <GameModeSelector

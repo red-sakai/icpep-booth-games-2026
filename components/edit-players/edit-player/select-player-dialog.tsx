@@ -9,13 +9,14 @@ import {
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { FilteredPlayerList } from "@/components/edit-players/edit-player/filtered-player-list";
-import { BoothPlayerType, GameMode } from "@/lib/types";
+import { BoothPlayerType, EGame, GameMode } from "@/lib/types";
 import { FilterPlayers } from "./filter-players";
 import { toast } from "sonner";
 import { usePlayers } from "@/contexts/players-context";
 import { NotificationToaster } from "../../notification/notification-toaster";
 
 type SelectPlayerDialogProps = {
+  gameName: EGame;
   gameMode: GameMode;
   team: "team1" | "team2";
   setTeam: (team: "team1" | "team2") => void;
@@ -26,6 +27,7 @@ type SelectPlayerDialogProps = {
   onExit: (value: boolean) => void;
 };
 export const SelectPlayerDialog = ({
+  gameName,
   gameMode,
   team,
   setTeam,
@@ -148,6 +150,7 @@ export const SelectPlayerDialog = ({
         </span>
         <div className="h-40 max-h-40 min-h-40">
           <FilteredPlayerList
+            gameName={gameName}
             team={team}
             filterNameValue={playerName}
             filterColor={selectedColor}

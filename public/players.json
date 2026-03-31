@@ -1,10 +1,10 @@
 [
   {
-    "name": "lkj",
+    "name": "asdf",
     "color": "blue",
     "status": {
       "tech-tac-toe": {
-        "playsRemaining": 2,
+        "playsRemaining": 0,
         "isLocked": true
       },
       "led-memory": {
@@ -12,60 +12,40 @@
         "isLocked": false
       },
       "rj45-game": {
+        "playsRemaining": 2,
+        "isLocked": false
+      }
+    },
+    "createdAt": "2026-03-31T18:38:10.258Z",
+    "updatedAt": "2026-03-31T18:50:52.844Z"
+  },
+  {
+    "name": "badsfs",
+    "color": "blue",
+    "status": {
+      "tech-tac-toe": {
+        "playsRemaining": 2,
+        "isLocked": true
+      },
+      "led-memory": {
         "playsRemaining": 1,
         "isLocked": true
-      }
-    },
-    "createdAt": "2026-03-31T16:44:31.113Z",
-    "updatedAt": "2026-03-31T16:46:21.721Z"
-  },
-  {
-    "name": "afdsfd",
-    "color": "blue",
-    "status": {
-      "tech-tac-toe": {
-        "playsRemaining": 2,
-        "isLocked": false
-      },
-      "led-memory": {
-        "playsRemaining": 2,
-        "isLocked": false
       },
       "rj45-game": {
         "playsRemaining": 2,
         "isLocked": false
       }
     },
-    "createdAt": "2026-03-31T16:46:50.132Z",
-    "updatedAt": "2026-03-31T16:52:45.672Z"
+    "createdAt": "2026-03-31T18:38:17.491Z",
+    "updatedAt": "2026-03-31T18:50:10.310Z"
   },
   {
-    "name": "sdaf",
-    "color": "blue",
-    "status": {
-      "tech-tac-toe": {
-        "playsRemaining": 2,
-        "isLocked": true
-      },
-      "led-memory": {
-        "playsRemaining": 2,
-        "isLocked": false
-      },
-      "rj45-game": {
-        "playsRemaining": 2,
-        "isLocked": false
-      }
-    },
-    "createdAt": "2026-03-31T16:47:00.298Z",
-    "updatedAt": "2026-03-31T16:47:18.859Z"
-  },
-  {
-    "name": "lksdjflkj",
+    "name": "sadfasdf",
     "color": "red",
     "status": {
       "tech-tac-toe": {
-        "playsRemaining": 2,
-        "isLocked": false
+        "playsRemaining": 0,
+        "isLocked": true
       },
       "led-memory": {
         "playsRemaining": 2,
@@ -76,7 +56,7 @@
         "isLocked": false
       }
     },
-    "createdAt": "2026-03-31T16:51:44.033Z",
-    "updatedAt": "2026-03-31T16:52:26.572Z"
+    "createdAt": "2026-03-31T18:39:17.008Z",
+    "updatedAt": "2026-03-31T18:51:43.920Z"
   }
 ]
