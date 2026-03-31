@@ -117,7 +117,9 @@ export const EditPlayers = ({
         onNext={handleEditTeamNext}
       />
       <CreatePlayerDialog
+        gameMode={gameMode}
         team={team}
+        setTeam={setTeam}
         isOpen={isCreatePlayerDialogOpen}
         setIsOpen={setIsCreatePlayerDialogOpen}
         currPlayer={team === "team1" ? currTeam1Player : currTeam2Player}
@@ -127,7 +129,9 @@ export const EditPlayers = ({
         onExit={onExitCreateOrSelectPlayerDialog}
       />
       <SelectPlayerDialog
+        gameMode={gameMode}
         team={team}
+        setTeam={setTeam}
         isOpen={isSelectPlayerDialogOpen}
         setIsOpen={setIsSelectPlayerDialogOpen}
         currPlayer={team === "team1" ? currTeam1Player : currTeam2Player}

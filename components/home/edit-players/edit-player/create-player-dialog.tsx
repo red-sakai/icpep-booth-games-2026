@@ -10,14 +10,16 @@ import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import colorPaletteData from "@/data/player-color-pallete.json";
 import { createPlayer } from "@/lib/players-utils/players.client";
-import { BoothPlayerType } from "@/lib/types";
+import { BoothPlayerType, GameMode } from "@/lib/types";
 import { ColorPaletteSelection } from "./color-palette-selection";
 import { usePlayers } from "@/contexts/players-context";
 import { toast } from "sonner";
 import { NotificationToaster } from "../../notification/notification-toaster";
 
 type CreatePlayerDialogProps = {
+  gameMode: GameMode;
   team: "team1" | "team2";
+  setTeam: (team: "team1" | "team2") => void;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   currPlayer: BoothPlayerType | null;
@@ -25,7 +27,9 @@ type CreatePlayerDialogProps = {
   onExit: (value: boolean) => void;
 };
 export const CreatePlayerDialog = ({
+  gameMode,
   team,
+  setTeam,
   isOpen,
   setIsOpen,
   currPlayer,
@@ -35,7 +39,8 @@ export const CreatePlayerDialog = ({
   const defaultColor = team === "team1" ? "blue" : "red";
   const [playerName, setPlayerName] = useState("");
   const [selectedColor, setSelectedColor] = useState(defaultColor);
-  const { players, updatePlayersData } = usePlayers();
+  const { players, updatePlayersData, currTeam1Player, currTeam2Player } =
+    usePlayers();
 
   useEffect(() => {
     if (currPlayer) {
@@ -91,7 +96,21 @@ export const CreatePlayerDialog = ({
     setPlayerName("");
     setSelectedColor(defaultColor);
     handleOpenChange(false);
-    onExit(false);
+    // only exit if both teams has players (pvp) or team1 has player (pve/solo)
+    switch (gameMode) {
+      case "pvp":
+        if (team === "team1" && currTeam2Player) {
+          onExit(false);
+        } else if (team === "team2" && currTeam1Player) {
+          onExit(false);
+        } else {
+          setTeam(team === "team1" ? "team2" : "team1");
+        }
+
+        break;
+      default:
+        onExit(false);
+    }
     toast.custom(() => (
       <NotificationToaster
         variant="success"

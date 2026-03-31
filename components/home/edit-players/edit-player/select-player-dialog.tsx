@@ -9,13 +9,16 @@ import {
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { FilteredPlayerList } from "@/components/home/edit-players/edit-player/filtered-player-list";
-import { BoothPlayerType } from "@/lib/types";
+import { BoothPlayerType, GameMode } from "@/lib/types";
 import { FilterPlayers } from "./filter-players";
 import { toast } from "sonner";
 import { NotificationToaster } from "../../notification/notification-toaster";
+import { usePlayers } from "@/contexts/players-context";
 
 type SelectPlayerDialogProps = {
+  gameMode: GameMode;
   team: "team1" | "team2";
+  setTeam: (team: "team1" | "team2") => void;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   currPlayer: BoothPlayerType | null;
@@ -23,7 +26,9 @@ type SelectPlayerDialogProps = {
   onExit: (value: boolean) => void;
 };
 export const SelectPlayerDialog = ({
+  gameMode,
   team,
+  setTeam,
   isOpen,
   setIsOpen,
   currPlayer,
@@ -36,6 +41,7 @@ export const SelectPlayerDialog = ({
   const [selectedPlayer, setSelectedPlayer] = useState<BoothPlayerType | null>(
     currPlayer,
   );
+  const { currTeam1Player, currTeam2Player } = usePlayers();
 
   useEffect(() => {
     setSelectedPlayer(currPlayer);
@@ -73,7 +79,21 @@ export const SelectPlayerDialog = ({
     setPlayerName("");
     setSelectedColor(defaultColor);
     handleOpenChange(false);
-    onExit(false);
+    // only exit if both teams has players (pvp) or team1 has player (pve/solo)
+    switch (gameMode) {
+      case "pvp":
+        if (team === "team1" && currTeam2Player) {
+          onExit(false);
+        } else if (team === "team2" && currTeam1Player) {
+          onExit(false);
+        } else {
+          setTeam(team === "team1" ? "team2" : "team1");
+        }
+
+        break;
+      default:
+        onExit(false);
+    }
     toast.custom(() => (
       <NotificationToaster
         variant="success"
