@@ -320,8 +320,15 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
     const isFinished = gameState === "gameover" || gameState === "success";
 
     if (isFinished && sequence.length > 0) {
-      const correctSequenceCount = playerSequence.length - 1;
-      const score = correctSequenceCount * EDificultyMultiplyer[selectedLevel];
+      const correctSequenceCount =
+        playerSequence.length > 0 ? playerSequence.length - 1 : 0;
+      const initalPoints =
+        correctSequenceCount * EDificultyMultiplyer[selectedLevel];
+      const timeBonusPoints = Math.round(
+        (timeLeft / LEVEL_CONFIG[selectedLevel].timeLimit) *
+          LEVEL_CONFIG[selectedLevel].timeLimit,
+      );
+      const score = initalPoints + timeBonusPoints;
       submitScore({
         gameId,
         score,
@@ -331,7 +338,7 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
         () => (
           <NotificationToaster
             variant={"rose"}
-            message={`Player ${currTeam1Player ? currTeam1Player.name : "Anonymous"} got ${score} points!`}
+            message={`Player <${currTeam1Player ? currTeam1Player.name : "Anonymous"}> got ${score} points!`}
             description={`You remembered ${correctSequenceCount} out of ${sequence.length} correctly on ${LEVEL_CONFIG[selectedLevel].label} level.`}
           />
         ),

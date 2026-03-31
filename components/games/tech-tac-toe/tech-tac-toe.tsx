@@ -58,7 +58,6 @@ export default function TechTacToe({
   const [p1Streak, setP1Streak] = useState(0);
   const [p0Streak, setP0Streak] = useState(0);
   const [lastWinScore, setLastWinScore] = useState(0);
-  const [showNameDialog, setShowNameDialog] = useState(false);
   const [leaderboardKey, setLeaderboardKey] = useState(0);
   const [leaderboardOpen, setLeaderboardOpen] = useState(false);
 
@@ -80,7 +79,7 @@ export default function TechTacToe({
           <NotificationToaster
             variant={"rose"}
             message={`Start!`}
-            description={`Player ${currTeam1Player ? currTeam1Player.name : "Anonymous"} will start the game!`}
+            description={`Player <${currTeam1Player ? currTeam1Player.name : "Anonymous"}> will start the game!`}
           />
         ),
         { duration: 5000 },
@@ -97,7 +96,12 @@ export default function TechTacToe({
       winnerPlayerName = currTeam2Player.name;
     }
     if (winnerPlayerName) {
-      const score = 1 * EDificultyMultiplyer[difficulty];
+      let score = 0;
+      if (gameMode === "pve") {
+        score = 1 * EDificultyMultiplyer[difficulty];
+      } else {
+        score = 2; // pvp
+      }
       submitScore({ gameId, score, name: winnerPlayerName });
       toast.custom(
         () => (
@@ -106,7 +110,7 @@ export default function TechTacToe({
             message={
               winnerTeam === "draw"
                 ? "It's a draw!"
-                : `Player ${winnerPlayerName} won!`
+                : `Player <${winnerPlayerName}> won!`
             }
             description={
               winnerTeam === "draw"

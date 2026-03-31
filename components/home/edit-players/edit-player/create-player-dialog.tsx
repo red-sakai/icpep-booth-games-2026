@@ -81,7 +81,11 @@ export const CreatePlayerDialog = ({
       color: selectedColor,
       createdAt: new Date().toISOString(),
     };
-    if (players.some((player) => player.name === newPlayer.name)) {
+    if (
+      players.some(
+        (player) => player.name.toUpperCase() === newPlayer.name.toUpperCase(),
+      )
+    ) {
       toast.custom(() => (
         <NotificationToaster
           variant="warning"
@@ -115,7 +119,7 @@ export const CreatePlayerDialog = ({
       <NotificationToaster
         variant="success"
         message="Player created successfully!"
-        description={`Welcome, ${newPlayer.name}! You have joined ${team === "team1" ? "Team 1" : "Team 2"}.`}
+        description={`Welcome, <${newPlayer.name}>! You have joined ${team === "team1" ? "Team 1" : "Team 2"}.`}
       />
     ));
   };

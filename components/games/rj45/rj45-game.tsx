@@ -124,7 +124,9 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
         (newMatchedWires.length -
           (correctWires.length - newMatchedWires.length)) *
         SCORE_MULTIPLIER;
-      const newPoints = Math.max(0, rawPoints);
+      const initialPoints = Math.max(0, rawPoints);
+      const timeBonusPoints = Math.round((timeLeft / TOTAL_TIME) * TOTAL_TIME);
+      const newPoints = initialPoints + timeBonusPoints;
       setPoints(newPoints);
 
       if (newMatchedWires.length === correctWires.length) {
@@ -152,7 +154,7 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
         () => (
           <NotificationToaster
             variant={"purple"}
-            message={`Player ${currTeam1Player ? currTeam1Player.name : "Anonymous"} got ${newPoints} points!`}
+            message={`Player <${currTeam1Player ? currTeam1Player.name : "Anonymous"}> got ${newPoints} points!`}
             description={`You matched ${newMatchedWires.length} out of ${correctWires.length} correctly on ${standard} standard.`}
           />
         ),
@@ -207,7 +209,7 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
       () => (
         <NotificationToaster
           variant={"purple"}
-          message={`Player ${currTeam1Player ? currTeam1Player.name : "Anonymous"} got ${newPoints} points!`}
+          message={`Player <${currTeam1Player ? currTeam1Player.name : "Anonymous"}> got ${newPoints} points!`}
           description={`You matched ${newMatchedWires.length} out of ${correctWires.length} correctly on ${standard} standard.`}
         />
       ),
