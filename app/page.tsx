@@ -19,10 +19,10 @@ import OverallLeaderboardSection from "@/components/home/overall-leaderboard-sec
 import BackToHomeButton from "@/components/home/back-to-home-button";
 
 // Types
-import { GameMode, GameType } from "@/lib/types";
-import { EditPlayers } from "@/components/home/edit-players/edit-players";
+import { EGame, GameMode, GameType } from "@/lib/types";
 import { usePlayers } from "@/contexts/players-context";
 import { useLeaderboard } from "@/contexts/leaderboard-context";
+import { EditPlayers } from "@/components/edit-players/edit-players";
 
 export default function GameHub() {
   const [currentGame, setCurrentGame] = useState<GameType>("home");
@@ -53,7 +53,11 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="pink" />
-              <EditPlayers gameMode={gameMode} openOnMount={false} />
+              <EditPlayers
+                gameName={EGame.TECH_TAC_TOE}
+                gameMode={gameMode}
+                openOnMount={false}
+              />
             </div>
             <TechTacToe
               gameId="tech-tac-toe"
@@ -67,9 +71,9 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="rose" />
-              <EditPlayers gameMode="solo" />
+              <EditPlayers gameName={EGame.LED_MEMORY} gameMode="solo" />
             </div>
-            <LEDMemoryGame gameId="led-memory" />
+            <LEDMemoryGame gameId={"led-memory"} />
           </div>
         );
       case "rj45-game":
@@ -77,7 +81,7 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="purple" />
-              <EditPlayers gameMode="solo" />
+              <EditPlayers gameName={EGame.RJ45_GAME} gameMode="solo" />
             </div>
             <RJ45Game gameId="rj45-game" />
           </div>

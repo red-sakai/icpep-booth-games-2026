@@ -2,17 +2,19 @@ import { Bot, Pencil, User } from "lucide-react";
 import { usePlayers } from "@/contexts/players-context";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { EditTeamDialog } from "@/components/home/edit-players/edit-player/edit-team-dialog";
-import { CreatePlayerDialog } from "@/components/home/edit-players/edit-player/create-player-dialog";
-import { SelectPlayerDialog } from "@/components/home/edit-players/edit-player/select-player-dialog";
-import { BoothPlayerType, GameMode } from "@/lib/types";
+import { EditTeamDialog } from "@/components/edit-players/edit-player/edit-team-dialog";
+import { CreatePlayerDialog } from "@/components/edit-players/edit-player/create-player-dialog";
+import { SelectPlayerDialog } from "@/components/edit-players/edit-player/select-player-dialog";
+import { BoothPlayerType, EGame, GameMode } from "@/lib/types";
 
 type EditPlayersProps = {
+  gameName: EGame;
   gameMode: GameMode;
   openOnMount?: boolean;
 };
 
 export const EditPlayers = ({
+  gameName,
   gameMode,
   openOnMount = true,
 }: EditPlayersProps) => {
@@ -22,12 +24,47 @@ export const EditPlayers = ({
     currTeam2Player,
     setCurrTeam1Player,
     setCurrTeam2Player,
+    players,
   } = usePlayers();
   const [isEditTeamDialogOpen, setIsEditTeamDialogOpen] = useState(openOnMount);
   const [isCreatePlayerDialogOpen, setIsCreatePlayerDialogOpen] =
     useState(false);
   const [isSelectPlayerDialogOpen, setIsSelectPlayerDialogOpen] =
     useState(false);
+
+  // if curr player is locked, change to null
+  useEffect(() => {
+    setCurrTeam1Player((prev) => {
+      if (prev) {
+        const updatedCurrTeam1Player = players.find(
+          (p) => p.name === prev.name,
+        );
+        if (
+          updatedCurrTeam1Player &&
+          updatedCurrTeam1Player.status[gameName].isLocked
+        ) {
+          setCurrTeam1Player(null);
+          return updatedCurrTeam1Player;
+        }
+      }
+      return prev;
+    });
+    setCurrTeam2Player((prev) => {
+      if (prev) {
+        const updatedCurrTeam2Player = players.find(
+          (p) => p.name === prev.name,
+        );
+        if (
+          updatedCurrTeam2Player &&
+          updatedCurrTeam2Player.status[gameName].isLocked
+        ) {
+          setCurrTeam2Player(null);
+          return updatedCurrTeam2Player;
+        }
+      }
+      return prev;
+    });
+  }, [players, gameMode, setCurrTeam1Player, setCurrTeam2Player]);
 
   // reset create and select player dialogs when edit team dialog is opened
   useEffect(() => {

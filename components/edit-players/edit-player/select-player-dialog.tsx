@@ -8,12 +8,12 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import { FilteredPlayerList } from "@/components/home/edit-players/edit-player/filtered-player-list";
+import { FilteredPlayerList } from "@/components/edit-players/edit-player/filtered-player-list";
 import { BoothPlayerType, GameMode } from "@/lib/types";
 import { FilterPlayers } from "./filter-players";
 import { toast } from "sonner";
-import { NotificationToaster } from "../../notification/notification-toaster";
 import { usePlayers } from "@/contexts/players-context";
+import { NotificationToaster } from "../../notification/notification-toaster";
 
 type SelectPlayerDialogProps = {
   gameMode: GameMode;
@@ -109,7 +109,7 @@ export const SelectPlayerDialog = ({
     <Dialog
       open={isOpen}
       onOpenChange={handleOpenChange}
-      aria-describedby="create-player-dialog"
+      aria-describedby="select-player-dialog"
     >
       <DialogContent
         className={cn(

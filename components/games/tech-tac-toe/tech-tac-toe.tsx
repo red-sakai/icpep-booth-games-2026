@@ -8,6 +8,7 @@ import {
   BoothPlayerType,
   DifficultyLevel,
   EDificultyMultiplyer,
+  EGame,
   type BoardState,
   type GameMode,
   type Player,
@@ -19,9 +20,6 @@ import GameBoard from "@/components/games/tech-tac-toe/game-board";
 import LeaderboardPanel from "@/components/games/leaderboard/leaderboard-panel";
 import { usePlayers } from "@/contexts/players-context";
 import GameModeSelector from "@/components/games/tech-tac-toe/game-mode-selector";
-// import PlayerNameDialog from "@/components/games/tech-tac-toe/player-name-dialog";
-import { submitScore } from "@/lib/leaderboard-utils/leaderboard-utils.client";
-import { useLeaderboard } from "@/contexts/leaderboard-context";
 import {
   Dialog,
   DialogContent,
@@ -29,8 +27,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { NotificationToaster } from "@/components/home/notification/notification-toaster";
-import { createPlayer } from "@/lib/players-utils/players.client";
+import { NotificationToaster } from "../../notification/notification-toaster";
+import { LockInScoreDialog } from "@/components/confirmation/lock-in-score";
 
 type TechTacToeProps = {
   gameId: string;
@@ -50,7 +48,8 @@ export default function TechTacToe({
   const [winnerTeam, setWinnerTeam] = useState<Player | "draw" | null>(null);
   const [winningPattern, setWinningPattern] = useState<number[] | null>(null);
   const [showInfo, setShowInfo] = useState(false);
-  const { updateLeaderboardData } = useLeaderboard();
+  const [score, setScore] = useState(0);
+  const [isLockInScoreDialogOpen, setIsLockInScoreDialogOpen] = useState(false);
 
   // AI & Game Mode State
   const [difficulty, setDifficulty] = useState<DifficultyLevel>("medium");
@@ -82,7 +81,7 @@ export default function TechTacToe({
           createdAt: new Date().toISOString(),
           updatedAt: null,
         };
-        createPlayer(newAIPlayer);
+        // createPlayer(newAIPlayer);
         setCurrTeam2Player(newAIPlayer);
       }
     }
@@ -113,32 +112,54 @@ export default function TechTacToe({
       winnerPlayerName = currTeam2Player.name;
     }
     if (winnerPlayerName) {
-      let score = 0;
-      if (gameMode === "pve") {
-        score = 1 * EDificultyMultiplyer[difficulty];
-      } else {
-        score = 2; // pvp
+      if (winnerTeam === "draw") {
+        toast.custom(
+          () => (
+            <NotificationToaster
+              variant={"purple"}
+              message={"It's a draw!"}
+              description={"No team/player won this round."}
+            />
+          ),
+          { duration: 5000 },
+        );
       }
-      submitScore({ gameId, score, name: winnerPlayerName });
-      toast.custom(
-        () => (
-          <NotificationToaster
-            variant={"rose"}
-            message={
-              winnerTeam === "draw"
-                ? "It's a draw!"
-                : `Player <${winnerPlayerName}> won!`
-            }
-            description={
-              winnerTeam === "draw"
-                ? "No team/player won this round."
-                : `You got ${score} points!`
-            }
-          />
-        ),
-        { duration: 5000 },
-      );
-      updateLeaderboardData();
+
+      if (winnerPlayerName === `AI (${difficulty.toUpperCase()})`) {
+        toast.custom(
+          () => (
+            <NotificationToaster
+              variant={winnerTeam === "1" ? "sky" : "rose"}
+              message={`${winnerPlayerName} won!`}
+              description={`Player <${currTeam1Player?.name}> got ${0} points!`}
+            />
+          ),
+          { duration: 5000 },
+        );
+        setScore(0);
+        setIsLockInScoreDialogOpen(true);
+      }
+
+      if (winnerPlayerName !== `AI (${difficulty.toUpperCase()})`) {
+        let newScore = 0;
+        if (gameMode === "pve") {
+          newScore = 2 * EDificultyMultiplyer[difficulty];
+        } else {
+          newScore = 5; // pvp
+        }
+        toast.custom(
+          () => (
+            <NotificationToaster
+              variant={winnerTeam === "1" ? "sky" : "rose"}
+              message={`Player <${winnerPlayerName}> won!`}
+              description={`You got ${newScore} points!`}
+            />
+          ),
+          { duration: 5000 },
+        );
+        setScore(newScore);
+        setIsLockInScoreDialogOpen(true);
+      }
     }
   }, [winnerTeam]);
 
@@ -304,6 +325,20 @@ export default function TechTacToe({
                     [radial-gradient(ellipse_80%_60%_at_50%_40%,_#fce7f3_0%,_#fbcfe8_50%,_#fda4af_100%)] 
                     rounded-2xl shadow-xl border border-pink-200"
     >
+      <LockInScoreDialog
+        isOpen={isLockInScoreDialogOpen}
+        setIsOpen={setIsLockInScoreDialogOpen}
+        gameName={EGame.TECH_TAC_TOE}
+        player={
+          gameMode === "pve"
+            ? currTeam1Player
+            : winnerTeam === "1"
+              ? currTeam1Player
+              : currTeam2Player
+        }
+        score={score}
+      />
+
       <GameModeSelector
         currGameMode={previousGameMode}
         open={gameMode === null}

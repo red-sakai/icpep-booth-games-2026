@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
 import {
   EDificultyMultiplyer,
+  EGame,
   type DifficultyLevel,
   type GameState,
   type LED,
@@ -22,10 +23,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { usePlayers } from "@/contexts/players-context";
-import { submitScore } from "@/lib/leaderboard-utils/leaderboard-utils.client";
-import { useLeaderboard } from "@/contexts/leaderboard-context";
-import { NotificationToaster } from "@/components/home/notification/notification-toaster";
+import { NotificationToaster } from "../../notification/notification-toaster";
+import { LockInScoreDialog } from "@/components/confirmation/lock-in-score";
 
+const TIME_BONUS_MAX_POINTS = 5;
 const LEVEL_CONFIG: Record<
   DifficultyLevel,
   {
@@ -96,7 +97,8 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
   const [showLevelDialog, setShowLevelDialog] = useState(false);
   const [leaderboardOpen, setLeaderboardOpen] = useState(false);
   const { currTeam1Player } = usePlayers();
-  const { updateLeaderboardData } = useLeaderboard();
+  const [isLockInScoreDialogOpen, setIsLockInScoreDialogOpen] = useState(false);
+  const [score, setScore] = useState(0);
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -324,27 +326,27 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
         playerSequence.length > 0 ? playerSequence.length - 1 : 0;
       const initalPoints =
         correctSequenceCount * EDificultyMultiplyer[selectedLevel];
-      const timeBonusPoints = Math.round(
-        (timeLeft / LEVEL_CONFIG[selectedLevel].timeLimit) *
-          LEVEL_CONFIG[selectedLevel].timeLimit,
-      );
-      const score = initalPoints + timeBonusPoints;
-      submitScore({
-        gameId,
-        score,
-        name: currTeam1Player ? currTeam1Player.name : "Anonymous",
-      });
+      let timeBonusPoints = 0;
+      if (gameState === "success") {
+        timeBonusPoints = Math.round(
+          (timeLeft / LEVEL_CONFIG[selectedLevel].timeLimit) *
+            TIME_BONUS_MAX_POINTS,
+        );
+      }
+      const newScore = initalPoints + timeBonusPoints;
+      setScore(newScore);
+
       toast.custom(
         () => (
           <NotificationToaster
             variant={"rose"}
-            message={`Player <${currTeam1Player ? currTeam1Player.name : "Anonymous"}> got ${score} points!`}
+            message={`Player <${currTeam1Player ? currTeam1Player.name : "Anonymous"}> got ${newScore} points!`}
             description={`You remembered ${correctSequenceCount} out of ${sequence.length} correctly on ${LEVEL_CONFIG[selectedLevel].label} level.`}
           />
         ),
         { duration: 5000 },
       );
-      updateLeaderboardData();
+      setIsLockInScoreDialogOpen(true);
     }
   }, [gameState, sequence.length]);
 
@@ -362,6 +364,14 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
 
   return (
     <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center p-4 sm:p-7 gap-5 sm:gap-6 bg-gradient-to-b from-white-100 via-white-100 to-white-100 rounded-2xl border border-rose-300/50 shadow-xl backdrop-blur-sm">
+      <LockInScoreDialog
+        isOpen={isLockInScoreDialogOpen}
+        setIsOpen={setIsLockInScoreDialogOpen}
+        gameName={EGame.LED_MEMORY}
+        player={currTeam1Player}
+        score={score}
+      />
+
       <GameHeader
         gameState={gameState}
         playerSequence={playerSequence}

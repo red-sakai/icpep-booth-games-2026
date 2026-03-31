@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle, Circle } from "lucide-react";
 import { useEffect, useState } from "react";
-import { NotificationToaster } from "../../notification/notification-toaster";
 import { toast } from "sonner";
+import { NotificationToaster } from "../../notification/notification-toaster";
 
 type FilteredPlayerListProps = {
   team: "team1" | "team2";

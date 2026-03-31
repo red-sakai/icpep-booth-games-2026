@@ -10,12 +10,29 @@
     "rj45-game": {
       "metric": "timeRemainingSeconds",
       "order": "desc",
-      "entries": []
+      "entries": [
+        {
+          "name": "LKJ",
+          "score": 0,
+          "createdAt": "2026-03-31T16:44:43.694Z"
+        }
+      ]
     },
     "tech-tac-toe": {
       "metric": "totalWins",
       "order": "desc",
-      "entries": []
+      "entries": [
+        {
+          "name": "SDAF",
+          "score": 5,
+          "createdAt": "2026-03-31T16:47:18.847Z"
+        },
+        {
+          "name": "LKJ",
+          "score": 0,
+          "createdAt": "2026-03-31T16:46:21.709Z"
+        }
+      ]
     }
   }
 }

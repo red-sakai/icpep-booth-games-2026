@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { AlertTriangle, BadgeCheck, Info, XCircle } from "lucide-react";
+import { AlertTriangle, BadgeCheck, CircleQuestionMark } from "lucide-react";
 
 type ScoreToasterProps = {
   variant?:
@@ -70,13 +70,13 @@ export const NotificationToaster = ({
         ) : variant === "warning" ? (
           <AlertTriangle className="size-5 text-yellow-600" />
         ) : variant === "error" ? (
-          <XCircle className="size-5 text-rose-600" />
+          <CircleQuestionMark className="size-5 text-rose-600" />
         ) : variant === "sky" ? (
-          <Info className="size-5 text-sky-600" />
+          <CircleQuestionMark className="size-5 text-sky-600" />
         ) : variant === "rose" ? (
-          <Info className="size-5 text-rose-600" />
+          <CircleQuestionMark className="size-5 text-rose-600" />
         ) : variant === "purple" ? (
-          <Info className="size-5 text-purple-600" />
+          <CircleQuestionMark className="size-5 text-purple-600" />
         ) : (
           <></>
         )}
