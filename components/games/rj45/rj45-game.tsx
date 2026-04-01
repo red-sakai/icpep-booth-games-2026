@@ -257,6 +257,7 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
       <div className="pointer-events-none absolute -bottom-16 -right-10 h-44 w-44 rounded-full bg-cyan-300/20 blur-3xl" />
 
       <LockInScoreDialog
+        team="team1"
         isOpen={isLockInScoreDialogOpen}
         setIsOpen={setIsLockInScoreDialogOpen}
         gameName={EGame.RJ45_GAME}

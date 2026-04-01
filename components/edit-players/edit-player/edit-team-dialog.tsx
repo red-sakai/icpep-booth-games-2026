@@ -8,36 +8,46 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { usePlayers } from "@/contexts/players-context";
-import { BoothPlayerType, GameMode } from "@/lib/types";
+import { BoothPlayerType, EGame, GameMode } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Bot, MousePointerClick, TextCursorInput, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { NotificationToaster } from "../../notification/notification-toaster";
+import { CreatePlayerDialog } from "./create-player-dialog";
+import { SelectPlayerDialog } from "./select-player-dialog";
 
 type EditTeamDialogProps = {
+  gameName: EGame;
   gameMode: GameMode;
   team: "team1" | "team2";
+  setTeam: (team: "team1" | "team2") => void;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  onNext: (
-    selectedOption: "create" | "select",
-    selectedTeam: "team1" | "team2",
-  ) => void;
 };
 export const EditTeamDialog = ({
+  gameName,
   gameMode,
   team,
+  setTeam,
   isOpen,
   setIsOpen,
-  onNext,
 }: EditTeamDialogProps) => {
   const [selectedOption, setSelectedOption] = useState<"create" | "select">(
     "create",
   );
   const [selectedTeam, setSelectedTeam] = useState<"team1" | "team2">(team);
-  const { currTeam1Player, currTeam2Player, setCurrTeam2Player } = usePlayers();
+  const {
+    currTeam1Player,
+    currTeam2Player,
+    setCurrTeam1Player,
+    setCurrTeam2Player,
+  } = usePlayers();
   const prevGameModeRef = useRef<GameMode>(gameMode);
+  const [isCreatePlayerDialogOpen, setIsCreatePlayerDialogOpen] =
+    useState(false);
+  const [isSelectPlayerDialogOpen, setIsSelectPlayerDialogOpen] =
+    useState(false);
 
   useEffect(() => {
     setSelectedTeam(team);
@@ -45,7 +55,7 @@ export const EditTeamDialog = ({
 
   // reset selected team and option when game mode changes
   useEffect(() => {
-    setSelectedTeam("team1");
+    setSelectedTeam(team);
     setSelectedOption("create");
   }, [gameMode]);
 
@@ -66,6 +76,25 @@ export const EditTeamDialog = ({
       }
     }
   }, [gameMode, setIsOpen]);
+
+  // closek create and select player dialogs when edit team dialog is opened
+  useEffect(() => {
+    if (isOpen) {
+      setIsCreatePlayerDialogOpen(false);
+      setIsSelectPlayerDialogOpen(false);
+    }
+  }, [isOpen]);
+
+  // open edit team dialog when both create and select player dialogs are exited
+  const onExitCreateOrSelectPlayerDialog = (value: boolean) => {
+    setIsCreatePlayerDialogOpen(false);
+    setIsSelectPlayerDialogOpen(false);
+    if (value) {
+      setIsOpen(true);
+    } else {
+      setIsOpen(false);
+    }
+  };
 
   const handleOnOpenChange = (open: boolean) => {
     switch (gameMode) {
@@ -123,105 +152,147 @@ export const EditTeamDialog = ({
     }
   };
 
+  const handleTeamNext = () => {
+    setTeam(selectedTeam);
+    setIsOpen(false);
+    if (selectedOption === "create") {
+      setIsCreatePlayerDialogOpen(true);
+    } else if (selectedOption === "select") {
+      setIsSelectPlayerDialogOpen(true);
+    }
+  };
+
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={handleOnOpenChange}
-      aria-describedby="player-entry-dialog"
-    >
-      <DialogContent className="sm:max-w-md bg-white border-sky-100">
-        <DialogHeader>
-          <DialogTitle
-            className={cn(
-              "flex items-center justify-center gap-4",
-              selectedTeam === "team1" ? "text-sky-900" : "text-rose-900",
-              "text-2xl font-bold",
-            )}
-          >
-            Edit Player
-          </DialogTitle>
-          <DialogDescription
-            className={cn(
-              "text-center",
-              selectedTeam === "team1" ? "text-sky-600" : "text-rose-600",
-            )}
-          >
-            Create or select a player to track your scores. You can change this
-            later.
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <CreatePlayerDialog
+        gameMode={gameMode}
+        team={team}
+        setTeam={setTeam}
+        isOpen={isCreatePlayerDialogOpen}
+        setIsOpen={setIsCreatePlayerDialogOpen}
+        currPlayer={team === "team1" ? currTeam1Player : currTeam2Player}
+        setCurrPlayer={
+          team === "team1" ? setCurrTeam1Player : setCurrTeam2Player
+        }
+        onExit={onExitCreateOrSelectPlayerDialog}
+      />
+      <SelectPlayerDialog
+        gameName={gameName}
+        gameMode={gameMode}
+        team={team}
+        setTeam={setTeam}
+        isOpen={isSelectPlayerDialogOpen}
+        setIsOpen={setIsSelectPlayerDialogOpen}
+        currPlayer={team === "team1" ? currTeam1Player : currTeam2Player}
+        setCurrPlayer={
+          team === "team1" ? setCurrTeam1Player : setCurrTeam2Player
+        }
+        onExit={onExitCreateOrSelectPlayerDialog}
+      />
 
-        <div className="flex flex-col gap-0">
-          <span
-            className={cn(
-              selectedTeam === "team1" ? "text-sky-700" : "text-rose-700",
-            )}
-          >
-            Assign to:
-          </span>
-          <div className="grid grid-cols-2 gap-4 py-4">
-            <TeamButton
-              label="Team 1"
-              team="team1"
-              player={currTeam1Player}
-              selectedTeam={selectedTeam}
-              onClick={() => setSelectedTeam("team1")}
-            />
-            <TeamButton
-              label="Team 2"
-              team="team2"
-              player={currTeam2Player}
-              selectedTeam={selectedTeam}
-              onClick={() => setSelectedTeam("team2")}
-              disabled={gameMode === "solo" || gameMode === "pve"}
-            />
+      <Dialog
+        open={isOpen}
+        onOpenChange={handleOnOpenChange}
+        aria-describedby="player-entry-dialog"
+      >
+        <DialogContent className="sm:max-w-md bg-white border-sky-100">
+          <DialogHeader>
+            <DialogTitle
+              className={cn(
+                "flex items-center justify-center gap-4",
+                selectedTeam === "team1" ? "text-sky-900" : "text-rose-900",
+                "text-2xl font-bold",
+              )}
+            >
+              Edit Player
+            </DialogTitle>
+            <DialogDescription
+              className={cn(
+                "text-center",
+                selectedTeam === "team1" ? "text-sky-600" : "text-rose-600",
+              )}
+            >
+              Create or select a player to track your scores. You can change
+              this later.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex flex-col gap-0">
+            <span
+              className={cn(
+                selectedTeam === "team1" ? "text-sky-700" : "text-rose-700",
+              )}
+            >
+              Assign to:
+            </span>
+            <div className="grid grid-cols-2 gap-4 py-4">
+              <TeamButton
+                label="Team 1"
+                team="team1"
+                player={currTeam1Player}
+                selectedTeam={selectedTeam}
+                onClick={() => setSelectedTeam("team1")}
+                disabled={gameMode === "solo" && team === "team2"}
+              />
+              <TeamButton
+                label="Team 2"
+                team="team2"
+                player={currTeam2Player}
+                selectedTeam={selectedTeam}
+                onClick={() => setSelectedTeam("team2")}
+                disabled={
+                  (gameMode === "solo" && team === "team1") ||
+                  gameMode === "pve"
+                }
+              />
+            </div>
+
+            <span
+              className={cn(
+                selectedTeam === "team1" ? "text-sky-700" : "text-rose-700",
+              )}
+            >
+              Method:
+            </span>
+            <div className="grid grid-cols-2 gap-4 py-4">
+              <OptionButton
+                selectedTeam={selectedTeam}
+                Icon={TextCursorInput}
+                label="Create Player"
+                option="create"
+                selectedOption={selectedOption}
+                onClick={() => setSelectedOption("create")}
+              />
+              <OptionButton
+                selectedTeam={selectedTeam}
+                Icon={MousePointerClick}
+                label="Select Player"
+                option="select"
+                selectedOption={selectedOption}
+                onClick={() => setSelectedOption("select")}
+              />
+            </div>
           </div>
 
-          <span
-            className={cn(
-              selectedTeam === "team1" ? "text-sky-700" : "text-rose-700",
-            )}
-          >
-            Method:
-          </span>
-          <div className="grid grid-cols-2 gap-4 py-4">
-            <OptionButton
-              selectedTeam={selectedTeam}
-              Icon={TextCursorInput}
-              label="Create Player"
-              option="create"
-              selectedOption={selectedOption}
-              onClick={() => setSelectedOption("create")}
-            />
-            <OptionButton
-              selectedTeam={selectedTeam}
-              Icon={MousePointerClick}
-              label="Select Player"
-              option="select"
-              selectedOption={selectedOption}
-              onClick={() => setSelectedOption("select")}
-            />
-          </div>
-        </div>
-
-        <DialogFooter>
-          <Button
-            className={cn(
-              "w-full rounded-xl shadow-lg",
-              selectedTeam === "team1"
-                ? "bg-sky-500 hover:bg-sky-700 shadow-sky-200"
-                : "bg-rose-500 hover:bg-rose-700 shadow-rose-200",
-              "text-white py-6 text-lg font-bold",
-              "transition-all duration-300",
-              "cursor-pointer",
-            )}
-            onClick={() => onNext(selectedOption, selectedTeam)}
-          >
-            Next
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          <DialogFooter>
+            <Button
+              className={cn(
+                "w-full rounded-xl shadow-lg",
+                selectedTeam === "team1"
+                  ? "bg-sky-500 hover:bg-sky-700 shadow-sky-200"
+                  : "bg-rose-500 hover:bg-rose-700 shadow-rose-200",
+                "text-white py-6 text-lg font-bold",
+                "transition-all duration-300",
+                "cursor-pointer",
+              )}
+              onClick={handleTeamNext}
+            >
+              Next
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

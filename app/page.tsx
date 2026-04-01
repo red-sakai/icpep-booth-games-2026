@@ -26,7 +26,7 @@ import { EditPlayers } from "@/components/edit-players/edit-players";
 
 export default function GameHub() {
   const [currentGame, setCurrentGame] = useState<GameType>("home");
-  const [gameMode, setGameMode] = useState<GameMode>(null);
+  const [techTacToeGameMode, setTechTacToeGameMode] = useState<GameMode>(null);
   const { updatePlayersData, setCurrTeam1Player, setCurrTeam2Player } =
     usePlayers();
   const { updateLeaderboardData } = useLeaderboard();
@@ -55,14 +55,14 @@ export default function GameHub() {
               <BackToHomeButton navigateTo={navigateTo} variant="pink" />
               <EditPlayers
                 gameName={EGame.TECH_TAC_TOE}
-                gameMode={gameMode}
+                gameMode={techTacToeGameMode}
                 openOnMount={false}
               />
             </div>
             <TechTacToe
               gameId="tech-tac-toe"
-              gameMode={gameMode}
-              setGameMode={setGameMode}
+              gameMode={techTacToeGameMode}
+              setGameMode={setTechTacToeGameMode}
             />
           </div>
         );

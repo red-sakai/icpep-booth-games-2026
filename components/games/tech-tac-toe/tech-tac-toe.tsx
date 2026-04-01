@@ -54,7 +54,7 @@ export default function TechTacToe({
     useState(false);
   const [isLockInScoreDialogOpen2, setIsLockInScoreDialogOpen2] =
     useState(false);
-  const [isGameModeSelectorOpen, setIsGameModeSelectorOpen] = useState(false);
+  const [isGameModeSelectorOpen, setIsGameModeSelectorOpen] = useState(true);
 
   // AI & Game Mode State
   const [difficulty, setDifficulty] = useState<DifficultyLevel>("medium");
@@ -185,6 +185,27 @@ export default function TechTacToe({
 
   const handleCellClick = useCallback(
     (index: number, isAutoMove = false) => {
+      // block click if game over & board not reset
+      if (winnerTeam) {
+        const isBoardReset = board.every((cell) => cell === null);
+        if (!isBoardReset) {
+          toast.custom(
+            () => (
+              <NotificationToaster
+                variant={"warning"}
+                message={`Game over!`}
+                description={`Please reset the board to start a new game.`}
+              />
+            ),
+            {
+              duration: 5000,
+              position: "top-center",
+            },
+          );
+          return;
+        }
+      }
+
       // check if player/s empty, block game if empty
       if (gameMode === "pve") {
         if (!currTeam1Player) {
@@ -316,6 +337,24 @@ export default function TechTacToe({
     setIsGameModeSelectorOpen(true);
   };
 
+  const handleGameModeSelectorClose = (
+    selectedGameMode: GameMode = gameMode,
+  ) => {
+    if (selectedGameMode) {
+      setIsGameModeSelectorOpen(false);
+    } else {
+      toast.custom(
+        () => (
+          <NotificationToaster
+            variant="warning"
+            message="Game mode not selected"
+            description="Please select a game mode before closing."
+          />
+        ),
+        { duration: 5000, position: "top-center" },
+      );
+    }
+  };
   const handleGameModeSelectorSave = (
     selectedGameMode: GameMode,
     selectedDiff: DifficultyLevel,
@@ -327,10 +366,7 @@ export default function TechTacToe({
     }
     setGameMode(selectedGameMode);
     setDifficulty(selectedDiff);
-    setIsGameModeSelectorOpen(false);
-  };
-  const handleGameModeSelectorClose = () => {
-    setIsGameModeSelectorOpen(false);
+    handleGameModeSelectorClose(selectedGameMode);
   };
 
   return (
@@ -340,7 +376,7 @@ export default function TechTacToe({
                     rounded-2xl shadow-xl border border-pink-200"
     >
       <LockInScoreDialog
-        variant="sky"
+        team="team1"
         isOpen={isLockInScoreDialogOpen1}
         setIsOpen={setIsLockInScoreDialogOpen1}
         gameName={EGame.TECH_TAC_TOE}
@@ -348,7 +384,7 @@ export default function TechTacToe({
         score={score1}
       />
       <LockInScoreDialog
-        variant="rose"
+        team="team2"
         isOpen={isLockInScoreDialogOpen2}
         setIsOpen={setIsLockInScoreDialogOpen2}
         gameName={EGame.TECH_TAC_TOE}
@@ -401,16 +437,16 @@ export default function TechTacToe({
         >
           Change Mode
         </Button>
-
-        <Button
-          onClick={() => setLeaderboardOpen(true)}
-          variant="outline"
-          size="lg"
-          className="bg-white border-sky-200 hover:text-sky-600 hover:bg-sky-50 hover:border-sky-300 text-sky-700 shadow-sm"
-        >
-          Show Leaderboard
-        </Button>
       </div>
+
+      <Button
+        onClick={() => setLeaderboardOpen(true)}
+        variant="outline"
+        size="lg"
+        className="bg-white border-sky-200 hover:text-sky-600 hover:bg-sky-50 hover:border-sky-300 text-sky-700 shadow-sm"
+      >
+        Show Leaderboard
+      </Button>
 
       <Dialog open={leaderboardOpen} onOpenChange={setLeaderboardOpen}>
         <DialogContent className="sm:max-w-2xl border-sky-100">

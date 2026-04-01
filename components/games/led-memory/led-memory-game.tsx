@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { CircleGauge, Gauge, Play, RotateCcw } from "lucide-react";
+import { Play } from "lucide-react";
 import {
   EDificultyMultiplyer,
   EGame,
@@ -373,6 +373,7 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
   return (
     <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center p-4 sm:p-7 gap-5 sm:gap-6 bg-gradient-to-b from-white-100 via-white-100 to-white-100 rounded-2xl border border-rose-300/50 shadow-xl backdrop-blur-sm">
       <LockInScoreDialog
+        team="team1"
         isOpen={isLockInScoreDialogOpen}
         setIsOpen={setIsLockInScoreDialogOpen}
         gameName={EGame.LED_MEMORY}

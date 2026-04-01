@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { User, Cpu } from "lucide-react";
 import { GameMode } from "@/lib/types";
+import { toast } from "sonner";
+import { NotificationToaster } from "@/components/notification/notification-toaster";
 
 type Difficulty = "easy" | "medium" | "hard";
 
@@ -29,14 +31,30 @@ export default function GameModeSelector({
   onSave,
   onClose,
 }: GameModeSelectorProps) {
-  const [selectedGameMode, setSeletectedGameMode] = useState<GameMode>(
-    currGameMode ? currGameMode : "pvp",
-  );
+  const [selectedGameMode, setSeletectedGameMode] =
+    useState<GameMode>(currGameMode);
   const [selectedDiff, setSelectedDiff] = useState<Difficulty>("medium");
+
+  useEffect(() => {
+    setSeletectedGameMode(currGameMode);
+  }, [currGameMode]);
 
   const handleOpenChange = (newOpen: boolean) => {
     if (!newOpen && onClose) {
-      onClose();
+      if (selectedGameMode) {
+        onClose();
+      } else {
+        toast.custom(
+          () => (
+            <NotificationToaster
+              variant="warning"
+              message="Game mode not selected"
+              description="Please select a game mode before closing."
+            />
+          ),
+          { duration: 5000, position: "top-center" },
+        );
+      }
     }
   };
 

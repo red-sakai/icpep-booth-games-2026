@@ -3,8 +3,6 @@ import { usePlayers } from "@/contexts/players-context";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { EditTeamDialog } from "@/components/edit-players/edit-player/edit-team-dialog";
-import { CreatePlayerDialog } from "@/components/edit-players/edit-player/create-player-dialog";
-import { SelectPlayerDialog } from "@/components/edit-players/edit-player/select-player-dialog";
 import { BoothPlayerType, EGame, GameMode } from "@/lib/types";
 
 type EditPlayersProps = {
@@ -27,12 +25,7 @@ export const EditPlayers = ({
     players,
   } = usePlayers();
   const [isEditTeamDialogOpen, setIsEditTeamDialogOpen] = useState(openOnMount);
-  const [isCreatePlayerDialogOpen, setIsCreatePlayerDialogOpen] =
-    useState(false);
-  const [isSelectPlayerDialogOpen, setIsSelectPlayerDialogOpen] =
-    useState(false);
 
-  // if curr player is locked, change to null
   useEffect(() => {
     setCurrTeam1Player((prev) => {
       if (prev) {
@@ -50,7 +43,6 @@ export const EditPlayers = ({
       return prev;
     });
   }, [players, gameMode, setCurrTeam1Player]);
-
   useEffect(() => {
     setCurrTeam2Player((prev) => {
       if (prev) {
@@ -69,39 +61,7 @@ export const EditPlayers = ({
     });
   }, [players, gameMode, setCurrTeam2Player]);
 
-  // reset create and select player dialogs when edit team dialog is opened
-  useEffect(() => {
-    if (isEditTeamDialogOpen) {
-      setIsCreatePlayerDialogOpen(false);
-      setIsSelectPlayerDialogOpen(false);
-    }
-  }, [isEditTeamDialogOpen]);
-
-  // open edit team dialog when both create and select player dialogs are exited
-  const onExitCreateOrSelectPlayerDialog = (value: boolean) => {
-    setIsCreatePlayerDialogOpen(false);
-    setIsSelectPlayerDialogOpen(false);
-    if (value) {
-      setIsEditTeamDialogOpen(true);
-    } else {
-      setIsEditTeamDialogOpen(false);
-    }
-  };
-
-  const handleEditTeamNext = (
-    selectedOption: "create" | "select",
-    selectedTeam: "team1" | "team2",
-  ) => {
-    setTeam(selectedTeam);
-    setIsEditTeamDialogOpen(false);
-    if (selectedOption === "create") {
-      setIsCreatePlayerDialogOpen(true);
-    } else if (selectedOption === "select") {
-      setIsSelectPlayerDialogOpen(true);
-    }
-  };
-
-  const handlePlayerNameClick = (newTeam: "team1" | "team2") => {
+  const handlePlayerNameDisplayClick = (newTeam: "team1" | "team2") => {
     setTeam(newTeam);
     setIsEditTeamDialogOpen(true);
   };
@@ -122,7 +82,7 @@ export const EditPlayers = ({
               gameMode={gameMode}
               team="team1"
               player={currTeam1Player}
-              onClick={() => handlePlayerNameClick("team1")}
+              onClick={() => handlePlayerNameDisplayClick("team1")}
             />
           </div>
           {gameMode !== "solo" && (
@@ -133,7 +93,7 @@ export const EditPlayers = ({
                 gameMode={gameMode}
                 team="team2"
                 player={currTeam2Player}
-                onClick={() => handlePlayerNameClick("team2")}
+                onClick={() => handlePlayerNameDisplayClick("team2")}
               />
             </div>
           )}
@@ -152,36 +112,12 @@ export const EditPlayers = ({
       </div>
 
       <EditTeamDialog
-        gameMode={gameMode}
-        team={team}
-        isOpen={isEditTeamDialogOpen}
-        setIsOpen={setIsEditTeamDialogOpen}
-        onNext={handleEditTeamNext}
-      />
-      <CreatePlayerDialog
-        gameMode={gameMode}
-        team={team}
-        setTeam={setTeam}
-        isOpen={isCreatePlayerDialogOpen}
-        setIsOpen={setIsCreatePlayerDialogOpen}
-        currPlayer={team === "team1" ? currTeam1Player : currTeam2Player}
-        setCurrPlayer={
-          team === "team1" ? setCurrTeam1Player : setCurrTeam2Player
-        }
-        onExit={onExitCreateOrSelectPlayerDialog}
-      />
-      <SelectPlayerDialog
         gameName={gameName}
         gameMode={gameMode}
         team={team}
         setTeam={setTeam}
-        isOpen={isSelectPlayerDialogOpen}
-        setIsOpen={setIsSelectPlayerDialogOpen}
-        currPlayer={team === "team1" ? currTeam1Player : currTeam2Player}
-        setCurrPlayer={
-          team === "team1" ? setCurrTeam1Player : setCurrTeam2Player
-        }
-        onExit={onExitCreateOrSelectPlayerDialog}
+        isOpen={isEditTeamDialogOpen}
+        setIsOpen={setIsEditTeamDialogOpen}
       />
     </>
   );
