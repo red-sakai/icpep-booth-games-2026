@@ -118,6 +118,7 @@ export const EditPlayers = ({
           <div className="flex items-center gap-2">
             <span className="font-medium text-slate-700">Team 1:</span>
             <PlayerNameDisplay
+              gameName={gameName}
               gameMode={gameMode}
               team="team1"
               player={currTeam1Player}
@@ -128,6 +129,7 @@ export const EditPlayers = ({
             <div className="flex items-center gap-2">
               <span className="font-medium text-slate-700">Team 2:</span>
               <PlayerNameDisplay
+                gameName={gameName}
                 gameMode={gameMode}
                 team="team2"
                 player={currTeam2Player}
@@ -186,17 +188,20 @@ export const EditPlayers = ({
 };
 
 type PlayerNameDisplayProps = {
+  gameName: EGame;
   gameMode: GameMode;
   team: "team1" | "team2";
   player: BoothPlayerType | null;
   onClick?: () => void;
 };
 const PlayerNameDisplay = ({
+  gameName,
   gameMode,
   team,
   player,
   onClick,
 }: PlayerNameDisplayProps) => {
+  const [isHovered, setIsHovered] = useState(false);
   const [isAi, setIsAi] = useState(false);
 
   useEffect(() => {
@@ -210,6 +215,7 @@ const PlayerNameDisplay = ({
   return (
     <button
       className={cn(
+        "relative hover:z-50",
         "font-medium bg-slate-50 rounded-lg shadow-md border-b-2",
         team === "team1" &&
           player &&
@@ -225,9 +231,34 @@ const PlayerNameDisplay = ({
       )}
       // always allow team 1, only ollow team 2 if pvp (since ai players can't be edited)
       onClick={team === "team1" || gameMode === "pvp" ? onClick : () => {}}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {isAi ? <Bot className="size-4" /> : <User className="size-4" />}
       <span className="text-sm">{player?.name || "None"}</span>
+      {isHovered && player?.status[gameName].playsRemaining && (
+        <div
+          className={cn(
+            "absolute px-8 py-4",
+            "top-full left-1/2 -translate-x-1/2 mt-4",
+            " bg-slate-50/60 backdrop-blur-xs rounded-md shadow-md",
+            "border border-slate-100/80",
+            "flex items-center",
+          )}
+        >
+          <p className="whitespace-nowrap text-slate-600">
+            tries left:{" "}
+            <span
+              className={cn(
+                "text-lg font-semibold",
+                team === "team1" ? "text-sky-600" : "text-rose-600",
+              )}
+            >
+              {player.status[gameName].playsRemaining}
+            </span>
+          </p>
+        </div>
+      )}
     </button>
   );
 };

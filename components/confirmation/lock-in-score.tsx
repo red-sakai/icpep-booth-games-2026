@@ -65,7 +65,7 @@ export const LockInScoreDialog = ({
           description={`Check the leaderboard to see how you rank against other players!`}
         />
       ),
-      { duration: 5000 },
+      { duration: 5000, position: "top-center" },
     );
     const updatedPlayer = decrementPlaysRemaining(player);
     updatedPlayer.status[gameName].isLocked = true;
@@ -87,7 +87,7 @@ export const LockInScoreDialog = ({
             description={`You have no choice but to lock in your score.`}
           />
         ),
-        { duration: 5000 },
+        { duration: 5000, position: "top-center" },
       );
     } else {
       updatePlayer(player.name, { ...updatedPlayer });
@@ -113,14 +113,20 @@ export const LockInScoreDialog = ({
             Do you want to lock in your score?
           </DialogTitle>
           <DialogDescription className="text-center text-slate-700">
-            You have{" "}
+            Hi,{" "}
+            <span className={`font-semibold text-slate-800`}>{"Player <"}</span>
+            <span className={`font-semibold text-${variant}-600`}>
+              {player.name}
+            </span>
+            <span className={`font-semibold text-slate-800`}>{">"}</span>! You
+            have{" "}
             <span className={`font-semibold text-${variant}-600`}>
               {player?.status[gameName].playsRemaining
                 ? player.status[gameName].playsRemaining - 1
-                : 0}
+                : "Infinity"}
             </span>{" "}
             {player?.status[gameName].playsRemaining &&
-            player.status[gameName].playsRemaining - 1
+            player.status[gameName].playsRemaining - 1 === 1
               ? "try"
               : "tries"}{" "}
             left for{" "}

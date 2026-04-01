@@ -57,13 +57,16 @@ export const FilteredPlayerList = ({
 
   const handlePlayerItemClick = (player: BoothPlayerType) => {
     if (["AI (EASY)", "AI (MEDIUM)", "AI (HARD)"].includes(player.name)) {
-      toast.custom(() => (
-        <NotificationToaster
-          variant="warning"
-          message="Can't select this player!"
-          description="AI players cannot be selected. Please choose a different player."
-        />
-      ));
+      toast.custom(
+        () => (
+          <NotificationToaster
+            variant="warning"
+            message="Can't select this player!"
+            description="AI players cannot be selected. Please choose a different player."
+          />
+        ),
+        { duration: 5000, position: "top-center" },
+      );
 
       return;
     }
@@ -72,13 +75,16 @@ export const FilteredPlayerList = ({
         if (selectedPlayer?.name === player.name) {
           setSelectedPlayer(null);
         } else if (currTeam2Player?.name === player.name) {
-          toast.custom(() => (
-            <NotificationToaster
-              variant="warning"
-              message="Can't select this player!"
-              description="Player is already selected for Team 2. Please choose a different player."
-            />
-          ));
+          toast.custom(
+            () => (
+              <NotificationToaster
+                variant="warning"
+                message="Can't select this player!"
+                description="Player is already selected for Team 2. Please choose a different player."
+              />
+            ),
+            { duration: 5000, position: "top-center" },
+          );
         } else {
           setSelectedPlayer(player);
         }
@@ -87,13 +93,16 @@ export const FilteredPlayerList = ({
         if (selectedPlayer?.name === player.name) {
           setSelectedPlayer(null);
         } else if (currTeam1Player?.name === player.name) {
-          toast.custom(() => (
-            <NotificationToaster
-              variant="warning"
-              message="Can't select this player!"
-              description="Player is already selected for Team 1. Please choose a different player."
-            />
-          ));
+          toast.custom(
+            () => (
+              <NotificationToaster
+                variant="warning"
+                message="Can't select this player!"
+                description="Player is already selected for Team 1. Please choose a different player."
+              />
+            ),
+            { duration: 5000, position: "top-center" },
+          );
         } else {
           setSelectedPlayer(player);
         }

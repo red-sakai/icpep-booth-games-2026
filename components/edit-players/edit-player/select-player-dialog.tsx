@@ -68,13 +68,16 @@ export const SelectPlayerDialog = ({
 
   const handleSubmit = () => {
     if (!selectedPlayer) {
-      toast.custom(() => (
-        <NotificationToaster
-          variant="warning"
-          message="No player selected!"
-          description="Please select a player before submitting."
-        />
-      ));
+      toast.custom(
+        () => (
+          <NotificationToaster
+            variant="warning"
+            message="No player selected!"
+            description="Please select a player before submitting."
+          />
+        ),
+        { duration: 5000, position: "top-center" },
+      );
       return;
     }
     setCurrPlayer(selectedPlayer);
@@ -96,15 +99,18 @@ export const SelectPlayerDialog = ({
       default:
         onExit(false);
     }
-    toast.custom(() => (
-      <NotificationToaster
-        variant="success"
-        message="Player selected!"
-        description={`<${selectedPlayer.name}> has been selected for ${
-          team === "team1" ? "Team 1" : "Team 2"
-        }.`}
-      />
-    ));
+    toast.custom(
+      () => (
+        <NotificationToaster
+          variant="success"
+          message="Player selected!"
+          description={`<${selectedPlayer.name}> has been selected for ${
+            team === "team1" ? "Team 1" : "Team 2"
+          }.`}
+        />
+      ),
+      { duration: 5000, position: "top-center" },
+    );
   };
 
   return (

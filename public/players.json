@@ -8,8 +8,8 @@
         "isLocked": true
       },
       "led-memory": {
-        "playsRemaining": 2,
-        "isLocked": false
+        "playsRemaining": 0,
+        "isLocked": true
       },
       "rj45-game": {
         "playsRemaining": 2,
@@ -17,7 +17,7 @@
       }
     },
     "createdAt": "2026-03-31T18:38:10.258Z",
-    "updatedAt": "2026-03-31T18:50:52.844Z"
+    "updatedAt": "2026-04-01T07:54:44.193Z"
   },
   {
     "name": "badsfs",
@@ -48,6 +48,106 @@
         "isLocked": true
       },
       "led-memory": {
+        "playsRemaining": 0,
+        "isLocked": true
+      },
+      "rj45-game": {
+        "playsRemaining": 2,
+        "isLocked": false
+      }
+    },
+    "createdAt": "2026-03-31T18:39:17.008Z",
+    "updatedAt": "2026-04-01T07:57:11.944Z"
+  },
+  {
+    "name": "sadfsdf",
+    "color": "blue",
+    "status": {
+      "tech-tac-toe": {
+        "playsRemaining": 1,
+        "isLocked": true
+      },
+      "led-memory": {
+        "playsRemaining": 1,
+        "isLocked": true
+      },
+      "rj45-game": {
+        "playsRemaining": 2,
+        "isLocked": false
+      }
+    },
+    "createdAt": "2026-04-01T07:57:22.610Z",
+    "updatedAt": "2026-04-01T08:44:28.323Z"
+  },
+  {
+    "name": "assdf",
+    "color": "blue",
+    "status": {
+      "tech-tac-toe": {
+        "playsRemaining": 0,
+        "isLocked": true
+      },
+      "led-memory": {
+        "playsRemaining": 0,
+        "isLocked": true
+      },
+      "rj45-game": {
+        "playsRemaining": 2,
+        "isLocked": false
+      }
+    },
+    "createdAt": "2026-04-01T08:09:20.507Z",
+    "updatedAt": "2026-04-01T08:30:25.867Z"
+  },
+  {
+    "name": "453",
+    "color": "red",
+    "status": {
+      "tech-tac-toe": {
+        "playsRemaining": 2,
+        "isLocked": false
+      },
+      "led-memory": {
+        "playsRemaining": 1,
+        "isLocked": true
+      },
+      "rj45-game": {
+        "playsRemaining": 2,
+        "isLocked": false
+      }
+    },
+    "createdAt": "2026-04-01T08:11:49.968Z",
+    "updatedAt": "2026-04-01T08:46:05.843Z"
+  },
+  {
+    "name": "sadf",
+    "color": "blue",
+    "status": {
+      "tech-tac-toe": {
+        "playsRemaining": 3,
+        "isLocked": false
+      },
+      "led-memory": {
+        "playsRemaining": 0,
+        "isLocked": true
+      },
+      "rj45-game": {
+        "playsRemaining": 1,
+        "isLocked": true
+      }
+    },
+    "createdAt": "2026-04-01T08:49:44.215Z",
+    "updatedAt": "2026-04-01T09:01:43.146Z"
+  },
+  {
+    "name": "sadfdsf",
+    "color": "blue",
+    "status": {
+      "tech-tac-toe": {
+        "playsRemaining": 3,
+        "isLocked": false
+      },
+      "led-memory": {
         "playsRemaining": 2,
         "isLocked": false
       },
@@ -56,7 +156,7 @@
         "isLocked": false
       }
     },
-    "createdAt": "2026-03-31T18:39:17.008Z",
-    "updatedAt": "2026-03-31T18:51:43.920Z"
+    "createdAt": "2026-04-01T08:55:54.146Z",
+    "updatedAt": null
   }
 ]

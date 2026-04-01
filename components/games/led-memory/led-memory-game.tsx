@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { RotateCcw } from "lucide-react";
+import { CircleGauge, Gauge, Play, RotateCcw } from "lucide-react";
 import {
   EDificultyMultiplyer,
   EGame,
@@ -25,6 +25,7 @@ import {
 import { usePlayers } from "@/contexts/players-context";
 import { NotificationToaster } from "../../notification/notification-toaster";
 import { LockInScoreDialog } from "@/components/confirmation/lock-in-score";
+import { cn } from "@/lib/utils";
 
 const TIME_BONUS_MAX_POINTS = 5;
 const LEVEL_CONFIG: Record<
@@ -236,6 +237,23 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
         clearInterval(timerRef.current);
       }
 
+      if (!currTeam1Player) {
+        toast.custom(
+          () => (
+            <NotificationToaster
+              variant={"warning"}
+              message={`No player detected!`}
+              description={`Please make sure a player is selected before starting the game.`}
+            />
+          ),
+          {
+            duration: 5000,
+            position: "top-center",
+          },
+        );
+        return;
+      }
+
       setSelectedLevel(level);
       setSequence(fullSequence);
       setPlayerSequence([]);
@@ -246,7 +264,7 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
       showSequence(fullSequence, level);
       toast.dismiss();
     },
-    [initializeAudio, showSequence],
+    [initializeAudio, showSequence, currTeam1Player],
   );
 
   // Handle player clicking an LED
@@ -273,14 +291,6 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
         clearInterval(timerRef.current);
       }
       setGameState("gameover");
-      //
-      // const currentScore = newPlayerSequence.length - 1;
-      // toast(
-      //   `Game Over! You remembered ${currentScore} out of ${sequence.length} correctly.`,
-      //   {
-      //     className: "bg-rose-100 text-rose-800 border-rose-200",
-      //   },
-      // );
       return;
     }
 
@@ -291,13 +301,6 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
         clearInterval(timerRef.current);
       }
       setGameState("success");
-
-      // toast(
-      //   `Success! You memorized all ${sequence.length} patterns correctly!`,
-      //   {
-      //     className: "bg-emerald-100 text-emerald-800 border-emerald-200",
-      //   },
-      // );
     }
   };
 
@@ -317,7 +320,7 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
     };
   }, []);
 
-  // Show post-game name dialog once per finished run
+  // update post-game score
   useEffect(() => {
     const isFinished = gameState === "gameover" || gameState === "success";
 
@@ -361,6 +364,11 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
   //   setGameState("idle");
   //   setTimeLeft(20);
   // };
+  //
+  const handleDifficultyChange = (level: DifficultyLevel) => {
+    setSelectedLevel(level);
+    setShowLevelDialog(false);
+  };
 
   return (
     <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center p-4 sm:p-7 gap-5 sm:gap-6 bg-gradient-to-b from-white-100 via-white-100 to-white-100 rounded-2xl border border-rose-300/50 shadow-xl backdrop-blur-sm">
@@ -388,7 +396,32 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
         handleLEDClick={handleLEDClick}
       />
 
-      {(gameState === "gameover" || gameState === "success") && (
+      <div className="flex space-x-4">
+        <Button
+          onClick={() => startGame(selectedLevel)}
+          variant="outline"
+          size="lg"
+          disabled={gameState === "showing"}
+          className={cn(
+            "min-w-40 bg-white border-rose-300",
+            "hover:bg-rose-50 hover:border-rose-400",
+            "text-rose-700 shadow-sm",
+            "flex items-center gap-4",
+          )}
+        >
+          <Play className="size-5" />
+        </Button>
+
+        <Button
+          onClick={() => setShowLevelDialog(true)}
+          variant="outline"
+          size="lg"
+          disabled={gameState === "showing"}
+          className="min-w-40 bg-white border-rose-200 hover:bg-rose-50 hover:border-rose-300 text-rose-700 shadow-sm"
+        >
+          Change Difficulty
+        </Button>
+
         <Button
           onClick={() => setLeaderboardOpen(true)}
           variant="outline"
@@ -397,7 +430,14 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
         >
           Show Leaderboard
         </Button>
-      )}
+      </div>
+
+      <div className="w-full flex justify-center">
+        <LeaderboardPanel
+          gameId="led-memory"
+          className="w-full max-w-2xl mx-auto bg-white/90 backdrop-blur-sm border-rose-100"
+        />
+      </div>
 
       <Dialog open={leaderboardOpen} onOpenChange={setLeaderboardOpen}>
         <DialogContent className="sm:max-w-2xl border-rose-100">
@@ -416,36 +456,6 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
           />
         </DialogContent>
       </Dialog>
-
-      <div className="flex space-x-4">
-        <Button
-          onClick={() => startGame(selectedLevel)}
-          variant="outline"
-          size="lg"
-          disabled={gameState === "showing"}
-          className="min-w-40 bg-white border-rose-300 hover:bg-rose-50 hover:border-rose-400 text-rose-700 shadow-sm flex items-center gap-2"
-        >
-          <RotateCcw size={16} />
-          Restart
-        </Button>
-
-        <Button
-          onClick={() => setShowLevelDialog(true)}
-          variant="outline"
-          size="lg"
-          disabled={gameState === "showing"}
-          className="min-w-40 bg-white border-rose-200 hover:bg-rose-50 hover:border-rose-300 text-rose-700 shadow-sm"
-        >
-          Change Level
-        </Button>
-      </div>
-
-      <div className="w-full flex justify-center">
-        <LeaderboardPanel
-          gameId="led-memory"
-          className="w-full max-w-2xl mx-auto bg-white/90 backdrop-blur-sm border-rose-100"
-        />
-      </div>
 
       <Dialog
         open={showLevelDialog}
@@ -474,7 +484,7 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
             <Button
               variant="outline"
               className="justify-between border-rose-100 hover:border-rose-300 hover:bg-rose-50/70"
-              onClick={() => startGame("easy")}
+              onClick={() => handleDifficultyChange("easy")}
             >
               <span className="text-rose-700 font-medium">Easy</span>
               <span className="text-xs text-rose-400 font-medium">
@@ -484,7 +494,7 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
             <Button
               variant="outline"
               className="justify-between border-rose-100 hover:border-rose-300 hover:bg-rose-50/70"
-              onClick={() => startGame("medium")}
+              onClick={() => handleDifficultyChange("medium")}
             >
               <span className="text-rose-700 font-medium">Medium</span>
               <span className="text-xs text-rose-400 font-medium">
@@ -494,7 +504,7 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
             <Button
               variant="outline"
               className="justify-between border-rose-100 hover:border-rose-300 hover:bg-rose-50/70"
-              onClick={() => startGame("hard")}
+              onClick={() => handleDifficultyChange("hard")}
             >
               <span className="text-rose-700 font-medium">Hard</span>
               <span className="text-xs text-rose-400 font-medium">

@@ -67,13 +67,16 @@ export const CreatePlayerDialog = ({
 
   const handleSubmit = () => {
     if (playerName.trim() === "") {
-      toast.custom(() => (
-        <NotificationToaster
-          variant="warning"
-          message="Player name cannot be empty!"
-          description="Please enter a valid player name before submitting."
-        />
-      ));
+      toast.custom(
+        () => (
+          <NotificationToaster
+            variant="warning"
+            message="Player name cannot be empty!"
+            description="Please enter a valid player name before submitting."
+          />
+        ),
+        { duration: 5000, position: "top-center" },
+      );
       return;
     }
     const newPlayer: BoothPlayerType = {
@@ -100,13 +103,16 @@ export const CreatePlayerDialog = ({
         (player) => player.name.toUpperCase() === newPlayer.name.toUpperCase(),
       )
     ) {
-      toast.custom(() => (
-        <NotificationToaster
-          variant="warning"
-          message="Player name already exists!"
-          description="Please choose a different name."
-        />
-      ));
+      toast.custom(
+        () => (
+          <NotificationToaster
+            variant="warning"
+            message="Player name already exists!"
+            description="Please choose a different name."
+          />
+        ),
+        { duration: 5000, position: "top-center" },
+      );
       return;
     }
     createPlayer(newPlayer);
@@ -129,13 +135,16 @@ export const CreatePlayerDialog = ({
       default:
         onExit(false);
     }
-    toast.custom(() => (
-      <NotificationToaster
-        variant="success"
-        message="Player created successfully!"
-        description={`Welcome, <${newPlayer.name}>! You have joined ${team === "team1" ? "Team 1" : "Team 2"}.`}
-      />
-    ));
+    toast.custom(
+      () => (
+        <NotificationToaster
+          variant="success"
+          message="Player created successfully!"
+          description={`Welcome, <${newPlayer.name}>! You have joined ${team === "team1" ? "Team 1" : "Team 2"}.`}
+        />
+      ),
+      { duration: 5000, position: "top-center" },
+    );
   };
 
   return (

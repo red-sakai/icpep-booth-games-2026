@@ -57,6 +57,23 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
 
   // Select a standard and start the game
   const selectStandard = (selected: WireStandard) => {
+    if (!currTeam1Player) {
+      toast.custom(
+        () => (
+          <NotificationToaster
+            variant={"warning"}
+            message={`No player detected!`}
+            description={`Please make sure a player is selected before starting the game.`}
+          />
+        ),
+        {
+          duration: 5000,
+          position: "top-center",
+        },
+      );
+      return;
+    }
+
     setLeaderboardOpen(false);
     setStandard(selected);
     setCorrectWires([...WIRE_STANDARDS[selected]]);
@@ -137,7 +154,7 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
               description={`You matched the wires perfectly on ${standard} standard and got a score of ${newScore}!`}
             />
           ),
-          { duration: 5000 },
+          { duration: 5000, position: "top-center" },
         );
         setIsLockInScoreDialogOpen(true);
       } else {
@@ -176,7 +193,7 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
             description={`You matched the wires perfectly on ${standard} standard and got a score of ${newScore}!`}
           />
         ),
-        { duration: 5000 },
+        { duration: 5000, position: "top-center" },
       );
     } else {
       // Game over - wrong arrangement

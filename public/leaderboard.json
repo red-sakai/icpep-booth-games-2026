@@ -7,21 +7,67 @@
       "order": "desc",
       "entries": [
         {
+          "name": "SADFSDF",
+          "score": 4,
+          "createdAt": "2026-04-01T08:44:28.323Z"
+        },
+        {
           "name": "BADSFS",
           "score": 0,
           "createdAt": "2026-03-31T18:50:10.310Z"
+        },
+        {
+          "name": "ASDF",
+          "score": 0,
+          "createdAt": "2026-04-01T07:54:44.167Z"
+        },
+        {
+          "name": "SADFASDF",
+          "score": 0,
+          "createdAt": "2026-04-01T07:57:11.943Z"
+        },
+        {
+          "name": "ASSDF",
+          "score": 0,
+          "createdAt": "2026-04-01T08:30:25.867Z"
+        },
+        {
+          "name": "453",
+          "score": 0,
+          "createdAt": "2026-04-01T08:46:05.832Z"
+        },
+        {
+          "name": "SADF",
+          "score": 0,
+          "createdAt": "2026-04-01T08:55:37.196Z"
         }
       ]
     },
     "rj45-game": {
       "metric": "timeRemainingSeconds",
       "order": "desc",
-      "entries": []
+      "entries": [
+        {
+          "name": "SADF",
+          "score": 0,
+          "createdAt": "2026-04-01T09:01:43.146Z"
+        }
+      ]
     },
     "tech-tac-toe": {
       "metric": "totalWins",
       "order": "desc",
       "entries": [
+        {
+          "name": "SADFSDF",
+          "score": 5,
+          "createdAt": "2026-04-01T08:11:15.366Z"
+        },
+        {
+          "name": "ASSDF",
+          "score": 5,
+          "createdAt": "2026-04-01T08:22:34.947Z"
+        },
         {
           "name": "SADFASDF",
           "score": 4.5,
