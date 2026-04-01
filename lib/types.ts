@@ -8,6 +8,7 @@ export type SocialQRCode = {
   name: string;
   icon: React.ReactNode;
   color: string;
+  href: string;
   url: string;
 };
 

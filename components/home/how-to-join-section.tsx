@@ -40,8 +40,16 @@ export default function HowToJoinSection() {
                 Follow ICPEP.SE - PUP Manila on 
                 {SOCIAL_PLATFORMS.map((p, i) => (
                   <span key={p.id} className={`inline-flex items-center mx-1 ${p.textColor} font-medium`}>
-                    <p.icon size={16} className="mr-1" /> 
-                    {p.name}{i < SOCIAL_PLATFORMS.length - 1 ? "," : ""}
+                    <a
+                      href={p.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center hover:underline underline-offset-4"
+                    >
+                      <p.icon size={16} className="mr-1" />
+                      {p.name}
+                    </a>
+                    {i < SOCIAL_PLATFORMS.length - 1 ? "," : ""}
                   </span>
                 ))}
               </span>
@@ -61,9 +69,14 @@ export default function HowToJoinSection() {
                   </div>
                   <img src={platform.url} alt={platform.name} className="w-16 h-16 object-contain" />
                 </button>
-                <span className={`text-xs font-medium mt-1 px-2 py-1 rounded-full ${platform.color}`}>
+                <a
+                  href={platform.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`text-xs font-medium mt-1 px-2 py-1 rounded-full ${platform.color} hover:underline underline-offset-4`}
+                >
                   {platform.name}
-                </span>
+                </a>
               </div>
             ))}
           </div>
