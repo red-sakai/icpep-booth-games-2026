@@ -54,11 +54,11 @@ export default function TechTacToe({
     useState(false);
   const [isLockInScoreDialogOpen2, setIsLockInScoreDialogOpen2] =
     useState(false);
+  const [isGameModeSelectorOpen, setIsGameModeSelectorOpen] = useState(false);
 
   // AI & Game Mode State
   const [difficulty, setDifficulty] = useState<DifficultyLevel>("medium");
   const [isAIThinking, setIsAIThinking] = useState(false);
-  const [previousGameMode, setPreviousGameMode] = useState<GameMode>(null);
 
   // Leaderboard & Streak State
   const [p1Streak, setP1Streak] = useState(0);
@@ -85,7 +85,6 @@ export default function TechTacToe({
           createdAt: new Date().toISOString(),
           updatedAt: null,
         };
-        // createPlayer(newAIPlayer);
         setCurrTeam2Player(newAIPlayer);
       }
     }
@@ -186,6 +185,43 @@ export default function TechTacToe({
 
   const handleCellClick = useCallback(
     (index: number, isAutoMove = false) => {
+      // check if player/s empty, block game if empty
+      if (gameMode === "pve") {
+        if (!currTeam1Player) {
+          toast.custom(
+            () => (
+              <NotificationToaster
+                variant={"warning"}
+                message={`No player detected!`}
+                description={`Please make sure a player is selected before starting the game.`}
+              />
+            ),
+            {
+              duration: 5000,
+              position: "top-center",
+            },
+          );
+          return;
+        }
+      } else if (gameMode === "pvp") {
+        if (!currTeam1Player || !currTeam2Player) {
+          toast.custom(
+            () => (
+              <NotificationToaster
+                variant={"warning"}
+                message={`Missing players!`}
+                description={`Please make sure both players are selected before starting the game.`}
+              />
+            ),
+            {
+              duration: 5000,
+              position: "top-center",
+            },
+          );
+          return;
+        }
+      }
+
       if (board[index] || winnerTeam || (isAIThinking && !isAutoMove)) return;
       if (gameMode === "pve" && currentTeam !== "1" && !isAutoMove) return;
 
@@ -200,20 +236,12 @@ export default function TechTacToe({
         setWinningPattern(pattern);
 
         if (newWinner === "draw") {
-          // toast("It's a draw!", {
-          //   className: "bg-pink-100 text-pink-800 border-pink-200",
-          // });
           setP1Streak(0);
           setP0Streak(0);
           setLastWinScore(0);
         } else {
           const winnerLabel =
             newWinner === "1" ? currTeam1Player?.name : currTeam2Player?.name;
-
-          // toast(`Team ${winnerLabel} wins!`, {
-          //   className: "bg-pink-100 text-pink-800 border-pink-200",
-          // });
-
           let currentWinnerStreak = 1;
           if (newWinner === "1") {
             currentWinnerStreak = p1Streak + 1;
@@ -284,62 +312,27 @@ export default function TechTacToe({
     setLastWinScore(0);
   };
 
-  const handleChangeMode = () => {
-    resetBoard();
-    setPreviousGameMode(gameMode);
-    setGameMode(null);
-    setP1Streak(0);
-    setP0Streak(0);
+  const handleChangeModeClick = () => {
+    setIsGameModeSelectorOpen(true);
   };
 
-  const handleCloseModeSelector = () => {
-    if (previousGameMode) {
-      setGameMode(previousGameMode);
-      setPreviousGameMode(null);
-    } else {
-      setGameMode("pve");
-    }
-  };
-
-  const handleModeSelect = (
+  const handleGameModeSelectorSave = (
     selectedGameMode: GameMode,
     selectedDiff: DifficultyLevel,
   ) => {
     if (gameMode !== selectedGameMode || difficulty !== selectedDiff) {
       setP1Streak(0);
       setP0Streak(0);
+      resetBoard();
     }
     setGameMode(selectedGameMode);
     setDifficulty(selectedDiff);
+    setIsGameModeSelectorOpen(false);
+  };
+  const handleGameModeSelectorClose = () => {
+    setIsGameModeSelectorOpen(false);
   };
 
-  // const handleSubmitName = async (name: string, scoreOverride?: number) => {
-  //   try {
-  //     const score = scoreOverride !== undefined ? scoreOverride : lastWinScore;
-  //     const response = await fetch("/api/leaderboard", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         gameId: "tech-tac-toe",
-  //         name,
-  //         score,
-  //       }),
-  //     });
-  //
-  //     if (response.ok) {
-  //       toast.success("Score saved to leaderboard!");
-  //       setLeaderboardKey((prev) => prev + 1);
-  //     } else {
-  //       toast.error("Failed to save score.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error submitting score:", error);
-  //     toast.error("An error occurred while saving your score.");
-  //   } finally {
-  //     setShowNameDialog(false);
-  //   }
-  // };
-  //
   return (
     <div
       className="flex flex-col items-center justify-center p-6 space-y-6 bg-
@@ -364,10 +357,10 @@ export default function TechTacToe({
       />
 
       <GameModeSelector
-        currGameMode={previousGameMode}
-        open={gameMode === null}
-        onSelect={handleModeSelect}
-        onClose={handleCloseModeSelector}
+        currGameMode={gameMode}
+        isOpen={isGameModeSelectorOpen}
+        onSave={handleGameModeSelectorSave}
+        onClose={handleGameModeSelectorClose}
       />
 
       <GameHeader
@@ -400,7 +393,7 @@ export default function TechTacToe({
           Play Again
         </Button>
         <Button
-          onClick={handleChangeMode}
+          onClick={handleChangeModeClick}
           variant="ghost"
           size="lg"
           className="bg-white/80 backdrop-blur-sm border-pink-200 hover:bg-pink-50 hover:border-pink-300 text-pink-600 
@@ -408,16 +401,16 @@ export default function TechTacToe({
         >
           Change Mode
         </Button>
-      </div>
 
-      <Button
-        onClick={() => setLeaderboardOpen(true)}
-        variant="outline"
-        size="lg"
-        className="bg-white border-sky-200 hover:text-sky-600 hover:bg-sky-50 hover:border-sky-300 text-sky-700 shadow-sm"
-      >
-        Show Leaderboard
-      </Button>
+        <Button
+          onClick={() => setLeaderboardOpen(true)}
+          variant="outline"
+          size="lg"
+          className="bg-white border-sky-200 hover:text-sky-600 hover:bg-sky-50 hover:border-sky-300 text-sky-700 shadow-sm"
+        >
+          Show Leaderboard
+        </Button>
+      </div>
 
       <Dialog open={leaderboardOpen} onOpenChange={setLeaderboardOpen}>
         <DialogContent className="sm:max-w-2xl border-sky-100">

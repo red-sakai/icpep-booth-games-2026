@@ -104,8 +104,8 @@
     "color": "red",
     "status": {
       "tech-tac-toe": {
-        "playsRemaining": 2,
-        "isLocked": false
+        "playsRemaining": 1,
+        "isLocked": true
       },
       "led-memory": {
         "playsRemaining": 1,
@@ -117,14 +117,14 @@
       }
     },
     "createdAt": "2026-04-01T08:11:49.968Z",
-    "updatedAt": "2026-04-01T08:46:05.843Z"
+    "updatedAt": "2026-04-01T09:37:46.462Z"
   },
   {
     "name": "sadf",
     "color": "blue",
     "status": {
       "tech-tac-toe": {
-        "playsRemaining": 3,
+        "playsRemaining": 2,
         "isLocked": false
       },
       "led-memory": {
@@ -137,15 +137,15 @@
       }
     },
     "createdAt": "2026-04-01T08:49:44.215Z",
-    "updatedAt": "2026-04-01T09:01:43.146Z"
+    "updatedAt": "2026-04-01T09:31:26.207Z"
   },
   {
     "name": "sadfdsf",
     "color": "blue",
     "status": {
       "tech-tac-toe": {
-        "playsRemaining": 3,
-        "isLocked": false
+        "playsRemaining": 2,
+        "isLocked": true
       },
       "led-memory": {
         "playsRemaining": 2,
@@ -157,6 +157,6 @@
       }
     },
     "createdAt": "2026-04-01T08:55:54.146Z",
-    "updatedAt": null
+    "updatedAt": "2026-04-01T09:31:24.047Z"
   }
 ]
