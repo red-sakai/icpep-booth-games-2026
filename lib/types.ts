@@ -51,9 +51,20 @@ export enum EDificultyMultiplyer {
 }
 
 // ----- for leaderboard -----
+export enum EGame {
+  TECH_TAC_TOE = "tech-tac-toe",
+  LED_MEMORY = "led-memory",
+  RJ45_GAME = "rj45-game",
+}
+export enum EGamePlayLimit {
+  TECH_TAC_TOE = 3,
+  LED_MEMORY = 2,
+  RJ45_GAME = 2,
+}
 export type BoothPlayerType = {
   name: string;
   color: string;
+  status: Record<EGame, { playsRemaining: number | null; isLocked: boolean }>;
   createdAt: string;
   updatedAt?: string | null;
 };

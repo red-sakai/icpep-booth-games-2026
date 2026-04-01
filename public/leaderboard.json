@@ -7,100 +7,49 @@
       "order": "desc",
       "entries": [
         {
-          "name": "CEDRIC",
-          "score": 10,
-          "createdAt": "2026-03-27T02:37:39.924Z"
-        },
-        {
-          "name": "SLADKJF",
-          "score": 8,
-          "createdAt": "2026-03-26T03:09:00.489Z",
-          "updatedAt": "2026-03-26T03:45:07.957Z"
-        },
-        {
-          "name": "SD",
-          "score": 7.5,
-          "createdAt": "2026-03-28T13:45:35.008Z",
-          "updatedAt": "2026-03-28T14:53:52.878Z"
-        },
-        {
-          "name": "ASDSADASD",
-          "score": 7,
-          "createdAt": "2026-03-29T08:13:16.602Z",
-          "updatedAt": "2026-03-29T08:32:40.252Z"
-        },
-        {
-          "name": "SS",
-          "score": 6,
-          "createdAt": "2026-03-26T03:17:22.564Z",
-          "updatedAt": "2026-03-26T09:09:19.719Z"
-        },
-        {
-          "name": "PAT",
-          "score": 6,
-          "createdAt": "2026-03-18T09:12:00.000Z"
-        },
-        {
-          "name": "RED",
-          "score": 5,
-          "createdAt": "2026-03-18T10:05:00.000Z",
-          "updatedAt": "2026-03-28T05:40:32.180Z"
-        },
-        {
-          "name": "EZE",
-          "score": 5,
-          "createdAt": "2026-03-18T14:44:00.000Z"
-        },
-        {
-          "name": "CRL",
+          "name": "SADFSDF",
           "score": 4,
-          "createdAt": "2026-03-19T08:22:00.000Z"
+          "createdAt": "2026-04-01T08:44:28.323Z"
         },
         {
-          "name": "JRD",
-          "score": 4,
-          "createdAt": "2026-03-19T11:03:00.000Z"
-        },
-        {
-          "name": "PTK",
-          "score": 3,
-          "createdAt": "2026-03-19T15:27:00.000Z"
-        },
-        {
-          "name": "IVY",
-          "score": 3,
-          "createdAt": "2026-03-19T16:09:00.000Z"
-        },
-        {
-          "name": "MAT",
-          "score": 2,
-          "createdAt": "2026-03-20T09:01:00.000Z"
-        },
-        {
-          "name": "F",
+          "name": "BADSFS",
           "score": 0,
-          "createdAt": "2026-03-26T07:59:06.486Z"
+          "createdAt": "2026-03-31T18:50:10.310Z"
         },
         {
-          "name": "AI",
-          "score": -1.5,
-          "createdAt": "2026-03-26T07:54:04.704Z"
+          "name": "ASDF",
+          "score": 0,
+          "createdAt": "2026-04-01T07:54:44.167Z"
         },
         {
-          "name": "LSAKDJF",
-          "score": -1.5,
-          "createdAt": "2026-03-27T10:25:01.523Z"
+          "name": "SADFASDF",
+          "score": 0,
+          "createdAt": "2026-04-01T07:57:11.943Z"
         },
         {
-          "name": "LSJFD",
-          "score": -1.5,
-          "createdAt": "2026-03-27T12:22:56.173Z"
+          "name": "ASSDF",
+          "score": 0,
+          "createdAt": "2026-04-01T08:30:25.867Z"
         },
         {
-          "name": "SLDKJF",
-          "score": -3,
-          "createdAt": "2026-03-28T12:38:34.041Z",
-          "updatedAt": "2026-03-28T14:07:58.522Z"
+          "name": "453",
+          "score": 0,
+          "createdAt": "2026-04-01T08:46:05.832Z"
+        },
+        {
+          "name": "SADF",
+          "score": 0,
+          "createdAt": "2026-04-01T08:55:37.196Z"
+        },
+        {
+          "name": "ASDFDSF",
+          "score": 0,
+          "createdAt": "2026-04-01T11:54:08.492Z"
+        },
+        {
+          "name": "JGLKSAG",
+          "score": 0,
+          "createdAt": "2026-04-01T12:13:56.364Z"
         }
       ]
     },
@@ -109,85 +58,14 @@
       "order": "desc",
       "entries": [
         {
-          "name": "RJM",
-          "score": 12,
-          "createdAt": "2026-03-18T09:40:00.000Z"
-        },
-        {
-          "name": "JII",
-          "score": 11,
-          "createdAt": "2026-03-18T13:02:00.000Z"
-        },
-        {
-          "name": "RED",
-          "score": 10,
-          "createdAt": "2026-03-18T16:18:00.000Z"
-        },
-        {
-          "name": "CRL",
-          "score": 9,
-          "createdAt": "2026-03-19T09:55:00.000Z"
-        },
-        {
-          "name": "SD",
-          "score": 8,
-          "createdAt": "2026-03-27T13:01:51.149Z",
-          "updatedAt": "2026-03-27T13:04:14.612Z"
-        },
-        {
-          "name": "EZE",
-          "score": 8,
-          "createdAt": "2026-03-19T12:11:00.000Z"
-        },
-        {
-          "name": "GKJ",
-          "score": 8,
-          "createdAt": "2026-03-19T17:45:00.000Z"
-        },
-        {
-          "name": "ZED",
-          "score": 7,
-          "createdAt": "2026-03-20T08:33:00.000Z"
-        },
-        {
-          "name": "SJM",
-          "score": 6,
-          "createdAt": "2026-03-20T10:20:00.000Z"
-        },
-        {
-          "name": "SDLFKJ",
-          "score": 6,
-          "createdAt": "2026-03-27T12:26:28.344Z",
-          "updatedAt": "2026-03-27T12:50:45.424Z"
-        },
-        {
-          "name": "SLDKJF",
-          "score": 3,
-          "createdAt": "2026-03-28T14:09:49.744Z",
-          "updatedAt": "2026-03-28T14:56:32.780Z"
-        },
-        {
-          "name": "ASDSADASD",
-          "score": 2,
-          "createdAt": "2026-03-29T08:31:43.256Z",
-          "updatedAt": "2026-03-29T08:33:33.542Z"
-        },
-        {
-          "name": "SLADKJF",
+          "name": "SADF",
           "score": 0,
-          "createdAt": "2026-03-26T03:53:32.577Z"
+          "createdAt": "2026-04-01T09:01:43.146Z"
         },
         {
-          "name": "LSJFD",
+          "name": "SDFSD",
           "score": 0,
-          "createdAt": "2026-03-27T12:24:48.892Z",
-          "updatedAt": "2026-03-27T12:25:45.569Z"
-        },
-        {
-          "name": "L",
-          "score": 0,
-          "createdAt": "2026-03-29T09:11:25.877Z",
-          "updatedAt": "2026-03-29T09:22:03.079Z"
+          "createdAt": "2026-04-01T11:56:19.000Z"
         }
       ]
     },
@@ -196,100 +74,64 @@
       "order": "desc",
       "entries": [
         {
-          "name": "AI (MEDIUM)",
-          "score": 12,
-          "createdAt": "2026-03-22T16:23:08.996Z",
-          "updatedAt": "2026-03-28T14:22:06.185Z"
-        },
-        {
-          "name": "AI (HARD)",
-          "score": 9,
-          "createdAt": "2026-03-23T06:35:48.935Z",
-          "updatedAt": "2026-03-27T02:39:03.584Z"
-        },
-        {
-          "name": "KIAN",
-          "score": 8,
-          "createdAt": "2026-03-22T16:22:25.495Z",
-          "updatedAt": "2026-03-22T16:23:49.948Z"
-        },
-        {
-          "name": "SGA",
+          "name": "SADFSDF",
           "score": 5,
-          "createdAt": "2026-03-18T10:00:00.000Z"
+          "createdAt": "2026-04-01T08:11:15.366Z"
         },
         {
-          "name": "F",
+          "name": "ASSDF",
+          "score": 5,
+          "createdAt": "2026-04-01T08:22:34.947Z"
+        },
+        {
+          "name": "JGLKSAG",
+          "score": 5,
+          "createdAt": "2026-04-01T12:12:32.878Z"
+        },
+        {
+          "name": "SADFASDF",
           "score": 4.5,
-          "createdAt": "2026-03-26T07:21:27.255Z",
-          "updatedAt": "2026-03-26T07:23:37.266Z"
+          "createdAt": "2026-03-31T18:51:43.913Z"
         },
         {
-          "name": "SLDKJF",
-          "score": 4.5,
-          "createdAt": "2026-03-28T14:22:27.715Z",
-          "updatedAt": "2026-03-28T14:23:44.512Z"
+          "name": "BADSFS",
+          "score": 0,
+          "createdAt": "2026-03-31T18:38:40.438Z"
         },
         {
-          "name": "PG",
-          "score": 4,
-          "createdAt": "2026-03-18T11:30:00.000Z"
+          "name": "ASDF",
+          "score": 0,
+          "createdAt": "2026-03-31T18:50:52.830Z"
         },
         {
-          "name": "ZAC",
-          "score": 3,
-          "createdAt": "2026-03-19T09:10:00.000Z"
+          "name": "SADFDSF",
+          "score": 0,
+          "createdAt": "2026-04-01T09:31:24.047Z"
         },
         {
-          "name": "GUM",
-          "score": 3,
-          "createdAt": "2026-03-19T13:50:00.000Z"
+          "name": "453",
+          "score": 0,
+          "createdAt": "2026-04-01T09:37:46.455Z"
         },
         {
-          "name": "CEDRIC",
-          "score": 3,
-          "createdAt": "2026-03-27T02:38:14.736Z",
-          "updatedAt": "2026-03-27T02:38:24.591Z"
+          "name": "SADF",
+          "score": 0,
+          "createdAt": "2026-04-01T11:21:40.055Z"
         },
         {
-          "name": "BAL",
-          "score": 2,
-          "createdAt": "2026-03-19T16:05:00.000Z"
+          "name": "ASDFDS",
+          "score": 0,
+          "createdAt": "2026-04-01T11:22:06.877Z"
         },
         {
-          "name": "ANA",
-          "score": 2,
-          "createdAt": "2026-03-20T08:45:00.000Z"
+          "name": "ASDFDSF",
+          "score": 0,
+          "createdAt": "2026-04-01T11:30:02.132Z"
         },
         {
-          "name": "AI HARD",
-          "score": 2,
-          "createdAt": "2026-03-26T07:11:36.405Z"
-        },
-        {
-          "name": "AI MEDIUM",
-          "score": 1.5,
-          "createdAt": "2026-03-26T07:15:27.377Z"
-        },
-        {
-          "name": "ASDSADASD",
-          "score": 1.5,
-          "createdAt": "2026-03-29T08:15:54.999Z"
-        },
-        {
-          "name": "JOE",
-          "score": 1,
-          "createdAt": "2026-03-20T10:15:00.000Z"
-        },
-        {
-          "name": "RED",
-          "score": 1,
-          "createdAt": "2026-03-23T06:36:15.058Z"
-        },
-        {
-          "name": "SDFA",
-          "score": 1,
-          "createdAt": "2026-03-26T05:18:52.786Z"
+          "name": "SADFSADF",
+          "score": 0,
+          "createdAt": "2026-04-01T11:55:01.275Z"
         }
       ]
     }

@@ -2,17 +2,17 @@ import { Bot, Pencil, User } from "lucide-react";
 import { usePlayers } from "@/contexts/players-context";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { EditTeamDialog } from "@/components/home/edit-players/edit-player/edit-team-dialog";
-import { CreatePlayerDialog } from "@/components/home/edit-players/edit-player/create-player-dialog";
-import { SelectPlayerDialog } from "@/components/home/edit-players/edit-player/select-player-dialog";
-import { BoothPlayerType, GameMode } from "@/lib/types";
+import { EditTeamDialog } from "@/components/edit-players/edit-player/edit-team-dialog";
+import { BoothPlayerType, EGame, GameMode } from "@/lib/types";
 
 type EditPlayersProps = {
+  gameName: EGame;
   gameMode: GameMode;
   openOnMount?: boolean;
 };
 
 export const EditPlayers = ({
+  gameName,
   gameMode,
   openOnMount = true,
 }: EditPlayersProps) => {
@@ -22,46 +22,46 @@ export const EditPlayers = ({
     currTeam2Player,
     setCurrTeam1Player,
     setCurrTeam2Player,
+    players,
   } = usePlayers();
   const [isEditTeamDialogOpen, setIsEditTeamDialogOpen] = useState(openOnMount);
-  const [isCreatePlayerDialogOpen, setIsCreatePlayerDialogOpen] =
-    useState(false);
-  const [isSelectPlayerDialogOpen, setIsSelectPlayerDialogOpen] =
-    useState(false);
 
-  // reset create and select player dialogs when edit team dialog is opened
   useEffect(() => {
-    if (isEditTeamDialogOpen) {
-      setIsCreatePlayerDialogOpen(false);
-      setIsSelectPlayerDialogOpen(false);
-    }
-  }, [isEditTeamDialogOpen]);
+    setCurrTeam1Player((prev) => {
+      if (prev) {
+        const updatedCurrTeam1Player = players.find(
+          (p) => p.name === prev.name,
+        );
+        if (
+          updatedCurrTeam1Player &&
+          updatedCurrTeam1Player.status[gameName].isLocked
+        ) {
+          setCurrTeam1Player(null);
+          return updatedCurrTeam1Player;
+        }
+      }
+      return prev;
+    });
+  }, [players, gameMode, setCurrTeam1Player]);
+  useEffect(() => {
+    setCurrTeam2Player((prev) => {
+      if (prev) {
+        const updatedCurrTeam2Player = players.find(
+          (p) => p.name === prev.name,
+        );
+        if (
+          updatedCurrTeam2Player &&
+          updatedCurrTeam2Player.status[gameName].isLocked
+        ) {
+          setCurrTeam2Player(null);
+          return updatedCurrTeam2Player;
+        }
+      }
+      return prev;
+    });
+  }, [players, gameMode, setCurrTeam2Player]);
 
-  // open edit team dialog when both create and select player dialogs are exited
-  const onExitCreateOrSelectPlayerDialog = (value: boolean) => {
-    setIsCreatePlayerDialogOpen(false);
-    setIsSelectPlayerDialogOpen(false);
-    if (value) {
-      setIsEditTeamDialogOpen(true);
-    } else {
-      setIsEditTeamDialogOpen(false);
-    }
-  };
-
-  const handleEditTeamNext = (
-    selectedOption: "create" | "select",
-    selectedTeam: "team1" | "team2",
-  ) => {
-    setTeam(selectedTeam);
-    setIsEditTeamDialogOpen(false);
-    if (selectedOption === "create") {
-      setIsCreatePlayerDialogOpen(true);
-    } else if (selectedOption === "select") {
-      setIsSelectPlayerDialogOpen(true);
-    }
-  };
-
-  const handlePlayerNameClick = (newTeam: "team1" | "team2") => {
+  const handlePlayerNameDisplayClick = (newTeam: "team1" | "team2") => {
     setTeam(newTeam);
     setIsEditTeamDialogOpen(true);
   };
@@ -78,20 +78,22 @@ export const EditPlayers = ({
           <div className="flex items-center gap-2">
             <span className="font-medium text-slate-700">Team 1:</span>
             <PlayerNameDisplay
+              gameName={gameName}
               gameMode={gameMode}
               team="team1"
               player={currTeam1Player}
-              onClick={() => handlePlayerNameClick("team1")}
+              onClick={() => handlePlayerNameDisplayClick("team1")}
             />
           </div>
           {gameMode !== "solo" && (
             <div className="flex items-center gap-2">
               <span className="font-medium text-slate-700">Team 2:</span>
               <PlayerNameDisplay
+                gameName={gameName}
                 gameMode={gameMode}
                 team="team2"
                 player={currTeam2Player}
-                onClick={() => handlePlayerNameClick("team2")}
+                onClick={() => handlePlayerNameDisplayClick("team2")}
               />
             </div>
           )}
@@ -110,48 +112,32 @@ export const EditPlayers = ({
       </div>
 
       <EditTeamDialog
+        gameName={gameName}
         gameMode={gameMode}
         team={team}
+        setTeam={setTeam}
         isOpen={isEditTeamDialogOpen}
         setIsOpen={setIsEditTeamDialogOpen}
-        onNext={handleEditTeamNext}
-      />
-      <CreatePlayerDialog
-        team={team}
-        isOpen={isCreatePlayerDialogOpen}
-        setIsOpen={setIsCreatePlayerDialogOpen}
-        currPlayer={team === "team1" ? currTeam1Player : currTeam2Player}
-        setCurrPlayer={
-          team === "team1" ? setCurrTeam1Player : setCurrTeam2Player
-        }
-        onExit={onExitCreateOrSelectPlayerDialog}
-      />
-      <SelectPlayerDialog
-        team={team}
-        isOpen={isSelectPlayerDialogOpen}
-        setIsOpen={setIsSelectPlayerDialogOpen}
-        currPlayer={team === "team1" ? currTeam1Player : currTeam2Player}
-        setCurrPlayer={
-          team === "team1" ? setCurrTeam1Player : setCurrTeam2Player
-        }
-        onExit={onExitCreateOrSelectPlayerDialog}
       />
     </>
   );
 };
 
 type PlayerNameDisplayProps = {
+  gameName: EGame;
   gameMode: GameMode;
   team: "team1" | "team2";
   player: BoothPlayerType | null;
   onClick?: () => void;
 };
 const PlayerNameDisplay = ({
+  gameName,
   gameMode,
   team,
   player,
   onClick,
 }: PlayerNameDisplayProps) => {
+  const [isHovered, setIsHovered] = useState(false);
   const [isAi, setIsAi] = useState(false);
 
   useEffect(() => {
@@ -165,6 +151,7 @@ const PlayerNameDisplay = ({
   return (
     <button
       className={cn(
+        "relative hover:z-50",
         "font-medium bg-slate-50 rounded-lg shadow-md border-b-2",
         team === "team1" &&
           player &&
@@ -180,9 +167,34 @@ const PlayerNameDisplay = ({
       )}
       // always allow team 1, only ollow team 2 if pvp (since ai players can't be edited)
       onClick={team === "team1" || gameMode === "pvp" ? onClick : () => {}}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {isAi ? <Bot className="size-4" /> : <User className="size-4" />}
       <span className="text-sm">{player?.name || "None"}</span>
+      {isHovered && player?.status[gameName].playsRemaining && (
+        <div
+          className={cn(
+            "absolute px-8 py-4",
+            "top-full left-1/2 -translate-x-1/2 mt-4",
+            " bg-slate-50/60 backdrop-blur-xs rounded-md shadow-md",
+            "border border-slate-100/80",
+            "flex items-center",
+          )}
+        >
+          <p className="whitespace-nowrap text-slate-600">
+            tries left:{" "}
+            <span
+              className={cn(
+                "text-lg font-semibold",
+                team === "team1" ? "text-sky-600" : "text-rose-600",
+              )}
+            >
+              {player.status[gameName].playsRemaining}
+            </span>
+          </p>
+        </div>
+      )}
     </button>
   );
 };

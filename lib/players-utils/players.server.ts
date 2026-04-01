@@ -5,8 +5,20 @@ import { BoothPlayerType } from "@/lib/types";
 const dataFilePath = path.join(process.cwd(), "public", "players.json");
 
 export async function getPlayers(): Promise<BoothPlayerType[]> {
-  const data = await fs.readFile(dataFilePath, "utf-8");
-  return JSON.parse(data);
+  try {
+    const data = await fs.readFile(dataFilePath, "utf-8");
+    if (!data.trim()) {
+      await fs.writeFile(dataFilePath, "[]", "utf-8");
+      return [];
+    }
+    return JSON.parse(data);
+  } catch (err: any) {
+    if (err.code === "ENOENT") {
+      await fs.writeFile(dataFilePath, "[]", "utf-8");
+      return [];
+    }
+    throw err;
+  }
 }
 
 export async function addPlayer(

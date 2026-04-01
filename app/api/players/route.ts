@@ -13,12 +13,13 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const { name, color } = await req.json();
-  if (!name || !color)
+  const { name, color, status } = await req.json();
+  if (!name || !color || !status)
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   const newPlayer: BoothPlayerType = {
     name,
     color,
+    status,
     createdAt: new Date().toISOString(),
     updatedAt: null,
   };

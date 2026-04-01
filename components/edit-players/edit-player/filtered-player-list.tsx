@@ -1,13 +1,14 @@
 import { usePlayers } from "@/contexts/players-context";
-import { BoothPlayerType } from "@/lib/types";
+import { BoothPlayerType, EGame } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle, Circle } from "lucide-react";
 import { useEffect, useState } from "react";
-import { NotificationToaster } from "../../notification/notification-toaster";
 import { toast } from "sonner";
+import { NotificationToaster } from "../../notification/notification-toaster";
 
 type FilteredPlayerListProps = {
+  gameName: EGame;
   team: "team1" | "team2";
   filterNameValue: string;
   filterColor: string;
@@ -18,6 +19,7 @@ type FilteredPlayerListProps = {
 };
 
 export const FilteredPlayerList = ({
+  gameName,
   team,
   filterNameValue,
   filterColor,
@@ -30,27 +32,41 @@ export const FilteredPlayerList = ({
     useState<BoothPlayerType[]>(players);
 
   useEffect(() => {
+    if (team === "team1" && currTeam1Player) {
+      setSelectedPlayer(currTeam1Player);
+    } else if (team === "team2" && currTeam2Player) {
+      setSelectedPlayer(currTeam2Player);
+    } else {
+      setSelectedPlayer(null);
+    }
+  }, [team]);
+
+  useEffect(() => {
     updatePlayersData();
-  }, [players]);
+  }, []);
 
   useEffect(() => {
     const filtered = players.filter(
       (player) =>
         player.name.toLowerCase().includes(filterNameValue.toLowerCase()) &&
-        (player.color.includes(filterColor) || filterColor === "all"),
+        (player.color.includes(filterColor) || filterColor === "all") &&
+        player.status[gameName].isLocked === false,
     );
     setFilteredPlayers(filtered);
   }, [filterNameValue, filterColor, players]);
 
   const handlePlayerItemClick = (player: BoothPlayerType) => {
     if (["AI (EASY)", "AI (MEDIUM)", "AI (HARD)"].includes(player.name)) {
-      toast.custom(() => (
-        <NotificationToaster
-          variant="warning"
-          message="Can't select this player!"
-          description="AI players cannot be selected. Please choose a different player."
-        />
-      ));
+      toast.custom(
+        () => (
+          <NotificationToaster
+            variant="warning"
+            message="Can't select this player!"
+            description="AI players cannot be selected. Please choose a different player."
+          />
+        ),
+        { duration: 5000, position: "top-center" },
+      );
 
       return;
     }
@@ -59,13 +75,16 @@ export const FilteredPlayerList = ({
         if (selectedPlayer?.name === player.name) {
           setSelectedPlayer(null);
         } else if (currTeam2Player?.name === player.name) {
-          toast.custom(() => (
-            <NotificationToaster
-              variant="warning"
-              message="Can't select this player!"
-              description="Player is already selected for Team 2. Please choose a different player."
-            />
-          ));
+          toast.custom(
+            () => (
+              <NotificationToaster
+                variant="warning"
+                message="Can't select this player!"
+                description="Player is already selected for Team 2. Please choose a different player."
+              />
+            ),
+            { duration: 5000, position: "top-center" },
+          );
         } else {
           setSelectedPlayer(player);
         }
@@ -74,13 +93,16 @@ export const FilteredPlayerList = ({
         if (selectedPlayer?.name === player.name) {
           setSelectedPlayer(null);
         } else if (currTeam1Player?.name === player.name) {
-          toast.custom(() => (
-            <NotificationToaster
-              variant="warning"
-              message="Can't select this player!"
-              description="Player is already selected for Team 1. Please choose a different player."
-            />
-          ));
+          toast.custom(
+            () => (
+              <NotificationToaster
+                variant="warning"
+                message="Can't select this player!"
+                description="Player is already selected for Team 1. Please choose a different player."
+              />
+            ),
+            { duration: 5000, position: "top-center" },
+          );
         } else {
           setSelectedPlayer(player);
         }
@@ -102,6 +124,7 @@ export const FilteredPlayerList = ({
         {[...filteredPlayers].reverse().map((player) => (
           <AnimatePresence key={player.name}>
             <PlayerItem
+              gameName={gameName}
               team={team}
               player={player}
               selectedPlayer={selectedPlayer}
@@ -115,12 +138,14 @@ export const FilteredPlayerList = ({
 };
 
 type PlayerItemProps = {
+  gameName: EGame;
   team: "team1" | "team2";
   player: BoothPlayerType;
   selectedPlayer: BoothPlayerType | null;
   onClick: () => void;
 };
 const PlayerItem = ({
+  gameName,
   team,
   player,
   selectedPlayer,
@@ -191,12 +216,20 @@ const PlayerItem = ({
       ></span>
       <span className="text-md font-medium">{player.name}</span>
       <span className="text-sm ml-2">{getCheckedPlayerTeam()}</span>
+      <span
+        className={cn(
+          "text-sm ml-auto",
+          !getIsChecked() && "text-slate-400/80",
+        )}
+      >
+        tries left: {player.status[gameName].playsRemaining}
+      </span>
       {getIsChecked() ? (
-        <CheckCircle className="size-5 ml-auto" />
+        <CheckCircle className="size-5 text-right" />
       ) : (
         <Circle
           className={cn(
-            "size-5 text-slate-300 ml-auto",
+            "size-5 text-slate-300 text-right",
             team === "team1"
               ? "group-hover:text-sky-600/80"
               : "group-hover:text-rose-600/80",
