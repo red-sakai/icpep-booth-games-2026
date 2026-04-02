@@ -1,5 +1,57 @@
 import { cn } from "@/lib/utils";
-import { AlertTriangle, BadgeCheck, CircleQuestionMark } from "lucide-react";
+
+const SuccessIcon = ({ className }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="10" />
+    <path d="m9 12 2 2 4-4" />
+  </svg>
+);
+
+const WarningIcon = ({ className }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+    aria-hidden="true"
+  >
+    <path d="m10.29 3.86-7.37 12.8A2 2 0 0 0 4.66 20h14.68a2 2 0 0 0 1.74-3.03l-7.37-12.8a2 2 0 0 0-3.42 0Z" />
+    <line x1="12" y1="9" x2="12" y2="13" />
+    <line x1="12" y1="17" x2="12.01" y2="17" />
+  </svg>
+);
+
+const InfoIcon = ({ className }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="10" />
+    <line x1="12" y1="16" x2="12" y2="12" />
+    <line x1="12" y1="8" x2="12.01" y2="8" />
+  </svg>
+);
 
 type ScoreToasterProps = {
   variant?:
@@ -66,17 +118,17 @@ export const NotificationToaster = ({
     >
       <div className="flex items-center gap-4">
         {variant === "success" ? (
-          <BadgeCheck className="size-5 text-emerald-600" />
+          <SuccessIcon className="size-5 text-emerald-600" />
         ) : variant === "warning" ? (
-          <AlertTriangle className="size-5 text-yellow-600" />
+          <WarningIcon className="size-5 text-yellow-600" />
         ) : variant === "error" ? (
-          <CircleQuestionMark className="size-5 text-rose-600" />
+          <InfoIcon className="size-5 text-rose-600" />
         ) : variant === "sky" ? (
-          <CircleQuestionMark className="size-5 text-sky-600" />
+          <InfoIcon className="size-5 text-sky-600" />
         ) : variant === "rose" ? (
-          <CircleQuestionMark className="size-5 text-rose-600" />
+          <InfoIcon className="size-5 text-rose-600" />
         ) : variant === "purple" ? (
-          <CircleQuestionMark className="size-5 text-purple-600" />
+          <InfoIcon className="size-5 text-purple-600" />
         ) : (
           <></>
         )}
