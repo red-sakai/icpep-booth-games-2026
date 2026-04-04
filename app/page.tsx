@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Home } from "lucide-react";
+import { Home, HelpCircle } from "lucide-react"; 
 
 // Game components
 import TechTacToe from "@/components/games/tech-tac-toe/tech-tac-toe";
@@ -24,12 +24,18 @@ import { usePlayers } from "@/contexts/players-context";
 import { useLeaderboard } from "@/contexts/leaderboard-context";
 import { EditPlayers } from "@/components/edit-players/edit-players";
 
+// --- IMPORT YOUR NEW CUSTOM HOOK HERE ---
+import { useGameHubTour } from "@/hooks/use-game-hub-tour";
+
 export default function GameHub() {
   const [currentGame, setCurrentGame] = useState<GameType>("home");
   const [techTacToeGameMode, setTechTacToeGameMode] = useState<GameMode>(null);
-  const { updatePlayersData, setCurrTeam1Player, setCurrTeam2Player } =
-    usePlayers();
+  
+  const { updatePlayersData, setCurrTeam1Player, setCurrTeam2Player } = usePlayers();
   const { updateLeaderboardData } = useLeaderboard();
+
+  // --- INITIALIZE THE HOOK ---
+  const { startTour } = useGameHubTour(currentGame);
 
   useEffect(() => {
     updatePlayersData();
@@ -88,14 +94,33 @@ export default function GameHub() {
         );
       default:
         return (
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-5xl mx-auto relative">
+            
+            {/* --- REPLAY BUTTON TRIGGER --- */}
+            <div className="absolute top-0 right-0 z-10 hidden md:block">
+              <Button 
+                onClick={startTour} 
+                variant="outline" 
+                className="text-pink-600 border-pink-200 hover:bg-pink-50 rounded-full"
+              >
+                <HelpCircle className="w-4 h-4 mr-2" />
+                Replay Tour
+              </Button>
+            </div>
+
             <GameHeader />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-              <HowToJoinSection />
+              <div id="how-to-join-section">
+                <HowToJoinSection />
+              </div>
               <GameMechanicsSection />
             </div>
-            <GameSelectorCarousel navigateTo={navigateTo} />
-            <OverallLeaderboardSection />
+            <div id="game-selector">
+              <GameSelectorCarousel navigateTo={navigateTo} />
+            </div>
+            <div id="leaderboard-section">
+               <OverallLeaderboardSection />
+            </div>
           </div>
         );
     }
