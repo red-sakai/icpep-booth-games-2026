@@ -1,20 +1,21 @@
 "use client";
-
-import React, { createContext, useContext, useState, useMemo } from "react";
+import React, { createContext, useCallback, useContext, useState } from "react";
 import { BoothPlayerType } from "@/lib/types";
-
-type CurrentPlayersType = {
-  player1: BoothPlayerType | null;
-  player2: BoothPlayerType | null;
-}
 
 type PlayersContextType = {
   players: BoothPlayerType[];
   setPlayers: React.Dispatch<React.SetStateAction<BoothPlayerType[]>>;
-  currentPlayers: CurrentPlayersType;
-  setCurrentPlayers: React.Dispatch<React.SetStateAction<CurrentPlayersType>>;
-  isPlayerSelectionModalOpen: boolean;
-  setIsPlayerSelectionModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  currTeam1Player: BoothPlayerType | null;
+  setCurrTeam1Player: React.Dispatch<
+    React.SetStateAction<BoothPlayerType | null>
+  >;
+  currTeam2Player: BoothPlayerType | null;
+  setCurrTeam2Player: React.Dispatch<
+    React.SetStateAction<BoothPlayerType | null>
+  >;
+  isPlayerEntryDialogOpen: boolean;
+  setIsPlayerEntryDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  updatePlayersData: () => Promise<void>;
 };
 
 const PlayersContext = createContext<PlayersContextType | null>(null);
@@ -25,24 +26,33 @@ type PlayersProviderProps = {
 
 export const PlayersProvider = ({ children }: PlayersProviderProps) => {
   const [players, setPlayers] = useState<BoothPlayerType[]>([]);
-  const [currentPlayers, setCurrentPlayers] = useState<CurrentPlayersType>({ player1: null, player2: null });
-  const [isPlayerSelectionModalOpen, setIsPlayerSelectionModalOpen] = useState(false);
+  const [currTeam1Player, setCurrTeam1Player] =
+    useState<BoothPlayerType | null>(null);
+  const [currTeam2Player, setCurrTeam2Player] =
+    useState<BoothPlayerType | null>(null);
+  const [isPlayerEntryDialogOpen, setIsPlayerEntryDialogOpen] = useState(false);
 
-  const contextValue = useMemo(
-    () => ({
-      players,
-      setPlayers,
-      currentPlayers,
-      setCurrentPlayers,
-      isPlayerSelectionModalOpen,
-      setIsPlayerSelectionModalOpen,
-    }),
-    [players, currentPlayers, isPlayerSelectionModalOpen]
-  );
-
+  const updatePlayersData = useCallback(async () => {
+    const response = await fetch("/api/players");
+    const data = await response.json();
+    setPlayers(data);
+    console.debug("Players data updated");
+  }, []);
 
   return (
-    <PlayersContext.Provider value={contextValue}>
+    <PlayersContext.Provider
+      value={{
+        players,
+        setPlayers,
+        currTeam1Player,
+        setCurrTeam1Player,
+        currTeam2Player,
+        setCurrTeam2Player,
+        isPlayerEntryDialogOpen,
+        setIsPlayerEntryDialogOpen,
+        updatePlayersData,
+      }}
+    >
       {children}
     </PlayersContext.Provider>
   );

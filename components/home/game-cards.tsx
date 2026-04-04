@@ -68,13 +68,13 @@ export default function GameCards({ navigateTo }: GameCardsProps) {
               <Button
                 onClick={() => setLeaderboardGame("led-memory")}
                 variant="outline"
-                className="w-full bg-white border-amber-200 hover:bg-amber-50 hover:border-amber-300 text-amber-700 shadow-sm"
+                className="w-full bg-white border-rose-200 hover:bg-rose-50 hover:border-rose-300 text-rose-700 shadow-sm"
               >
                 Leaderboards
               </Button>
               <Button
                 onClick={() => navigateTo("led-memory")}
-                className="w-full bg-amber-500 hover:bg-amber-600 text-white shadow-sm"
+                className="w-full bg-rose-500 hover:bg-rose-600 text-white shadow-sm"
               >
                 Play LED Memory
               </Button>
@@ -113,13 +113,13 @@ export default function GameCards({ navigateTo }: GameCardsProps) {
               <Button
                 onClick={() => setLeaderboardGame("tech-tac-toe")}
                 variant="outline"
-                className="w-full bg-white border-sky-200 hover:bg-sky-50 hover:border-sky-300 text-sky-700 shadow-sm"
+                className="w-full bg-white border-pink-200 hover:bg-pink-50 hover:border-pink-300 text-pink-700 shadow-sm"
               >
                 Leaderboards
               </Button>
               <Button
                 onClick={() => navigateTo("tech-tac-toe")}
-                className="w-full bg-sky-600 hover:bg-sky-700 text-white shadow-sm"
+                className="w-full bg-pink-600 hover:bg-pink-700 text-white shadow-sm"
               >
                 Play Tech Tac Toe
               </Button>
@@ -140,12 +140,17 @@ export default function GameCards({ navigateTo }: GameCardsProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <Card className="overflow-hidden border-2 border-purple-400 shadow-lg h-full">
+        <Card className="overflow-hidden border-2 border-purple-400 shadow-lg h-full hover:shadow-xl transition-shadow">
           <div className="p-6 h-full flex flex-col bg-gradient-to-b from-purple-200 via-purple-100 to-white">
             <div className="flex justify-center mb-4">
               <div className="bg-white p-4 rounded-2xl shadow-sm">
                 <Cable size={48} className="text-purple-500" />
               </div>
+            </div>
+            <div className="flex justify-center mb-2">
+              <span className="text-xs font-semibold tracking-wide uppercase px-3 py-1 rounded-full bg-cyan-100 text-cyan-700 border border-cyan-200">
+                Fast 15s Challenge
+              </span>
             </div>
             <h2 className="text-lg font-bold text-purple-600 text-center mb-2">
               Connect Me Not: Ethernet Color Coding Game

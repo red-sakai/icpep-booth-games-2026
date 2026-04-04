@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ReactLenis } from "lenis/react";
-
+import { PlayersProvider } from "@/contexts/players-context";
+import { LeaderboardProvider } from "@/contexts/leaderboard-context";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "ICpEP Booth Games",
@@ -21,9 +22,10 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <ReactLenis root options={{ lerp: 0.1, duration: 0.5, smoothWheel: true }} >
-          {children}
-        </ReactLenis>
+        <Toaster />
+        <PlayersProvider>
+          <LeaderboardProvider>{children}</LeaderboardProvider>
+        </PlayersProvider>
       </body>
     </html>
   );

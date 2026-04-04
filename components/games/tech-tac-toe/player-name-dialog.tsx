@@ -42,19 +42,21 @@ export default function PlayerNameDialog({
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onCancel()}>
-      <DialogContent className="sm:max-w-md bg-white border-sky-100">
+      <DialogContent className="sm:max-w-md bg-white border-pink-100">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-sky-900 text-center">
+            <DialogTitle className="text-2xl font-bold text-pink-700 text-center">
               {title}
             </DialogTitle>
             <DialogDescription className="text-center text-sky-600">
-              {playerLabel ? `${playerLabel}, you` : "You"} won with a streak of <span className="font-bold text-sky-800">{score}</span>! Enter your name to save your score.
+              {playerLabel ? `${playerLabel}, you` : "You"} won with a streak of{" "}
+              <span className="font-bold text-pink-600">{score}</span>! Enter
+              your name to save your score.
             </DialogDescription>
           </DialogHeader>
 
           <div className="flex flex-col items-center py-6 space-y-4">
-            <div className="bg-sky-50 p-4 rounded-full text-sky-600">
+            <div className="bg-pink-50 p-4 rounded-full text-pink-500">
               <User size={48} />
             </div>
             <Input
@@ -63,7 +65,7 @@ export default function PlayerNameDialog({
               placeholder="ENTER YOUR NAME"
               maxLength={10}
               autoFocus
-              className="text-center text-xl font-bold uppercase border-sky-200 focus:border-sky-500 focus:ring-sky-500"
+              className="text-center text-xl font-bold uppercase border-pink-200 focus:border-pink-400 focus:ring-pink-400"
             />
           </div>
 
@@ -73,14 +75,14 @@ export default function PlayerNameDialog({
                 type="button"
                 variant="outline"
                 onClick={onCancel}
-                className="flex-1 border-slate-200 text-slate-600"
+                className="flex-1 border-pink-200 text-pink-500 hover:bg-pink-50"
               >
                 Skip
               </Button>
               <Button
                 type="submit"
                 disabled={!name.trim()}
-                className="flex-1 bg-sky-600 hover:bg-sky-700 text-white font-bold"
+                className="flex-1 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-xl"
               >
                 Save Score
               </Button>

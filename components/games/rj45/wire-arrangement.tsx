@@ -21,10 +21,13 @@ export default function WireArrangement({
   isLargeScreen,
 }: WireArrangementProps) {
   return (
-    <Card className="p-4 bg-white shadow-md">
-      <h3 className="text-lg font-semibold text-center mb-4 text-cyan-700">
+    <Card className="p-4 sm:p-5 bg-white/45 backdrop-blur-md border border-white/50 shadow-md rounded-2xl">
+      <h3 className="text-lg font-semibold text-center mb-1 text-purple-700">
         Arrange the wires in the correct order
       </h3>
+      <p className="text-center text-sm text-purple-700/75 mb-4">
+        Drag and drop each wire into position 1 to 8.
+      </p>
 
       {/* Responsive wire arrangement - vertical on mobile, horizontal on larger screens */}
       <div className="flex flex-col items-center">
@@ -36,7 +39,7 @@ export default function WireArrangement({
             isMobile
               ? "flex flex-col gap-2"
               : "flex flex-row gap-2 justify-center"
-          } p-4 bg-slate-50 rounded-lg min-h-[120px] w-full`}
+          } p-4 bg-white/35 backdrop-blur-sm rounded-xl min-h-[120px] w-full border border-white/40`}
         >
           {wires.map((wire, index) => (
             <Reorder.Item
@@ -47,13 +50,13 @@ export default function WireArrangement({
               <motion.div
                 className={`flex ${
                   isMobile ? "flex-row items-center" : "flex-col items-center"
-                } p-2 bg-white rounded-md hover:bg-slate-100 border border-slate-200 shadow-sm ${
+                } p-2 bg-white/85 rounded-xl hover:bg-white border border-purple-100 shadow-sm ${
                   isLargeScreen ? "w-[80px]" : ""
                 }`}
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ scale: 1.03, y: -1 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <div className="text-center text-slate-500 font-medium mb-1 mx-2">
+                <div className="text-center text-purple-500 font-semibold mb-1 mx-2">
                   {index + 1}
                 </div>
                 <div
@@ -71,11 +74,11 @@ export default function WireArrangement({
                     ></div>
                   )}
                 </div>
-                <div className="text-xs font-medium text-slate-700 bg-white px-2 py-1 rounded mx-2 my-1 shadow-sm whitespace-nowrap">
+                <div className="text-xs font-medium text-purple-700 bg-white/80 px-2 py-1 rounded mx-2 my-1 shadow-sm whitespace-nowrap">
                   {wire.name}
                 </div>
                 <div
-                  className={`text-slate-400 ${isMobile ? "ml-auto" : "mt-1"}`}
+                  className={`text-purple-300 ${isMobile ? "ml-auto" : "mt-1"}`}
                 >
                   {isMobile ? "⋮⋮" : "≡"}
                 </div>
@@ -88,7 +91,7 @@ export default function WireArrangement({
       <div className="mt-6 flex justify-center">
         <Button
           onClick={checkArrangement}
-          className="bg-cyan-600 hover:bg-cyan-700 text-white shadow-md text-base sm:text-lg px-4 sm:px-6 py-2"
+          className="bg-purple-500 hover:bg-purple-600 text-white shadow-md text-base sm:text-lg px-4 sm:px-6 py-2 rounded-xl min-w-[180px]"
         >
           Check Wiring
         </Button>

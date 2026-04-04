@@ -10,8 +10,17 @@ import {
   ChevronLeft,
   ChevronRight,
   Play,
+  Trophy,
 } from "lucide-react";
 import type { GameType } from "@/lib/types";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import LeaderboardPanel from "@/components/games/leaderboard/leaderboard-panel";
 
 type GameCardsProps = {
   navigateTo: (game: GameType) => void;
@@ -39,11 +48,11 @@ const games: GameOption[] = [
       "Test your memory by repeating a sequence of 6 LED patterns in the correct order. Challenge yourself and climb the leaderboard!",
     icon: <Lightbulb size={100} />,
     color: {
-      from: "from-amber-500",
-      to: "to-orange-600",
-      accent: "bg-amber-500",
-      button: "bg-amber-500",
-      buttonHover: "hover:bg-amber-600",
+      from: "from-rose-400",
+      to: "to-rose-600",
+      accent: "bg-rose-500",
+      button: "bg-rose-500",
+      buttonHover: "hover:bg-rose-600",
     },
   },
   {
@@ -53,11 +62,11 @@ const games: GameOption[] = [
       "A binary twist on the classic game with 1s and 0s instead of Xs and Os. Strategic gameplay meets digital innovation.",
     icon: <Grid3X3 size={100} />,
     color: {
-      from: "from-sky-500",
-      to: "to-blue-600",
-      accent: "bg-sky-500",
-      button: "bg-sky-600",
-      buttonHover: "hover:bg-sky-700",
+      from: "from-pink-400",
+      to: "to-pink-600",
+      accent: "bg-pink-500",
+      button: "bg-pink-600",
+      buttonHover: "hover:bg-pink-700",
     },
   },
   {
@@ -67,17 +76,18 @@ const games: GameOption[] = [
       "Master the art of RJ45 connector wiring standards. Learn T568A and T568B in this interactive challenge.",
     icon: <Cable size={100} />,
     color: {
-      from: "from-cyan-500",
-      to: "to-teal-600",
-      accent: "bg-cyan-500",
-      button: "bg-cyan-600",
-      buttonHover: "hover:bg-cyan-700",
+      from: "from-purple-500",
+      to: "to-fuchsia-600",
+      accent: "bg-purple-500",
+      button: "bg-purple-600",
+      buttonHover: "hover:bg-purple-700",
     },
   },
 ];
 
 export default function GameSelectorCarousel({ navigateTo }: GameCardsProps) {
   const [current, setCurrent] = useState(0);
+  const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(false);
 
   const paginate = useCallback((newDirection: number) => {
     setCurrent((prev) => (prev + newDirection + games.length) % games.length);
@@ -136,13 +146,23 @@ export default function GameSelectorCarousel({ navigateTo }: GameCardsProps) {
                   {game.title}
                 </h2>
 
-                <Button
-                  onClick={() => navigateTo(game.id)}
-                  className={`${game.color.button} ${game.color.buttonHover} text-white font-bold px-6 py-3 shadow-lg flex items-center gap-2`}
-                >
-                  <Play size={20} fill="white" />
-                  Play Now
-                </Button>
+                <div className="flex flex-wrap items-center gap-3">
+                  <Button
+                    onClick={() => navigateTo(game.id)}
+                    className={`${game.color.button} ${game.color.buttonHover} text-white font-bold px-6 py-3 shadow-lg flex items-center gap-2`}
+                  >
+                    <Play size={20} fill="white" />
+                    Play Now
+                  </Button>
+                  <Button
+                    onClick={() => setIsLeaderboardOpen(true)}
+                    variant="outline"
+                    className="bg-white/85 border-white/90 text-slate-900 hover:bg-white font-semibold inline-flex items-center gap-2"
+                  >
+                    <Trophy size={16} />
+                    Leaderboard
+                  </Button>
+                </div>
               </motion.div>
             </div>
           </motion.div>
@@ -246,6 +266,18 @@ export default function GameSelectorCarousel({ navigateTo }: GameCardsProps) {
           <ChevronRight size={24} />
         </motion.button>
       </div>
+
+      <Dialog open={isLeaderboardOpen} onOpenChange={setIsLeaderboardOpen}>
+        <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{game.title} Leaderboard</DialogTitle>
+            <DialogDescription>
+              Top players for this game.
+            </DialogDescription>
+          </DialogHeader>
+          <LeaderboardPanel gameId={game.id} limit={50} className="w-full max-w-none" />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Home } from "lucide-react";
+import { Home, HelpCircle } from "lucide-react"; 
 
 // Game components
 import TechTacToe from "@/components/games/tech-tac-toe/tech-tac-toe";
@@ -15,15 +15,37 @@ import GameHeader from "@/components/home/game-header";
 import HowToJoinSection from "@/components/home/how-to-join-section";
 import GameMechanicsSection from "@/components/home/game-mechanics-section";
 import GameSelectorCarousel from "@/components/home/game-selector-carousel";
+import OverallLeaderboardSection from "@/components/home/overall-leaderboard-section";
 import BackToHomeButton from "@/components/home/back-to-home-button";
 
 // Types
-import { GameType } from "@/lib/types";
-import { PlayersProvider } from "@/contexts/players-context";
-import { PlayersSelection } from "@/components/home/player-selection/players-selection";
+import { EGame, GameMode, GameType } from "@/lib/types";
+import { usePlayers } from "@/contexts/players-context";
+import { useLeaderboard } from "@/contexts/leaderboard-context";
+import { EditPlayers } from "@/components/edit-players/edit-players";
+
+// --- IMPORT YOUR NEW CUSTOM HOOK HERE ---
+import { useGameHubTour } from "@/hooks/use-game-hub-tour";
 
 export default function GameHub() {
   const [currentGame, setCurrentGame] = useState<GameType>("home");
+  const [techTacToeGameMode, setTechTacToeGameMode] = useState<GameMode>(null);
+  
+  const { updatePlayersData, setCurrTeam1Player, setCurrTeam2Player } = usePlayers();
+  const { updateLeaderboardData } = useLeaderboard();
+
+  // --- INITIALIZE THE HOOK ---
+  const { startTour } = useGameHubTour(currentGame);
+
+  useEffect(() => {
+    updatePlayersData();
+    updateLeaderboardData();
+  }, []);
+
+  useEffect(() => {
+    setCurrTeam1Player(null);
+    setCurrTeam2Player(null);
+  }, [setCurrTeam1Player, setCurrTeam2Player, currentGame]);
 
   const navigateTo = (game: GameType) => {
     setCurrentGame(game);
@@ -37,9 +59,17 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="pink" />
-              <PlayersSelection playerCount={2} />
+              <EditPlayers
+                gameName={EGame.TECH_TAC_TOE}
+                gameMode={techTacToeGameMode}
+                openOnMount={false}
+              />
             </div>
-            <TechTacToe />
+            <TechTacToe
+              gameId="tech-tac-toe"
+              gameMode={techTacToeGameMode}
+              setGameMode={setTechTacToeGameMode}
+            />
           </div>
         );
       case "led-memory":
@@ -47,9 +77,9 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="rose" />
-              <PlayersSelection playerCount={1} />
+              <EditPlayers gameName={EGame.LED_MEMORY} gameMode="solo" />
             </div>
-            <LEDMemoryGame />
+            <LEDMemoryGame gameId={"led-memory"} />
           </div>
         );
       case "rj45-game":
@@ -57,53 +87,71 @@ export default function GameHub() {
           <div className="w-full max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <BackToHomeButton navigateTo={navigateTo} variant="purple" />
-              <PlayersSelection playerCount={1} />
+              <EditPlayers gameName={EGame.RJ45_GAME} gameMode="solo" />
             </div>
-            <RJ45Game />
+            <RJ45Game gameId="rj45-game" />
           </div>
         );
       default:
         return (
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-5xl mx-auto relative">
+            
+            {/* --- REPLAY BUTTON TRIGGER --- */}
+            <div className="absolute top-0 right-0 z-10 hidden md:block">
+              <Button 
+                onClick={startTour} 
+                variant="outline" 
+                className="text-pink-600 border-pink-200 hover:bg-pink-50 rounded-full"
+              >
+                <HelpCircle className="w-4 h-4 mr-2" />
+                Replay Tour
+              </Button>
+            </div>
+
             <GameHeader />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-              <HowToJoinSection />
+              <div id="how-to-join-section">
+                <HowToJoinSection />
+              </div>
               <GameMechanicsSection />
             </div>
-            <GameSelectorCarousel navigateTo={navigateTo} />
+            <div id="game-selector">
+              <GameSelectorCarousel navigateTo={navigateTo} />
+            </div>
+            <div id="leaderboard-section">
+               <OverallLeaderboardSection />
+            </div>
           </div>
         );
     }
   };
 
   return (
-    <PlayersProvider>
-      <div className="min-h-screen bg-gradient-to-b from-purple-100 via-pink-200 to-rose-200 p-4 md:p-8">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentGame}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {renderContent()}
-          </motion.div>
-        </AnimatePresence>
+    <div className="min-h-screen bg-gradient-to-b from-purple-100 via-pink-200 to-rose-200 p-4 md:p-8">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentGame}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {renderContent()}
+        </motion.div>
+      </AnimatePresence>
 
-        {currentGame !== "home" && (
-          <div className="fixed bottom-4 right-4">
-            <Button
-              onClick={() => navigateTo("home")}
-              size="icon"
-              className="rounded-full bg-white text-sky-600 hover:bg-sky-50 shadow-md"
-              aria-label="Return to home"
-            >
-              <Home size={20} />
-            </Button>
-          </div>
-        )}
-      </div>
-    </PlayersProvider>
+      {currentGame !== "home" && (
+        <div className="fixed bottom-4 right-4">
+          <Button
+            onClick={() => navigateTo("home")}
+            size="icon"
+            className="rounded-full bg-white text-pink-600 hover:bg-pink-50 shadow-md"
+            aria-label="Return to home"
+          >
+            <Home size={20} />
+          </Button>
+        </div>
+      )}
+    </div>
   );
 }
