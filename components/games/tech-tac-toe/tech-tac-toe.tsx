@@ -426,7 +426,7 @@ export default function TechTacToe({
                     hover:border-pink-400 text-pink-600 shadow-sm flex items-center gap-2 rounded-xl"
         >
           <RotateCcw size={16} />
-          Play Again
+          Reset Board
         </Button>
         <Button
           onClick={handleChangeModeClick}
