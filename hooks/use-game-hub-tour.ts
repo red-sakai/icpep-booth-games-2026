@@ -7,7 +7,7 @@ export function useGameHubTour(currentGame: string) {
   const startTour = () => {
     const driverObj = driver({
       showProgress: true,
-    
+      // Optional: popoverClass: "game-hub-tour", 
       steps: [
         {
           element: '#how-to-join-section', 
@@ -34,14 +34,25 @@ export function useGameHubTour(currentGame: string) {
     });
 
     driverObj.drive();
-    localStorage.setItem("hasSeenTour", "true");
+    
+    // Save to sessionStorage so it resets when the tab is closed
+    sessionStorage.setItem("hasSeenTourSession", "true");
   };
 
   useEffect(() => {
+    // Only attempt to start if we are on the home screen
     if (currentGame === "home") {
-      setTimeout(() => {
-        startTour();
-      }, 500);
+      const hasSeenTour = sessionStorage.getItem("hasSeenTourSession");
+
+      // Only auto-start if the session flag doesn't exist
+      if (!hasSeenTour) {
+        const timer = setTimeout(() => {
+          startTour();
+        }, 500);
+
+        // Cleanup timer if the component unmounts or currentGame changes
+        return () => clearTimeout(timer);
+      }
     }
   }, [currentGame]);
 
