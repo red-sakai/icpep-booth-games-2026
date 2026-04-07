@@ -140,7 +140,7 @@ export const CreatePlayerDialog = ({
         <NotificationToaster
           variant="success"
           message="Player created successfully!"
-          description={`Welcome, <${newPlayer.name}>! You have joined ${team === "team1" ? "Team 1" : "Team 2"}.`}
+          description={`Welcome, ${newPlayer.name}! You have joined ${team === "team1" ? "Team 1" : "Team 2"}.`}
         />
       ),
       { duration: 5000, position: "top-center" },

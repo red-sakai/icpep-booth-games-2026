@@ -189,7 +189,7 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
         () => (
           <NotificationToaster
             variant={"success"}
-            message={`Congratulations <${currTeam1Player ? currTeam1Player.name : "Anonymous"}>!`}
+            message={`Congratulations ${currTeam1Player ? currTeam1Player.name : "Anonymous"}!`}
             description={`You matched the wires perfectly on ${standard} standard and got a score of ${newScore}!`}
           />
         ),

@@ -104,7 +104,7 @@ export const SelectPlayerDialog = ({
         <NotificationToaster
           variant="success"
           message="Player selected!"
-          description={`<${selectedPlayer.name}> has been selected for ${
+          description={`${selectedPlayer.name} has been selected for ${
             team === "team1" ? "Team 1" : "Team 2"
           }.`}
         />

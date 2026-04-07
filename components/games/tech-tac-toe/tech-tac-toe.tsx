@@ -98,7 +98,7 @@ export default function TechTacToe({
           <NotificationToaster
             variant={"rose"}
             message={`Start!`}
-            description={`Player <${currTeam1Player ? currTeam1Player.name : "Anonymous"}> will start the game!`}
+            description={`Player ${currTeam1Player ? currTeam1Player.name : "Anonymous"} will start the game!`}
           />
         ),
         { duration: 5000 },
@@ -146,7 +146,7 @@ export default function TechTacToe({
           () => (
             <NotificationToaster
               variant={winnerTeam === "1" ? "sky" : "rose"}
-              message={`Player <${currTeam1Player?.name}> ${winnerTeam === "1" ? "won" : "lost"}!`}
+              message={`Player ${currTeam1Player?.name} ${winnerTeam === "1" ? "won" : "lost"}!`}
               description={`You got ${newScore1} points!`}
             />
           ),
@@ -170,7 +170,7 @@ export default function TechTacToe({
           () => (
             <NotificationToaster
               variant={winnerTeam === "1" ? "sky" : "rose"}
-              message={`Player <${winnerPlayerName}> won!`}
+              message={`Player ${winnerPlayerName} won!`}
               description={`You got ${winnerTeam === "1" ? newScore1 : newScore2} points!`}
             />
           ),
