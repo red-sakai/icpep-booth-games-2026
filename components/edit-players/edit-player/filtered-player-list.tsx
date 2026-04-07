@@ -156,15 +156,15 @@ const PlayerItem = ({
   const getButtonClasses = () => {
     if (team === "team1") {
       return selectedPlayer?.name === player.name
-        ? "bg-sky-400/20 border-sky-600/80 text-sky-600"
+        ? "bg-purple-400/20 border-purple-600/80 text-purple-600"
         : player.name === currTeam2Player?.name
           ? "border-rose-700/80 text-rose-700 bg-rose-400/20 cursor-not-allowed"
-          : "hover:border-sky-600/80 text-sky-700";
+          : "hover:border-purple-600/80 text-purple-700";
     } else if (team === "team2") {
       return selectedPlayer?.name === player.name
         ? "bg-rose-400/20 border-rose-700/80 text-rose-700"
         : player.name === currTeam1Player?.name
-          ? "border-sky-600/80 text-sky-600 bg-sky-400/20 cursor-not-allowed"
+          ? "border-purple-600/80 text-purple-600 bg-purple-400/20 cursor-not-allowed"
           : "hover:border-rose-700/80 text-rose-700";
     } else return "";
   };
@@ -231,7 +231,7 @@ const PlayerItem = ({
           className={cn(
             "size-5 text-slate-300 text-right",
             team === "team1"
-              ? "group-hover:text-sky-600/80"
+              ? "group-hover:text-purple-600/80"
               : "group-hover:text-rose-600/80",
             "transition-colors duration-200",
           )}
