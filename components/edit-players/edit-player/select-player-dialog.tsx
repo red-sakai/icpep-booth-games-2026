@@ -122,14 +122,14 @@ export const SelectPlayerDialog = ({
       <DialogContent
         className={cn(
           "sm:max-w-md bg-slate-50",
-          team === "team1" ? "border-sky-100" : "border-rose-100",
+          team === "team1" ? "border-purple-100" : "border-rose-100",
         )}
       >
         <DialogHeader>
           <DialogTitle
             className={cn(
               "text-2xl font-bold",
-              team === "team1" ? "text-sky-900" : "text-rose-900",
+              team === "team1" ? "text-purple-900" : "text-rose-900",
             )}
           >
             Select a Player
@@ -137,7 +137,7 @@ export const SelectPlayerDialog = ({
         </DialogHeader>
 
         <span
-          className={cn(team === "team1" ? "text-sky-700" : "text-rose-700")}
+          className={cn(team === "team1" ? "text-purple-700" : "text-rose-700")}
         >
           Filter players:
         </span>
@@ -150,7 +150,7 @@ export const SelectPlayerDialog = ({
         />
 
         <span
-          className={cn(team === "team1" ? "text-sky-700" : "text-rose-700")}
+          className={cn(team === "team1" ? "text-purple-700" : "text-rose-700")}
         >
           Result:
         </span>
@@ -170,7 +170,7 @@ export const SelectPlayerDialog = ({
             <Button
               className={cn(
                 "w-full bg-slate-50 rounded-xl",
-                team === "team1" ? "text-sky-900" : "text-rose-900",
+                team === "team1" ? "text-purple-900" : "text-rose-900",
                 "py-6 text-lg font-bold",
                 "cursor-pointer border border-slate-300/80",
                 "hover:bg-slate-200   hover:shadow-lg",
@@ -185,7 +185,7 @@ export const SelectPlayerDialog = ({
                 "w-full brounded-xl shadow-lg",
                 "text-slate-50 py-6 text-lg font-bold",
                 team === "team1"
-                  ? "bg-sky-600 hover:bg-sky-700   hover:shadow-sky-200"
+                  ? "bg-purple-600 hover:bg-purple-700   hover:shadow-purple-200"
                   : "bg-rose-600 hover:bg-rose-700   hover:shadow-rose-200",
                 "transition-all duration-300",
                 "cursor-pointer",
