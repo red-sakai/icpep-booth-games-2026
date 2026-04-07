@@ -398,5 +398,45 @@
     },
     "createdAt": "2026-04-07T07:13:40.000Z",
     "updatedAt": "2026-04-07T07:15:12.142Z"
+  },
+  {
+    "name": "jin",
+    "color": "lightgreen",
+    "status": {
+      "tech-tac-toe": {
+        "playsRemaining": 3,
+        "isLocked": false
+      },
+      "led-memory": {
+        "playsRemaining": 2,
+        "isLocked": false
+      },
+      "rj45-game": {
+        "playsRemaining": 2,
+        "isLocked": false
+      }
+    },
+    "createdAt": "2026-04-07T07:28:35.722Z",
+    "updatedAt": null
+  },
+  {
+    "name": "nij",
+    "color": "teal",
+    "status": {
+      "tech-tac-toe": {
+        "playsRemaining": 3,
+        "isLocked": false
+      },
+      "led-memory": {
+        "playsRemaining": 2,
+        "isLocked": false
+      },
+      "rj45-game": {
+        "playsRemaining": 2,
+        "isLocked": false
+      }
+    },
+    "createdAt": "2026-04-07T07:28:42.644Z",
+    "updatedAt": null
   }
 ]

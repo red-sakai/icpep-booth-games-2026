@@ -155,7 +155,7 @@ const PlayerNameDisplay = ({
         "font-medium bg-slate-50 rounded-lg shadow-md border-b-2",
         team === "team1" &&
           player &&
-          "bg-sky-100 text-sky-800 border-sky-600/80",
+          "bg-purple-100 text-purple-800 border-purple-600/80",
         team === "team2" &&
           player &&
           "bg-rose-100 text-rose-800 border-rose-600/80",
@@ -187,7 +187,7 @@ const PlayerNameDisplay = ({
             <span
               className={cn(
                 "text-lg font-semibold",
-                team === "team1" ? "text-sky-600" : "text-rose-600",
+                team === "team1" ? "text-purple-600" : "text-rose-600",
               )}
             >
               {player.status[gameName].playsRemaining}

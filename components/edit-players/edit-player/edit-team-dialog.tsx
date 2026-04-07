@@ -195,12 +195,12 @@ export const EditTeamDialog = ({
         onOpenChange={handleOnOpenChange}
         aria-describedby="player-entry-dialog"
       >
-        <DialogContent className="sm:max-w-md bg-white border-sky-100">
+        <DialogContent className="sm:max-w-md bg-white border-purple-100">
           <DialogHeader>
             <DialogTitle
               className={cn(
                 "flex items-center justify-center gap-4",
-                selectedTeam === "team1" ? "text-sky-900" : "text-rose-900",
+                selectedTeam === "team1" ? "text-purple-900" : "text-rose-900",
                 "text-2xl font-bold",
               )}
             >
@@ -209,7 +209,7 @@ export const EditTeamDialog = ({
             <DialogDescription
               className={cn(
                 "text-center",
-                selectedTeam === "team1" ? "text-sky-600" : "text-rose-600",
+                selectedTeam === "team1" ? "text-purple-600" : "text-rose-600",
               )}
             >
               Create or select a player to track your scores. You can change
@@ -220,7 +220,7 @@ export const EditTeamDialog = ({
           <div className="flex flex-col gap-0">
             <span
               className={cn(
-                selectedTeam === "team1" ? "text-sky-700" : "text-rose-700",
+                selectedTeam === "team1" ? "text-purple-700" : "text-rose-700",
               )}
             >
               Assign to:
@@ -249,7 +249,7 @@ export const EditTeamDialog = ({
 
             <span
               className={cn(
-                selectedTeam === "team1" ? "text-sky-700" : "text-rose-700",
+                selectedTeam === "team1" ? "text-purple-700" : "text-rose-700",
               )}
             >
               Method:
@@ -279,7 +279,7 @@ export const EditTeamDialog = ({
               className={cn(
                 "w-full rounded-xl shadow-lg",
                 selectedTeam === "team1"
-                  ? "bg-sky-500 hover:bg-sky-700 shadow-sky-200"
+                  ? "bg-purple-500 hover:bg-purple-700 shadow-purple-200"
                   : "bg-rose-500 hover:bg-rose-700 shadow-rose-200",
                 "text-white py-6 text-lg font-bold",
                 "transition-all duration-300",
@@ -325,12 +325,12 @@ const TeamButton = ({
   const getButtonClasses = () => {
     if (team === "team1") {
       return team === selectedTeam
-        ? "border-sky-500 bg-sky-50 text-sky-700 shadow-md"
+        ? "border-purple-500 bg-purple-50 text-purple-700 shadow-md"
         : "border-slate-100 bg-slate-50 text-slate-500 hover:border-rose-200 hover:bg-rose-25";
     } else if (team === "team2") {
       return team === selectedTeam
         ? "border-rose-500 bg-rose-50 text-rose-700 shadow-md"
-        : "border-slate-100 bg-slate-50 text-slate-500 hover:border-sky-200 hover:bg-sky-25";
+        : "border-slate-100 bg-slate-50 text-slate-500 hover:border-purple-200 hover:bg-purple-25";
     }
   };
   const getCircleStyle = () => {
@@ -346,7 +346,7 @@ const TeamButton = ({
     switch (team) {
       case "team1":
         return {
-          border: "2px solid var(--color-sky-600)",
+          border: "2px solid var(--color-purple-600)",
           backgroundColor: "transparent",
         };
       case "team2":
@@ -398,8 +398,8 @@ const OptionButton = ({
   const getButtonClasses = () => {
     if (selectedTeam === "team1") {
       return option === selectedOption
-        ? "border-sky-500 bg-sky-50 text-sky-700 shadow-md"
-        : "border-slate-100 bg-slate-50 text-slate-500 hover:border-sky-200 hover:bg-sky-25";
+        ? "border-purple-500 bg-purple-50 text-purple-700 shadow-md"
+        : "border-slate-100 bg-slate-50 text-slate-500 hover:border-purple-200 hover:bg-purple-25";
     } else if (selectedTeam === "team2") {
       return option === selectedOption
         ? "border-rose-500 bg-rose-50 text-rose-700 shadow-md"
@@ -409,7 +409,7 @@ const OptionButton = ({
   const getDivClasses = () => {
     if (selectedTeam === "team1") {
       return option === selectedOption
-        ? "bg-sky-500 text-white"
+        ? "bg-purple-500 text-white"
         : "bg-slate-200";
     } else if (selectedTeam === "team2") {
       return option === selectedOption
