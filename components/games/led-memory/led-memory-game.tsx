@@ -343,7 +343,7 @@ export default function LEDMemoryGame({ gameId }: LEDMemoryGameProps) {
         () => (
           <NotificationToaster
             variant={"rose"}
-            message={`Player <${currTeam1Player ? currTeam1Player.name : "Anonymous"}> got ${newScore} points!`}
+            message={`Player ${currTeam1Player ? currTeam1Player.name : "Anonymous"} got ${newScore} points!`}
             description={`You remembered ${correctSequenceCount} out of ${sequence.length} correctly on ${LEVEL_CONFIG[selectedLevel].label} level.`}
           />
         ),

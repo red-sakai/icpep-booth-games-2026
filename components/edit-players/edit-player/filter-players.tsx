@@ -22,7 +22,7 @@ export const FilterPlayers = ({
 }: FilterPlayersProps) => {
   const getClasses = () => {
     if (team === "team1") {
-      return "border-sky-600 text-sky-700 hover:border-2 hover:border-sky-600/80";
+      return "border-sky-600 text-purple-700 hover:border-2 hover:border-purple-600/80";
     } else if (team === "team2") {
       return "border-rose-700 text-rose-700 hover:border-2 hover:border-rose-700/80";
     } else return "";
@@ -64,7 +64,7 @@ const FilterPlayerColorPicker = ({
   const [isColorPaletteOpen, setIsColorPaletteOpen] = useState(false);
   const getClasses = () => {
     if (team === "team1") {
-      return "border-sky-600 text-sky-700 hover:border-sky-600/80";
+      return "border-pruple-600 text-purple-700 hover:border-purple-600/80";
     } else if (team === "team2") {
       return "border-rose-700 text-rose-700 hover:border-rose-700/80";
     } else return "";

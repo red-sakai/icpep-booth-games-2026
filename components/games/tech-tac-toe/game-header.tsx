@@ -40,7 +40,7 @@ export default function GameHeader({
     <div className="text-center space-y-3 w-full max-w-md">
       {/* Title Area */}
       <div className="flex items-center justify-center gap-2">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-pink-600 via-fuchsia-500 to-pink-400 drop-shadow-sm tracking-tight">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-pink-600 via-pink-500 to-pink-400 drop-shadow-sm tracking-tight">
           Tech Tac Toe
         </h1>   
         <button

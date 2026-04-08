@@ -98,7 +98,7 @@ export default function TechTacToe({
           <NotificationToaster
             variant={"rose"}
             message={`Start!`}
-            description={`Player <${currTeam1Player ? currTeam1Player.name : "Anonymous"}> will start the game!`}
+            description={`Player ${currTeam1Player ? currTeam1Player.name : "Anonymous"} will start the game!`}
           />
         ),
         { duration: 5000 },
@@ -146,7 +146,7 @@ export default function TechTacToe({
           () => (
             <NotificationToaster
               variant={winnerTeam === "1" ? "sky" : "rose"}
-              message={`Player <${currTeam1Player?.name}> ${winnerTeam === "1" ? "won" : "lost"}!`}
+              message={`Player ${currTeam1Player?.name} ${winnerTeam === "1" ? "won" : "lost"}!`}
               description={`You got ${newScore1} points!`}
             />
           ),
@@ -170,7 +170,7 @@ export default function TechTacToe({
           () => (
             <NotificationToaster
               variant={winnerTeam === "1" ? "sky" : "rose"}
-              message={`Player <${winnerPlayerName}> won!`}
+              message={`Player ${winnerPlayerName} won!`}
               description={`You got ${winnerTeam === "1" ? newScore1 : newScore2} points!`}
             />
           ),
@@ -443,15 +443,15 @@ export default function TechTacToe({
         onClick={() => setLeaderboardOpen(true)}
         variant="outline"
         size="lg"
-        className="bg-white border-sky-200 hover:text-sky-600 hover:bg-sky-50 hover:border-sky-300 text-sky-700 shadow-sm"
+        className="bg-white border-pink-200 hover:text-pink-600 hover:bg-pink-50 hover:border-pink-300 text-pink-700 shadow-sm"
       >
         Show Leaderboard
       </Button>
 
       <Dialog open={leaderboardOpen} onOpenChange={setLeaderboardOpen}>
-        <DialogContent className="sm:max-w-2xl border-sky-100">
+        <DialogContent className="sm:max-w-2xl border-pink-100">
           <DialogHeader>
-            <DialogTitle className="text-sky-900">Leaderboard</DialogTitle>
+            <DialogTitle className="text-pink-900">Leaderboard</DialogTitle>
             <DialogDescription>
               Tech-Tac-Toe scores and rankings
             </DialogDescription>

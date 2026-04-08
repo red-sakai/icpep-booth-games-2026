@@ -189,7 +189,7 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
         () => (
           <NotificationToaster
             variant={"success"}
-            message={`Congratulations <${currTeam1Player ? currTeam1Player.name : "Anonymous"}>!`}
+            message={`Congratulations ${currTeam1Player ? currTeam1Player.name : "Anonymous"}!`}
             description={`You matched the wires perfectly on ${standard} standard and got a score of ${newScore}!`}
           />
         ),
@@ -315,7 +315,7 @@ export default function RJ45Game({ gameId }: RJ45GameProps) {
         onClick={() => setLeaderboardOpen(true)}
         variant="outline"
         size="lg"
-        className="bg-white/80 backdrop-blur-sm border-sky-200 hover:text-sky-700 hover:bg-sky-50 hover:border-sky-300 text-sky-700 shadow-sm rounded-xl"
+        className="bg-white/80 backdrop-blur-sm border-purple-200 hover:text-purple-700 hover:bg-purple-50 hover:border-purple-300 text-purple-700 shadow-sm rounded-xl"
       >
         Show Leaderboard
       </Button>
