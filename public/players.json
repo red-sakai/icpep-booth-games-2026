@@ -308,8 +308,8 @@
         "isLocked": true
       },
       "led-memory": {
-        "playsRemaining": 2,
-        "isLocked": false
+        "playsRemaining": 1,
+        "isLocked": true
       },
       "rj45-game": {
         "playsRemaining": 2,
@@ -317,7 +317,7 @@
       }
     },
     "createdAt": "2026-04-07T06:55:40.478Z",
-    "updatedAt": "2026-04-07T06:59:20.348Z"
+    "updatedAt": "2026-04-27T14:08:16.846Z"
   },
   {
     "name": "russell",
@@ -438,5 +438,25 @@
     },
     "createdAt": "2026-04-07T07:28:42.644Z",
     "updatedAt": null
+  },
+  {
+    "name": "jhered",
+    "color": "red",
+    "status": {
+      "tech-tac-toe": {
+        "playsRemaining": 2,
+        "isLocked": true
+      },
+      "led-memory": {
+        "playsRemaining": 1,
+        "isLocked": true
+      },
+      "rj45-game": {
+        "playsRemaining": 1,
+        "isLocked": true
+      }
+    },
+    "createdAt": "2026-04-27T14:09:02.213Z",
+    "updatedAt": "2026-04-27T14:10:50.112Z"
   }
 ]

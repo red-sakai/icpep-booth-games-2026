@@ -21,6 +21,29 @@ Start the development server:
 npm run dev
 ```
 
+## Supabase Setup (Leaderboard)
+
+The leaderboard now uses Supabase tables instead of `public/leaderboard.json`.
+
+1. Copy `.env.example` to `.env.local`.
+2. Set these values:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=...
+SUPABASE_SERVICE_ROLE_KEY=...
+```
+
+3. In Supabase SQL Editor, run:
+
+- `supabase/leaderboard-schema.sql`
+
+This creates separate tables for:
+
+- Memory Heist
+- Tech Tac Toe
+- Ethernet Challenge
+- Overall leaderboard
+
 Create a production build:
 
 ```bash
