@@ -458,5 +458,25 @@
     },
     "createdAt": "2026-04-27T14:09:02.213Z",
     "updatedAt": "2026-04-27T14:10:50.112Z"
+  },
+  {
+    "name": "red",
+    "color": "orange",
+    "status": {
+      "tech-tac-toe": {
+        "playsRemaining": 3,
+        "isLocked": false
+      },
+      "led-memory": {
+        "playsRemaining": 1,
+        "isLocked": true
+      },
+      "rj45-game": {
+        "playsRemaining": 2,
+        "isLocked": false
+      }
+    },
+    "createdAt": "2026-04-27T14:24:25.112Z",
+    "updatedAt": "2026-04-27T14:24:40.800Z"
   }
 ]

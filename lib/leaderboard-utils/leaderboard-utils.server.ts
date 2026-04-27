@@ -1,25 +1,32 @@
 import { LeaderboardDataType } from "../types";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
-const GAME_CONFIG = {
+type SupportedGameId = "led-memory" | "rj45-game" | "tech-tac-toe";
+type SortOrder = "asc" | "desc";
+
+type GameConfig = {
+  metric: string;
+  order: SortOrder;
+  tableName: string;
+};
+
+const GAME_CONFIG: Record<SupportedGameId, GameConfig> = {
   "led-memory": {
     metric: "patternsRemembered",
-    order: "desc" as const,
+    order: "desc",
     tableName: "leaderboard_memory_heist",
   },
   "rj45-game": {
     metric: "timeRemainingSeconds",
-    order: "desc" as const,
+    order: "desc",
     tableName: "leaderboard_ethernet_challenge",
   },
   "tech-tac-toe": {
     metric: "totalWins",
-    order: "desc" as const,
+    order: "desc",
     tableName: "leaderboard_tech_tac_toe",
   },
-} as const;
-
-type SupportedGameId = keyof typeof GAME_CONFIG;
+};
 
 const initialLeaderboard: LeaderboardDataType = {
   version: 1,
@@ -48,6 +55,18 @@ type SupabaseScoreRow = {
   score: number;
   created_at: string;
   updated_at: string | null;
+};
+
+type ExistingGameScoreRow = {
+  name: string;
+  score: number;
+  created_at: string;
+};
+
+type OverallLeaderboardRow = {
+  name: string;
+  total_score: number;
+  games_played: number;
 };
 
 const normalizePlayerName = (name: string) => name.trim().toUpperCase();
@@ -138,12 +157,14 @@ export async function updateLeaderboard(
   const gameConfig = GAME_CONFIG[gameId as SupportedGameId];
   const { tableName } = gameConfig;
 
-  const { data: existingGameEntry, error: existingGameEntryError } =
+  const { data: existingGameEntryRaw, error: existingGameEntryError } =
     await supabase
       .from(tableName)
       .select("name, score, created_at")
       .eq("name", normalizedName)
       .maybeSingle();
+
+  const existingGameEntry = existingGameEntryRaw as ExistingGameScoreRow | null;
 
   if (existingGameEntryError) {
     throw new Error(
@@ -159,34 +180,41 @@ export async function updateLeaderboard(
   if (hadEntryForGame) {
     const { error: updateGameError } = await supabase
       .from(tableName)
-      .update({
-        score: nextGameScore,
-        updated_at: now,
-      })
+      .update(
+        {
+          score: nextGameScore,
+          updated_at: now,
+        } as never,
+      )
       .eq("name", normalizedName);
 
     if (updateGameError) {
       throw new Error(`Failed to update ${gameId} score: ${updateGameError.message}`);
     }
   } else {
-    const { error: insertGameError } = await supabase.from(tableName).insert({
-      name: normalizedName,
-      score: nextGameScore,
-      created_at: now,
-      updated_at: null,
-    });
+    const { error: insertGameError } = await supabase.from(tableName).insert(
+      {
+        name: normalizedName,
+        score: nextGameScore,
+        created_at: now,
+        updated_at: null,
+      } as never,
+    );
 
     if (insertGameError) {
       throw new Error(`Failed to insert ${gameId} score: ${insertGameError.message}`);
     }
   }
 
-  const { data: existingOverallEntry, error: existingOverallEntryError } =
+  const { data: existingOverallEntryRaw, error: existingOverallEntryError } =
     await supabase
       .from("leaderboard_overall")
       .select("name, total_score, games_played")
       .eq("name", normalizedName)
       .maybeSingle();
+
+  const existingOverallEntry =
+    existingOverallEntryRaw as OverallLeaderboardRow | null;
 
   if (existingOverallEntryError) {
     throw new Error(
@@ -203,12 +231,14 @@ export async function updateLeaderboard(
 
     const { error: updateOverallError } = await supabase
       .from("leaderboard_overall")
-      .update({
-        total_score: nextTotalScore,
-        games_played: nextGamesPlayed,
-        latest_activity_at: now,
-        updated_at: now,
-      })
+      .update(
+        {
+          total_score: nextTotalScore,
+          games_played: nextGamesPlayed,
+          latest_activity_at: now,
+          updated_at: now,
+        } as never,
+      )
       .eq("name", normalizedName);
 
     if (updateOverallError) {
@@ -219,14 +249,16 @@ export async function updateLeaderboard(
   } else {
     const { error: insertOverallError } = await supabase
       .from("leaderboard_overall")
-      .insert({
-        name: normalizedName,
-        total_score: numericScore,
-        games_played: 1,
-        latest_activity_at: now,
-        created_at: now,
-        updated_at: null,
-      });
+      .insert(
+        {
+          name: normalizedName,
+          total_score: numericScore,
+          games_played: 1,
+          latest_activity_at: now,
+          created_at: now,
+          updated_at: null,
+        } as never,
+      );
 
     if (insertOverallError) {
       throw new Error(
