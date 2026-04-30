@@ -1,0 +1,12 @@
+{
+  "maven.terminal.customEnv": [
+    {
+      "environmentVariable": "SUPABASE_SERVICE_ROLE_KEY",
+      "value": "sb_publishable_OGk5PHyVq_E6elYjpGwxHw_LPg2CA3J"
+    },
+    {
+      "environmentVariable": "NEXT_PUBLIC_SUPABASE_URL",
+      "value": "https://gpiwigafbyoguesggxfr.supabase.co"
+    }
+  ]
+}

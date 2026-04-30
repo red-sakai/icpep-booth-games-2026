@@ -145,6 +145,7 @@ export const CreatePlayerDialog = ({
       ),
       { duration: 5000, position: "top-center" },
     );
+    updatePlayersData();
   };
 
   return (
